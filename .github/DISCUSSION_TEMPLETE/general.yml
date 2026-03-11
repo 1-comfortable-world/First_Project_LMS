@@ -1,11 +1,10 @@
-title: "[Discussion] "
+title: "[General] "
 labels: ["discussion"]
 body:
   - type: markdown
     attributes:
       value: |
         개발 관련 주제를 자유롭게 논의하는 공간입니다.
-        아래 내용을 작성해주시면 더 생산적으로 이야기할 수 있어요.
 
   - type: input
     id: topic
@@ -24,19 +23,9 @@ body:
       placeholder: |
         예)
         - 현재 인증 구조를 결정해야 합니다.
-        - 프론트/백엔드 분리 환경을 고려 중입니다.
         - 운영 편의성과 보안을 함께 고민하고 있습니다.
     validations:
       required: true
-
-  - type: textarea
-    id: current_thoughts
-    attributes:
-      label: 현재 생각
-      description: 현재 생각 중인 방향이나 의견이 있다면 적어주세요.
-      placeholder: 예) JWT를 고려 중이지만 토큰 관리가 복잡해질까 걱정됩니다.
-    validations:
-      required: false
 
   - type: textarea
     id: discussion_points
@@ -47,23 +36,6 @@ body:
         예)
         - 장단점 비교
         - 실제 운영 시 주의점
-        - 팀 프로젝트에서의 적합성
         - 다른 대안이 있는지
     validations:
       required: true
-
-  - type: input
-    id: related_area
-    attributes:
-      label: 관련 영역
-      description: 관련 기술이나 모듈을 적어주세요.
-      placeholder: 예) auth, backend, frontend, database, api
-    validations:
-      required: false
-
-  - type: checkboxes
-    attributes:
-      label: 확인 사항
-      options:
-        - label: 기존 Discussion이나 관련 문서를 먼저 확인했습니다.
-          required: true
