@@ -1,6 +1,10 @@
 package com.wanted.only_one.member.controller;
 
+import com.wanted.only_one.member.service.AuthService;
+
 public class AuthController {
+    public AuthController(AuthService authService) {
+    }
 
     /*
     * 강사 / 학생 회원가입
