@@ -20,8 +20,51 @@ public class PaymentDTO {
 
     public PaymentDTO() {}
 
+    public PaymentDTO(Long member_id, Timestamp payed_at, Long price) {
+        this.member_id = member_id;
+        this.payed_at = payed_at;
+        this.price = price;
+    }
 
+    public Long getPay_id() {
+        return pay_id;
+    }
 
+    public void setPay_id(Long pay_id) {
+        this.pay_id = pay_id;
+    }
 
+    public Long getMember_id() {
+        return member_id;
+    }
 
+    public void setMember_id(Long member_id) {
+        this.member_id = member_id;
+    }
+
+    public Timestamp getPayed_at() {
+        return payed_at;
+    }
+
+    public void setPayed_at(Timestamp payed_at) {
+        this.payed_at = payed_at;
+    }
+
+    public Long getPrice() {
+        return price;
+    }
+
+    public void setPrice(Long price) {
+        this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "PaymentDTO{" +
+                "pay_id=" + pay_id +
+                ", member_id=" + member_id +
+                ", payed_at=" + payed_at +
+                ", price=" + price +
+                '}';
+    }
 }

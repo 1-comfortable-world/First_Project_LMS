@@ -1,4 +1,4 @@
 package com.wanted.only_one.member.view;
 
-public class TeacherInputView {
+public class MemberOutputView {
 }
