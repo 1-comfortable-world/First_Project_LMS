@@ -8,22 +8,17 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ------------------------------------------------------------------------------------
 -- 기존 테이블 삭제 (역순 배치)
 -- ------------------------------------------------------------------------------------
--- DROP TABLE IF EXISTS `lecture_histories`;
--- DROP TABLE IF EXISTS `payments`;
--- DROP TABLE IF EXISTS `favorites`;
--- DROP TABLE IF EXISTS `connection_status`;
--- DROP TABLE IF EXISTS `blacklists`;
--- DROP TABLE IF EXISTS `course_reviews`;
--- DROP TABLE IF EXISTS `studying_courses`;
--- DROP TABLE IF EXISTS `lectures`;
--- DROP TABLE IF EXISTS `courses`;
--- DROP TABLE IF EXISTS `students`;
--- DROP TABLE IF EXISTS `teachers`;
-
--- ------------------------------------------------------------------------------------
--- 외래 키 제약 조건 재활성화
--- ------------------------------------------------------------------------------------
-SET FOREIGN_KEY_CHECKS = 1;
+DROP TABLE IF EXISTS `lecture_histories`;
+DROP TABLE IF EXISTS `payments`;
+DROP TABLE IF EXISTS `favorites`;
+DROP TABLE IF EXISTS `connection_status`;
+DROP TABLE IF EXISTS `blacklists`;
+DROP TABLE IF EXISTS `course_reviews`;
+DROP TABLE IF EXISTS `studying_courses`;
+DROP TABLE IF EXISTS `lectures`;
+DROP TABLE IF EXISTS `courses`;
+DROP TABLE IF EXISTS `students`;
+DROP TABLE IF EXISTS `teachers`;
 
 -- ------------------------------------------------------------------------------------
 -- 테이블 생성 (독립 테이블 -> 종속 테이블 순서)
@@ -55,7 +50,7 @@ CREATE TABLE `courses` (
     `course_id`    BIGINT         NOT NULL AUTO_INCREMENT,
     `title`        VARCHAR(255)   NOT NULL,
     `teacher_id`   BIGINT         NOT NULL,
-    `status`       VARCHAR(50)    NOT NULL,
+   --  `status`       VARCHAR(50)    NOT NULL,
     PRIMARY KEY (`course_id`),
     FOREIGN KEY (`teacher_id`) REFERENCES `teachers` (`teacher_id`) ON DELETE CASCADE
 );
@@ -76,7 +71,7 @@ CREATE TABLE `studying_courses` (
     `studying_id`  BIGINT         NOT NULL AUTO_INCREMENT,
 	`course_id`    BIGINT         NOT NULL,
     `student_id`   BIGINT         NOT NULL,
-    `status`       VARCHAR(50)    NOT NULL,
+    `status`       VARCHAR(50)    NOT NULL ,
 	PRIMARY KEY (`studying_id`),
     FOREIGN KEY (`course_id`) REFERENCES `courses` (`course_id`) ON DELETE CASCADE,
     FOREIGN KEY (`student_id`) REFERENCES `students` (`student_id`) ON DELETE CASCADE
@@ -84,12 +79,12 @@ CREATE TABLE `studying_courses` (
 
 -- 6. 강좌평 (Course Review)
 CREATE TABLE `course_reviews` (
-    `review_id`    BIGINT         NOT NULL AUTO_INCREMENT,
+    -- `review_id`    BIGINT         NOT NULL AUTO_INCREMENT,
     `course_id`    BIGINT         NOT NULL,
     `student_id`   BIGINT         NOT NULL,
 	`contents`     TEXT           NOT NULL,
 	`rating`       FLOAT          NOT NULL,
-    PRIMARY KEY (`review_id`),
+    PRIMARY KEY (`course_id`,`student_id`),
     FOREIGN KEY (`course_id`) REFERENCES `courses` (`course_id`) ON DELETE CASCADE,
     FOREIGN KEY (`student_id`) REFERENCES `students` (`student_id`) ON DELETE CASCADE
 );
@@ -104,10 +99,8 @@ CREATE TABLE `blacklists` (
 
 -- 8. 접속여부 (Connection Status) - 설계 결함 수정 (PK 및 시간 컬럼 추가)
 CREATE TABLE `connection_status` (
-    `connection_id`    BIGINT         NOT NULL AUTO_INCREMENT,
     `student_id`       BIGINT         NOT NULL,
-    `last_accessed_at` DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRIMARY KEY (`connection_id`),
+    PRIMARY KEY (`student_id`),
     FOREIGN KEY (`student_id`) REFERENCES `students` (`student_id`) ON DELETE CASCADE
 );
 
@@ -141,3 +134,9 @@ CREATE TABLE `lecture_histories` (
     FOREIGN KEY (`student_id`) REFERENCES `students` (`student_id`) ON DELETE CASCADE,
     FOREIGN KEY (`lecture_id`) REFERENCES `lectures` (`lecture_id`) ON DELETE CASCADE
 );
+
+
+-- ------------------------------------------------------------------------------------
+-- 외래 키 제약 조건 재활성화
+-- ------------------------------------------------------------------------------------
+SET FOREIGN_KEY_CHECKS = 1;
