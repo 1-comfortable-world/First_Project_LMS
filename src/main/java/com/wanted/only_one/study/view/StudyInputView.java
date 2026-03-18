@@ -1,4 +1,4 @@
 package com.wanted.only_one.study.view;
 
-public class FavView {
+public class StudyInputView {
 }
