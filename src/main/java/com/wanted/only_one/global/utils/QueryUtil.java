@@ -27,12 +27,12 @@ public class QueryUtil {
      */
     private static void loadQueries() {
         try {
-            // 클래스 로더를 통해 "queries.xml" 파일을 InputStream으로 가져옴
-            InputStream inputStream = QueryUtil.class.getClassLoader().getResourceAsStream("queries.xml");
+            // 클래스 로더를 통해 "payments_queries.xml" 파일을 InputStream으로 가져옴
+            InputStream inputStream = QueryUtil.class.getClassLoader().getResourceAsStream("payments_queries.xml");
 
             // InputStream이 null인 경우, 즉 파일을 찾지 못한 경우 예외 발생
             if (inputStream == null) {
-                throw new RuntimeException("queries.xml 파일을 찾을 수 없습니다.");
+                throw new RuntimeException("payments_queries.xml 파일을 찾을 수 없습니다.");
             }
 
             // DocumentBuilderFactory를 사용하여 DocumentBuilder 인스턴스를 생성

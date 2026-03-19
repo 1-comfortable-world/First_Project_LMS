@@ -20,8 +20,7 @@ public class PaymentDTO {
 
     public PaymentDTO() {}
 
-    public PaymentDTO(Long member_id, Timestamp payed_at, Long price) {
-        this.member_id = member_id;
+    public PaymentDTO(Timestamp payed_at, Long price) {
         this.payed_at = payed_at;
         this.price = price;
     }

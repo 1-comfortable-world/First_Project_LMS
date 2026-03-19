@@ -14,12 +14,25 @@ public class PaymentService {
         this.connection = connection;
     }
 
-    public List<PaymentDTO> findMyPayment() {
+    public static boolean payingMoney(String email) {
+        try {
+            return PaymentDAO.payingMoney(email);
+        } catch (SQLException e) {
+            throw new RuntimeException("결제에 실패하셨습니다!!");
+        }
+
+    }
+
+    public List<PaymentDTO> findMyPayment(String payEmail) {
 
         try {
-            return paymentDAO.findPayment();
+            return paymentDAO.findPayment(payEmail);
         } catch (SQLException e) {
             throw new RuntimeException("결제 내역 조회 중 Error 발생!!" + e);
         }
+    }
+
+    public boolean checkEmail(String value) throws SQLException {
+        return paymentDAO.checkEmail(value);
     }
 }
