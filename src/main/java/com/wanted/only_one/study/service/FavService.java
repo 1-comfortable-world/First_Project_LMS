@@ -1,8 +1,10 @@
 package com.wanted.only_one.study.service;
 
+import com.wanted.only_one.course.dao.CourseDAO;
 import com.wanted.only_one.course.dto.CourseDTO;
 import com.wanted.only_one.study.dao.FavDAO;
 import com.wanted.only_one.study.dto.FavDTO;
+import com.wanted.only_one.study.dto.ReviewDTO;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -12,17 +14,19 @@ public class FavService {
 
     private final FavDAO favDAO;
     private final Connection connection;
+    private final CourseDAO courseDAO;
 
 
     public FavService(Connection connection) {
         this.favDAO = new FavDAO(connection);
         this.connection = connection;
+        this.courseDAO = new CourseDAO();
     }
 
    // 선택 목록에 넣을 강좌 선택을 위한 전체 강좌 목록 조회
     public List<CourseDTO> showCourseList() {
         System.out.println("로그 찍는 용 : 전체 강좌 출력");
-        // return courseDAO.findAll(); // 종준님 강좌 조회 메서드 연결
+    //     return courseDAO.showAllCourses(); // 종준님 강좌 조회 메서드 연결
         return List.of();
     }
 

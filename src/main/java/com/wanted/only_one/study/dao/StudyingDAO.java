@@ -42,4 +42,29 @@ public class StudyingDAO {
     }
 
 
+    public List<CourseDTO> showMyStudyingList(int menu) throws SQLException {
+        String query = QueryUtil.getQuery("showMyStudyingList");
+        List<CourseDTO> list = new ArrayList<>();
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setLong(1, 11L);   // TODO: 로그인 세션 연결 후 교체
+            pstmt.setInt(2, menu);  // 1,2,3 그대로 넘기면 안 되고 아래 SQL 참고
+            ResultSet rset = pstmt.executeQuery();
+
+            while (rset.next()) {
+                list.add(new CourseDTO(rset.getString("title")));
+            }
+        }
+        return list;
+    }
+
+    public void updateCourseStatus(long memberId, long courseId) throws SQLException {
+        String query = QueryUtil.getQuery("updateCourseStatus");
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setLong(1, memberId);
+            pstmt.setLong(2, courseId);
+            pstmt.executeUpdate();
+        }
+    }
 }

@@ -6,6 +6,7 @@ public class ReviewDTO {
     private Long course_id;
     private Long member_id;
     private String contents;
+    private String title;
     private Double rating;
 
     public ReviewDTO() {
@@ -15,6 +16,12 @@ public class ReviewDTO {
         this.review_id = review_id;
         this.course_id = course_id;
         this.member_id = member_id;
+        this.contents = contents;
+        this.rating = rating;
+    }
+
+    public ReviewDTO(String title, String contents, Double rating) {
+        this.title = title;
         this.contents = contents;
         this.rating = rating;
     }
@@ -59,6 +66,14 @@ public class ReviewDTO {
         this.review_id = review_id;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     @Override
     public String toString() {
         return "ReviewDTO{" +
@@ -66,6 +81,7 @@ public class ReviewDTO {
                 ", course_id=" + course_id +
                 ", member_id=" + member_id +
                 ", contents='" + contents + '\'' +
+                ", title='" + title + '\'' +
                 ", rating=" + rating +
                 '}';
     }

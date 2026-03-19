@@ -3,6 +3,7 @@ package com.wanted.only_one.study.service;
 import com.wanted.only_one.course.dto.CourseDTO;
 import com.wanted.only_one.study.dao.ReviewDAO;
 import com.wanted.only_one.study.dao.StudyingDAO;
+import com.wanted.only_one.study.dto.ReviewDTO;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -21,8 +22,7 @@ public class ReviewService {
         this.connection = connection;
     }
 
-
-
+// 수강 완료한 강좌 조회
     public List<CourseDTO> showcompletedCourseList() {
         try {
             return studyingDAO.showcompletedCourseList();
@@ -59,6 +59,14 @@ public class ReviewService {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    public List<ReviewDTO> showMyReviewList() {
+        try {
+            return reviewDAO.showMyReviewList();
+        } catch (SQLException e) {
+            throw new RuntimeException("강좌평 조회 중 에러 발생 🚨"+e);
         }
     }
 }
