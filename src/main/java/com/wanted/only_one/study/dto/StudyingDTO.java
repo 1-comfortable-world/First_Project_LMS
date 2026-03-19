@@ -16,6 +16,10 @@ public class StudyingDTO {
         this.status = status;
     }
 
+    public StudyingDTO(long courseId) {
+        this.course_id = courseId;
+    }
+
     public Long getStudying_id() {
         return studying_id;
     }

@@ -13,6 +13,7 @@ public class FavService {
     private final FavDAO favDAO;
     private final Connection connection;
 
+
     public FavService(Connection connection) {
         this.favDAO = new FavDAO(connection);
         this.connection = connection;
@@ -65,4 +66,5 @@ public class FavService {
             throw new RuntimeException("선택 목록 조최 중 에러 발생 🚨"+e);
         }
     }
+
 }

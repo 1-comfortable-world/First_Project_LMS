@@ -31,8 +31,8 @@ public class FavDAO {
 
             while(rset.next()){
                 FavDTO course = new FavDTO(
-                        rset.getLong("course_id"),
-                        rset.getLong("member_id")
+                        rset.getString("title"),
+                        rset.getString("name")
                 );
                 favList.add(course);
             }

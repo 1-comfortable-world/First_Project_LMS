@@ -2,11 +2,28 @@
 <properties>
     <query key="addFavList">
         INSERT INTO favorites (member_id, course_id)
-        SELECT ?, c.id
+        SELECT ?, c.course_id
         FROM courses c
         WHERE c.title LIKE CONCAT('%', ?, '%');
     </query>
     <query key="showFavList">
-        select * from favorites
+        SELECT m.name as member_name, c.title as course_title
+        FROM favorites f
+        JOIN members m ON f.member_id = m.member_id
+        JOIN courses c ON f.course_id = c.course_id
     </query>
+    <query key="showcompletedCourseList">
+        SELECT  c.title
+        FROM courses c
+        JOIN studying_courses s ON c.course_id = s.course_id
+        WHERE s.status = '수강완료'
+        and s.member_id=?
+    </query>
+    <query key="writeReview">
+        INSERT INTO course_reviews (member_id, course_id, contents, rating)
+        SELECT ?, c.course_id, ?, ?
+        FROM courses c
+        WHERE c.title LIKE CONCAT('%', ?, '%');
+    </query>
+
 </properties>

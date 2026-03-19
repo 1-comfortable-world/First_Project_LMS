@@ -23,13 +23,27 @@ public class StudyOutputView {
     public void printCourses(List<CourseDTO> courseList) {
 
         if(courseList == null || courseList.isEmpty()){
-            System.out.println("조회된 강좌가 없습니다");
+            System.out.println("조회된 강좌가 없습니다. ");
             return;
         }
 
-        System.out.println("결과)");
+        System.out.println("====강좌 전체 조회 목록 결과====");
         for (CourseDTO courseDTO : courseList){
-            System.out.println("course = " + courseDTO);
+            System.out.println(courseDTO);
+        }
+    }
+
+    public void printCompletedCourses(List<CourseDTO> completedCourseList) {
+
+        if(completedCourseList == null || completedCourseList.isEmpty()){
+            System.out.println("수강 완료된 강좌가 없습니다. ");
+            System.out.println("최소 하나의 강좌를 수강 완료한 후 이용해주세요.");
+            return;
+        }
+
+        System.out.println("  ====수강 완료한 강좌 목록 전체 조회====");
+        for (CourseDTO courseDTO : completedCourseList){
+            System.out.println(courseDTO);
         }
     }
 
@@ -41,9 +55,9 @@ public class StudyOutputView {
             return;
         }
 
-        System.out.println("결과)");
+        System.out.println("====강좌 선택 목록 조회 결과====");
         for (FavDTO favDTO : favList){
-            System.out.println( "member_id:"+favDTO.getMember_id() +"Course_id:"+favDTO.getCourse_id() );
+            System.out.println( "회원명 : "+favDTO.getMember_name() +"/ 강좌명 : "+favDTO.getCourse_title() );
         }
     }
 }
