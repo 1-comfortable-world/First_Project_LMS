@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<properties>
+    <query key="addFavList">
+        INSERT INTO favorites (member_id, course_id)
+        SELECT ?, c.id
+        FROM courses c
+        WHERE c.title LIKE CONCAT('%', ?, '%');
+    </query>
+    <query key="showFavList">
+        select * from favorites
+    </query>
+</properties>

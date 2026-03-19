@@ -15,6 +15,11 @@ public class FavDTO {
         this.member_id = member_id;
     }
 
+    public FavDTO(long courseId, long memberId) {
+        this.course_id = courseId;
+        this.member_id = memberId;
+    }
+
     public Long getFav_id() {
         return fav_id;
     }
