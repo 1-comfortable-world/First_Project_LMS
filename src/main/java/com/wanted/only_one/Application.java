@@ -27,7 +27,7 @@ public class Application {
              * 강사 / 학생 로그아웃
              * 학생 중복 로그인 시 블랙리스트
              * */
-//            MemberController memberController = new MemberController(memberService); -> 마이페이지
+//          MemberController memberController = new MemberController(memberService); -> 마이페이지
             // 회원 정보 수정
             // 회원 정보 조회
             // 회원 정보 삭제
