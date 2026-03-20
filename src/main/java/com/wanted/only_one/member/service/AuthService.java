@@ -96,14 +96,14 @@ public class AuthService {
     }
 
     // 로그아웃
-    public boolean signOut(long memberId) {
+    public boolean signOut(long memberID) {
         Connection conn = null;
 
         try {
             conn = JDBCTemplate.getConnection();
             ConnectionDAO connectionDAO = new ConnectionDAO(conn);
 
-            return connectionDAO.deleteConnection(memberId);
+            return connectionDAO.deleteConnection(memberID);
 
         } catch (SQLException e) {
             e.printStackTrace();
