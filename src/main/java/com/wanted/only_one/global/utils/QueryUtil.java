@@ -76,7 +76,7 @@ public class QueryUtil {
 
             for (int i = 0; i < CoursenodeList.getLength(); i++) {
                 Element queryElement = (Element) CoursenodeList.item(i);
-                String key = queryElement.getAttribute("id");
+                String key = queryElement.getAttribute("key");
                 String sql = queryElement.getTextContent().trim();
                 queries.put(key, sql);
             }
