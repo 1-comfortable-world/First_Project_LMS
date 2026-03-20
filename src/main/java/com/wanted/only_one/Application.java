@@ -30,7 +30,8 @@ public class Application {
 
             MemberOutputView memberoutputView = new MemberOutputView();
             PaymentOutputView paymentOutputView = new PaymentOutputView();
-            PaymentController paymentController = new PaymentController();
+            PaymentService paymentService = new PaymentService(con);
+            PaymentController paymentController = new PaymentController(paymentService);
             PaymentInputView payInputView = new PaymentInputView(paymentController, paymentOutputView);
 
 

@@ -85,7 +85,7 @@ public class MemberInputView {
     }
 
     // 회원가입 처리 - 동의
-    private void signUp(String role) {
+    private boolean signUp(String role) {
         while (true) {
             System.out.println();
             System.out.println("=================================");
@@ -99,11 +99,13 @@ public class MemberInputView {
             int agree = inputInt();
             switch (agree) {
                 case 1:
-                    enterInfo(role);  // 동의 → 정보 입력
-                    break;
+                    if(enterInfo(role)){
+                        return true;
+                    }
+                    return false;
                 case 2:
                     outputView.printMessage("개인정보 수집에 동의하지 않으면 가입할 수 없습니다.");
-                    return;  // ← 메인으로
+                    return false;
                 default:
                     System.out.println(" ");
                     outputView.printError("========올바른 메뉴를 선택해주세요.");
@@ -112,12 +114,9 @@ public class MemberInputView {
     }
 
     // 회원가입 정보 입력
-    private void enterInfo(String role) {
-
+    private boolean enterInfo(String role) {
         boolean result = true;
         while (true) {
-
-
             System.out.print("이름을 입력하십시오 : ");
             String name = sc.nextLine();
 
@@ -127,9 +126,7 @@ public class MemberInputView {
             if (emailresult) {
                 outputView.printError("\n이미 존재하는 이메일입니다");
                 continue;
-
             }
-
             System.out.print("비밀번호를 입력하십시오 (특수기호 포함) : ");
             String password = sc.nextLine();
             boolean pwdResult = authController.pwdInclude(password);
@@ -137,7 +134,6 @@ public class MemberInputView {
                 outputView.printError("\n특수기호는 필수입니다");
                 continue;
             }
-
             result = authController.signUp(name, email, password, role);
             outputView.printSignUpResult(result);
             break;
@@ -146,12 +142,13 @@ public class MemberInputView {
         if (result) {
             displayLoginMenu();  // ← 추가!
         }
+        return false;
     }
 
 
 
     // 로그인 메뉴
-    public void displayLoginMenu() {
+    public boolean displayLoginMenu() {
         while (true) {
             System.out.println();
             System.out.println("=================================");
@@ -177,7 +174,7 @@ public class MemberInputView {
                     resetPassword();
                     break;
                 case 4:
-                    return;  // ← 메인으로
+                    return true;  // ← 메인으로
                 default:
                     outputView.printError("올바른 메뉴를 선택해주세요.");
             }

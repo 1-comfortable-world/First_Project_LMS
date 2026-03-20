@@ -5,9 +5,10 @@ import java.util.List;
 
 public class PaymentController {
 
-    private PaymentService paymentService;
+    public final PaymentService paymentService;
 
-    public PaymentController() {
+    public PaymentController(PaymentService paymentService) {
+        this.paymentService = paymentService;
 
     }
 

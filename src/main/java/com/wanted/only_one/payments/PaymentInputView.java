@@ -33,17 +33,20 @@ public class PaymentInputView {
 
             switch(option) {
                 case 1:
-                    payMoney();
+                    if(payMoney()){
+                        return;
+                    }
                     break;
                 case 2:
                     return;
                 default:
                     payoutputView.printError("숫자를 제대로 입력하세요.");
             }
+
         }
     }
 
-    private void payMoney() {
+    private boolean payMoney() {
         System.out.println(" ");
         System.out.println("---본인 확인을 위해 아이디를 입력해주세요 : ");
         String email = inputEmail();
@@ -52,8 +55,10 @@ public class PaymentInputView {
 
         if(result) {
             payoutputView.printMessage("💰💰결제가 완료되었습니다.");
+            return true;
         } else {
             payoutputView.printMessage("🤣🤣🤣 결제 처리 중 문제가 발생했습니다!!!");
+            return false;
         }
     }
 

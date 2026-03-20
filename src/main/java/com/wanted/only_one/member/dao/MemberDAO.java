@@ -1,6 +1,5 @@
 package com.wanted.only_one.member.dao;
 
-import com.wanted.only_one.global.config.JDBCTemplate;
 import com.wanted.only_one.global.utils.QueryUtil;
 import com.wanted.only_one.member.dto.MemberDTO;
 
@@ -11,32 +10,32 @@ import java.sql.SQLException;
 
 public class MemberDAO {
 
+    private final Connection con;
 
+    public MemberDAO(Connection con) {
+        this.con = con;
+    }
 
-    public MemberDAO(Connection con) { this.con = con; }
-
-    public  boolean emailMix(String email) {
+    public boolean emailMix(String email) {
         String sql = "SELECT COUNT(*) FROM members WHERE email = ?";
-        try(Connection con = JDBCTemplate.getConnection();
-            PreparedStatement pstmt = con.prepareStatement(sql)) {
-            pstmt.setString(1, email);
-            rs = pstmt.executeQuery();
 
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
+        try (PreparedStatement pstmt = con.prepareStatement(sql)) {
+            pstmt.setString(1, email);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-            try { if (pstmt != null) pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
+
         return false;
     }
 
-
-    //  회원 조회
+    // 회원 조회
     public MemberDTO findById(long memberId) {
         String sql = "SELECT * FROM members WHERE member_id = ?";
         PreparedStatement pstmt = null;
@@ -60,7 +59,7 @@ public class MemberDAO {
         return null;
     }
 
-    //  이메일, 비밀번호로 회원 조회
+    // 이메일, 비밀번호로 회원 조회
     public MemberDTO findByEmailAndPassword(String email, String password) {
         String sql = "SELECT * FROM members WHERE email = ? AND password = ?";
         PreparedStatement pstmt = null;
@@ -85,7 +84,7 @@ public class MemberDAO {
         return null;
     }
 
-    //  비밀번호 수정
+    // 비밀번호 수정
     public boolean updatePassword(long memberId, String newPassword) {
         String sql = "UPDATE members SET password = ? WHERE member_id = ?";
         PreparedStatement pstmt = null;
@@ -106,7 +105,7 @@ public class MemberDAO {
         return false;
     }
 
-    //  회원 삭제
+    // 회원 삭제
     public boolean deleteMember(long memberId) {
         String sql = "DELETE FROM members WHERE member_id = ?";
         PreparedStatement pstmt = null;
@@ -126,7 +125,7 @@ public class MemberDAO {
         return false;
     }
 
-    //  이메일 중복 확인
+    // 이메일 중복 확인
     public boolean existsByEmail(String email) {
         String sql = "SELECT COUNT(*) FROM members WHERE email = ?";
         PreparedStatement pstmt = null;
@@ -150,7 +149,7 @@ public class MemberDAO {
         return false;
     }
 
-    //  회원가입
+    // 회원가입
     public boolean insertMember(String name, String email, String password, String role) {
         String sql = "INSERT INTO members (name, email, password, role) VALUES (?, ?, ?, ?)";
         PreparedStatement pstmt = null;
@@ -173,7 +172,7 @@ public class MemberDAO {
         return false;
     }
 
-    //  중복 로그인 카운트 + 1
+    // 중복 로그인 카운트 + 1
     public void updateAccCount(long memberId) {
         String sql = "UPDATE members SET acc_count = acc_count + 1 WHERE member_id = ?";
         PreparedStatement pstmt = null;
@@ -190,7 +189,7 @@ public class MemberDAO {
         }
     }
 
-    //  이메일로 비밀번호 초기화
+    // 이메일로 비밀번호 초기화
     public boolean resetPasswordByEmail(String email, String newPassword) {
         String sql = "UPDATE members SET password = ? WHERE email = ?";
         PreparedStatement pstmt = null;
@@ -211,7 +210,6 @@ public class MemberDAO {
         return false;
     }
 
-    // 공통 메서드 - ResultSet → MemberDTO 변환
     private MemberDTO mapRow(ResultSet rs) throws SQLException {
         return new MemberDTO(
                 rs.getLong("member_id"),
@@ -223,7 +221,6 @@ public class MemberDAO {
                 rs.getInt("acc_count")
         );
     }
-
 
     // 로그인중 이메일 패스워드 중복 확인
     public boolean pwdCheck(String email, String password) {
@@ -245,17 +242,17 @@ public class MemberDAO {
             rs2 = pstmt2.executeQuery();
 
             if (rs.next() && rs2.next()) {
-                return rs.getInt(1) > 0;
+                return rs.getInt(1) > 0 && rs2.getInt(1) > 0;
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
+            try { if (rs2 != null) rs2.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (pstmt2 != null) pstmt2.close(); } catch (SQLException e) { e.printStackTrace(); }
             try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
             try { if (pstmt != null) pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
         return false;
     }
-
-
 }
