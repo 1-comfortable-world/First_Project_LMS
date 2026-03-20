@@ -213,7 +213,28 @@ public class AuthService {
             return connectionDAO.logout(email);
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("🤬🤬🤬🤬어딜 나가?");
+            return false;
+        } finally {
+            try {
+                if (con != null) con.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public boolean getOut(String email) {
+        Connection con = null;
+
+        try {
+            con = JDBCTemplate.getConnection();
+            MemberDAO memberDAO = new MemberDAO(con);
+
+            return memberDAO.getOut(email);
+
+        } catch (SQLException e) {
+            System.out.println("🤬🤬🤬🤬어딜 나가?");
             return false;
         } finally {
             try {

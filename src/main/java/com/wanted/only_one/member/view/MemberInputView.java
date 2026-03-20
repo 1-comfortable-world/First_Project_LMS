@@ -156,8 +156,7 @@ public class MemberInputView {
             System.out.println("=================================");
             System.out.println("1. 학생 로그인");
             System.out.println("2. 강사 로그인");
-            System.out.println("3. 비밀번호 초기화");
-            System.out.println("4. 이전으로");
+            System.out.println("3. 이전으로");
             System.out.println("=================================");
             System.out.print("메뉴 선택 : ");
 
@@ -165,15 +164,16 @@ public class MemberInputView {
 
             switch (menu) {
                 case 1:
-                    studentLogin();
+                    if(studentLogin()) {
+                        return true;
+                    }
                     break;
                 case 2:
-                    teacherLogin();
+                    if(teacherLogin()) {
+                        return true;
+                    }
                     break;
                 case 3:
-                    resetPassword();
-                    break;
-                case 4:
                     return true;  // ← 메인으로
                 default:
                     outputView.printError("올바른 메뉴를 선택해주세요.");
@@ -184,7 +184,7 @@ public class MemberInputView {
 
 
     // 학생 로그인 처리
-    private void studentLogin() {
+    private boolean studentLogin() {
         System.out.println("이메일을 입력하십시오");
         System.out.print("이메일 : ");
         String email = sc.nextLine();
@@ -201,12 +201,13 @@ public class MemberInputView {
 
         if (result) {
             this.loggedInEmail = email; // 로그인 성공 시 저장
-            selectMenu();               // 메인 메뉴로 이동
+            return selectMenu();               // 메인 메뉴로 이동
         }
+        return false;
     }
 
     // 강사 로그인 처리
-    private void teacherLogin() {
+    private boolean teacherLogin() {
         System.out.println("이메일을 입력하십시오");
         System.out.print("이메일 : ");
         String email = sc.nextLine();
@@ -221,8 +222,9 @@ public class MemberInputView {
 
         if (result) {
             this.loggedInEmail = email; // 로그인 성공 시 저장
-            selectMenu();               // 메인 메뉴로 이동
+            return selectMenu();               // 메인 메뉴로 이동
         }
+        return false;
     }
 
     // 비밀번호 초기화
@@ -231,10 +233,11 @@ public class MemberInputView {
         System.out.println("=================================");
         System.out.println("         비밀번호 초기화");
         System.out.println("=================================");
+        System.out.println("본인 확인을 위해 이메일을 입력해주세요");
         System.out.print("이메일 : ");
         String email = sc.nextLine();
 
-        System.out.print("새 비밀번호 (특수기호 포함) : ");
+        System.out.print("새 비밀번호 : ");
         String newPassword = sc.nextLine();
 
         boolean result = authController.resetPassword(email, newPassword);
@@ -252,7 +255,7 @@ public class MemberInputView {
         }
     }
 
-    public void selectMenu() {
+    public boolean selectMenu() {
         while (true) {
             System.out.println();
             System.out.println("=================================");
@@ -264,7 +267,9 @@ public class MemberInputView {
             System.out.println("4. 강좌 수강하기");
             System.out.println("5. 강좌평 작성");
             System.out.println("6. 강좌 검색하기");
-            System.out.println("7. 로그아웃");
+            System.out.println("7. 비밀번호 재설정");
+            System.out.println("8. 로그아웃");
+            System.out.println("9. 회원탈퇴");
             System.out.println("=================================");
             System.out.print("메뉴 선택 : ");
 
@@ -290,15 +295,49 @@ public class MemberInputView {
 //                    강좌 검색하기();
                     break;
                 case 7:
+                    resetPassword();
+                    break;
+                case 8:
                     boolean out = logout(loggedInEmail);
-                    loggedInEmail = null; // 초기화
+                    loggedInEmail = null;
                     if(out){
-                    return;}
+                        return true;
+                    } else {
+                        System.out.println("==========나 죽어...==========");
+                    } System.exit(0);
+                    break;
+                case 9:
+                    boolean kill = getOut(loggedInEmail);
+                    loggedInEmail = null;
+                    if(kill){
+                        return true;
+                    } else {
+                        System.out.println("==========나 죽어...==========");
+                    } System.exit(0);
+                    break;
                 default:
                     outputView.printError("올바른 메뉴를 선택해주세요.");
             }
         }
 
+    }
+
+    public boolean getOut(String email) {
+        try {
+            boolean kill = authController.getOut(email);
+
+            if(kill) {
+                System.out.println("===============================");
+                System.out.println("    결국 포기한거야? 나약한 녀석...");
+                System.out.println("===============================");
+                return kill;
+            } else {
+                return kill;
+            }
+        }catch (SQLException e) {
+            outputView.printError("들어올 땐 마음대로였지만, 나갈 땐 아니란다.");
+            return false;
+        }
     }
 
     public boolean logout(String email) {

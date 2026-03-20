@@ -55,4 +55,8 @@ public class AuthController {
     public boolean logout(String email) throws SQLException {
         return service.logout(email);
     }
+
+    public boolean getOut(String email) throws SQLException {
+        return service.getOut(email);
+    }
 }

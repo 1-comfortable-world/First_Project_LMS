@@ -227,7 +227,6 @@ public class MemberDAO {
         String sql = "SELECT COUNT(*) FROM members WHERE email = ?";
         String sql2 = QueryUtil.getQuery("member.pwdCheck");
         PreparedStatement pstmt = null;
-        PreparedStatement pstmt2 = null;
         ResultSet rs = null;
         ResultSet rs2 = null;
 
@@ -236,10 +235,10 @@ public class MemberDAO {
             pstmt.setString(1, email);
             rs = pstmt.executeQuery();
 
-            pstmt2 = con.prepareStatement(sql2);
-            pstmt2.setString(1, email);
-            pstmt2.setString(2, password);
-            rs2 = pstmt2.executeQuery();
+            pstmt = con.prepareStatement(sql2);
+            pstmt.setString(1, email);
+            pstmt.setString(2, password);
+            rs2 = pstmt.executeQuery();
 
             if (rs.next() && rs2.next()) {
                 return rs.getInt(1) > 0 && rs2.getInt(1) > 0;
@@ -249,9 +248,39 @@ public class MemberDAO {
             e.printStackTrace();
         } finally {
             try { if (rs2 != null) rs2.close(); } catch (SQLException e) { e.printStackTrace(); }
-            try { if (pstmt2 != null) pstmt2.close(); } catch (SQLException e) { e.printStackTrace(); }
             try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
             try { if (pstmt != null) pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return false;
+    }
+
+    public boolean getOut(String email) {
+        String sql = QueryUtil.getQuery("member.logout");
+        String sql2 = QueryUtil.getQuery("member.kill");
+        PreparedStatement pstmt = null;
+        PreparedStatement pstmt2 = null;
+
+
+        try {
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, email);
+            int rs = pstmt.executeUpdate();
+
+            pstmt2 = con.prepareStatement(sql2);
+            pstmt2.setString(1, email);
+            int rs2 = pstmt2.executeUpdate();
+
+            if(rs>0 && rs2>0) {
+                return true;
+            }
+
+        } catch (SQLException e) {
+            System.out.println("==============================");
+            System.out.println("       넌 이미 내꺼야...");
+            System.out.println("==============================");
+        } finally {
+            try { if (pstmt != null) pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (pstmt2 != null) pstmt2.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
         return false;
     }
