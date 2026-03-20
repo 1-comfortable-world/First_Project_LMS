@@ -106,6 +106,21 @@
         ORDER BY c.course_id
     </query>
 
+    <!-- 강좌 검색 + 평균 별점 (별점 높은 순) -->
+    <query id="course.searchByTitleWithRating">
+        SELECT
+        c.course_id,
+        c.title,
+        c.member_id,
+        ROUND(AVG(r.rating), 1) AS avg_rating,
+        COUNT(r.review_id)      AS review_count
+        FROM courses c
+        LEFT JOIN course_reviews r ON c.course_id = r.course_id
+        WHERE c.title LIKE ?
+        GROUP BY c.course_id, c.title, c.member_id
+        ORDER BY avg_rating DESC
+    </query>
+
     <!-- ======================== STUDYING_COURSES (수강생 조회 - 강사용) ======================== -->
 
     <!-- 강좌별 수강생 목록 조회 -->

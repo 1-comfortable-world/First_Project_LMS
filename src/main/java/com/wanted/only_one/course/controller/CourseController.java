@@ -16,54 +16,56 @@ public class CourseController {
 
     // ── 학생용 ───────────────────────────────────────
 
-    // 전체 강좌 목록 (학생)
     public List<CourseDTO> showAllCourses() throws SQLException {
         return courseService.getAllCourses();
     }
 
-    // 강좌 검색
+    // 강좌 검색 (기본)
     public List<CourseDTO> searchCourse(String keyword) throws SQLException {
         return courseService.searchCourse(keyword);
     }
 
-    // 강좌 단건 + 강의 목록 JOIN 조회 (강좌 선택 시)
+    // 강좌 검색 + 별점 (별점 높은 순)
+    public List<CourseDTO> searchCourseWithRating(String keyword) throws SQLException {
+        return courseService.searchCourseWithRating(keyword);
+    }
+
     public SectionDTO findJoin(long courseId) throws SQLException {
         return courseService.findCourseWithSections(courseId);
     }
 
+    // 강의 수강완료 + 강좌 상태 자동 변경 → study 팀 연동 대기 중
+    public void updateCourseStatus(long memberId, long courseId) throws SQLException {
+        // studyController.updateCourseStatus(memberId, courseId);
+        System.out.println("수강완료 처리 예정 (study 팀 연동 대기 중)");
+    }
+
     // ── 강사용 ───────────────────────────────────────
 
-    // 강사 본인 강좌 목록
     public List<CourseDTO> T_showAllCourses(long memberId) throws SQLException {
         return courseService.getT_AllCourses(memberId);
     }
 
-    // 강사 본인 강좌 전체 + 강의 JOIN 조회
     public List<SectionDTO> T_findAllWithSections(long memberId) throws SQLException {
         return courseService.findAllWithSections(memberId);
     }
 
-    // 강좌 등록
     public long addCourse(String title, long memberId) throws SQLException {
         return courseService.addCourse(title, memberId);
     }
 
-    // 강의 등록
     public boolean addLecture(long courseId, String title) throws SQLException {
         return lectureService.addLecture(courseId, title);
     }
 
-    // 강의 목록 조회
     public List<LectureDTO> getLectures(long courseId) throws SQLException {
         return lectureService.getLectures(courseId);
     }
 
-    // 강좌 수정
     public boolean updateCourse(long courseId, String newTitle, long memberId) throws SQLException {
         return courseService.updateCourse(courseId, newTitle, memberId);
     }
 
-    // 강좌 삭제
     public boolean deleteCourse(long courseId) throws SQLException {
         return courseService.deleteCourse(courseId);
     }

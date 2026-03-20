@@ -18,8 +18,7 @@ public class CourseSectionDAO {
         try {
             this.conn = JDBCTemplate.getConnection();
         } catch (SQLException e) {
-            throw new RuntimeException("[CourseDAO] DB 연결 실패: " + e.getMessage(), e);
-            // 연결 실패 즉시 터뜨려서 null 상태로 넘어가지 않게 함
+            System.out.println("[CourseSectionDAO] DB 연결 실패: " + e.getMessage());
         }
     }
 
@@ -32,9 +31,9 @@ public class CourseSectionDAO {
                         "LEFT JOIN lectures l ON c.course_id = l.course_id " +
                         "WHERE c.course_id = ?";
 
-        try (PreparedStatement p = conn.prepareStatement(sql);
-             ResultSet rs = p.executeQuery()) { // ← try 안으로 이동, 자동으로 닫힘
+        try (PreparedStatement p = conn.prepareStatement(sql)) {
             p.setLong(1, courseId);
+            ResultSet rs = p.executeQuery();
 
             SectionDTO section = null;
             List<LectureDTO> lectures = new ArrayList<>();
@@ -81,7 +80,6 @@ public class CourseSectionDAO {
             while (rs.next()) {
                 long courseId = rs.getLong("course_id");
 
-                // 강좌 없으면 새로 만들기
                 if (!map.containsKey(courseId)) {
                     List<LectureDTO> lectures = new ArrayList<>();
                     SectionDTO section = new SectionDTO(
@@ -93,7 +91,6 @@ public class CourseSectionDAO {
                     map.put(courseId, section);
                 }
 
-                // 강의 추가
                 long lectureId = rs.getLong("lecture_id");
                 if (lectureId != 0) {
                     map.get(courseId).getLectures().add(new LectureDTO(

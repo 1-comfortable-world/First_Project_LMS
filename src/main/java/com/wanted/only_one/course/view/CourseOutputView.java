@@ -8,61 +8,73 @@ import java.util.List;
 
 public class CourseOutputView {
 
-    // 강좌 목록 출력
+    // 강좌 목록 출력 (강사 이름 포함)
     public void printCourses(List<CourseDTO> list) {
         if (list == null || list.isEmpty()) {
             System.out.println("등록된 강좌가 없습니다.");
             return;
         }
         System.out.println("=================================");
-        System.out.printf("  %-5s  %-25s%n", "ID", "강좌명");
-        System.out.println("---------------------------------");
-        for (CourseDTO c : list)
-            System.out.printf("  %-5d  %-25s%n", c.getCourseId(), c.getTitle());
-        System.out.println("=================================");
+        for (int i = 0; i < list.size(); i++) {
+            CourseDTO c = list.get(i);
+            System.out.println((i + 1) + ". 강좌명 : " + c.getTitle());
+            if (c.getTeacherName() != null)
+                System.out.println("   강사명 : " + c.getTeacherName());
+            System.out.println("---------------------------------");
+        }
     }
 
-    // 강좌 + 강의 목록 통합 출력 (SectionDTO)
+    // 강좌 목록 + 별점 + 강사 이름 출력
+    public void printCoursesWithRating(List<CourseDTO> list) {
+        if (list == null || list.isEmpty()) {
+            System.out.println("검색 결과가 없습니다.");
+            return;
+        }
+        System.out.println("=================================");
+        for (int i = 0; i < list.size(); i++) {
+            CourseDTO c = list.get(i);
+            System.out.println((i + 1) + ". 강좌명 : " + c.getTitle());
+            if (c.getTeacherName() != null)
+                System.out.println("   강사명 : " + c.getTeacherName());
+            System.out.println("   별점   : " + (c.getAvgRating() == 0 ? "없음" : c.getAvgRating() + "점"));
+            System.out.println("   리뷰수 : " + c.getReviewCount() + "개");
+            System.out.println("---------------------------------");
+        }
+    }
+
+    // 강좌 + 강의 목록 출력
     public void printCourseDetail(SectionDTO section) {
         if (section == null) {
             System.out.println("강좌 정보를 찾을 수 없습니다.");
             return;
         }
         System.out.println("=================================");
-        System.out.println("  강좌명 : " + section.getCourseTitle());
-        System.out.println("  강좌ID : " + section.getCourseId());
+        System.out.println("강좌명 : " + section.getCourseTitle());
         System.out.println("---------------------------------");
-        System.out.println("  [강의 목록]");
+        System.out.println("[강의 목록]");
         if (section.getLectures() == null || section.getLectures().isEmpty()) {
-            System.out.println("    등록된 강의가 없습니다.");
+            System.out.println("  등록된 강의가 없습니다.");
         } else {
-            for (LectureDTO l : section.getLectures())
-                System.out.printf("    %-5d  %s%n", l.getLectureId(), l.getTitle());
+            for (int i = 0; i < section.getLectures().size(); i++)
+                System.out.println("  " + (i + 1) + ". 강의명 : " + section.getLectures().get(i).getTitle());
         }
         System.out.println("=================================");
     }
 
-    // 강사 강좌 전체 + 강의 목록 출력
+    // 강사 강좌 전체 출력
     public void printAllCourseDetails(List<SectionDTO> list) {
-        if (list == null || list.isEmpty()) {
-            System.out.println("등록한 강좌가 없습니다.");
-            return;
-        }
+        if (list == null || list.isEmpty()) { System.out.println("등록한 강좌가 없습니다."); return; }
         for (SectionDTO section : list) printCourseDetail(section);
     }
 
-    // 강의 목록만 출력
+    // 강의 목록 출력
     public void printLectures(List<LectureDTO> list) {
-        if (list == null || list.isEmpty()) {
-            System.out.println("강의가 없습니다.");
-            return;
+        if (list == null || list.isEmpty()) { System.out.println("강의가 없습니다."); return; }
+        System.out.println("=================================");
+        for (int i = 0; i < list.size(); i++) {
+            System.out.println((i + 1) + ". 강의명 : " + list.get(i).getTitle());
+            System.out.println("---------------------------------");
         }
-        System.out.println("=================================");
-        System.out.printf("  %-5s  %-25s%n", "ID", "강의명");
-        System.out.println("---------------------------------");
-        for (LectureDTO l : list)
-            System.out.printf("  %-5d  %-25s%n", l.getLectureId(), l.getTitle());
-        System.out.println("=================================");
     }
 
     public void printMessage(String msg) { System.out.println(msg); }

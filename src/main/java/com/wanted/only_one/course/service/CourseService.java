@@ -13,17 +13,17 @@ public class CourseService {
     private CourseDAO courseDAO               = new CourseDAO();
     private CourseSectionDAO courseSectionDAO = new CourseSectionDAO();
 
-    // 학생 - 전체 강좌 목록
+    // 학생 - 전체 강좌 조회
     public List<CourseDTO> getAllCourses() throws SQLException {
         return courseDAO.findAll();
     }
 
-    // 강사 - 본인 강좌 목록
+    // 강사 - 본인 강좌 조회
     public List<CourseDTO> getT_AllCourses(long memberId) throws SQLException {
         return courseDAO.findByMemberId(memberId);
     }
 
-    // 강좌 단건 + 강의 목록 JOIN 조회
+    // 강좌 + 강의 목록 JOIN 조회
     public SectionDTO findCourseWithSections(long courseId) throws SQLException {
         return courseSectionDAO.findCourseWithLectures(courseId);
     }
@@ -48,8 +48,13 @@ public class CourseService {
         return courseDAO.delete(courseId);
     }
 
-    // 강좌 검색
+    // 강좌 검색 (기본)
     public List<CourseDTO> searchCourse(String keyword) throws SQLException {
         return courseDAO.searchByTitle(keyword);
+    }
+
+    // 강좌 검색 + 별점 (별점 높은 순)
+    public List<CourseDTO> searchCourseWithRating(String keyword) throws SQLException {
+        return courseDAO.searchByTitleWithRating(keyword);
     }
 }

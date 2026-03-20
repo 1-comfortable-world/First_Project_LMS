@@ -15,55 +15,8 @@ public class CourseDAO {
         try {
             this.conn = JDBCTemplate.getConnection();
         } catch (SQLException e) {
-            throw new RuntimeException("[CourseDAO] DB 연결 실패: " + e.getMessage(), e);
-            // 연결 실패 즉시 터뜨려서 null 상태로 넘어가지 않게 함
+            System.out.println("[CourseDAO] DB 연결 실패: " + e.getMessage());
         }
-    }
-
-    // course.findAll
-    public List<CourseDTO> findAll() throws SQLException {
-        String sql = "SELECT course_id, title, member_id FROM courses";
-        List<CourseDTO> list = new ArrayList<>();
-        try (Statement s = conn.createStatement();
-             ResultSet rs = s.executeQuery(sql)) {
-            while (rs.next()) list.add(mapRow(rs));
-        }
-        return list;
-    }
-
-    // course.findByMemberId
-    public List<CourseDTO> findByMemberId(long memberId) throws SQLException {
-        String sql = "SELECT course_id, title, member_id FROM courses WHERE member_id = ?";
-        List<CourseDTO> list = new ArrayList<>();
-        try (PreparedStatement p = conn.prepareStatement(sql)) {
-            p.setLong(1, memberId);
-            ResultSet rs = p.executeQuery();
-            while (rs.next()) list.add(mapRow(rs));
-        }
-        return list;
-    }
-
-    // course.findById
-    public CourseDTO findById(long courseId) throws SQLException {
-        String sql = "SELECT course_id, title, member_id FROM courses WHERE course_id = ?";
-        try (PreparedStatement p = conn.prepareStatement(sql)) {
-            p.setLong(1, courseId);
-            ResultSet rs = p.executeQuery();
-            if (rs.next()) return mapRow(rs);
-        }
-        return null;
-    }
-
-    // course.searchByTitle
-    public List<CourseDTO> searchByTitle(String keyword) throws SQLException {
-        String sql = "SELECT course_id, title, member_id FROM courses WHERE title LIKE ?";
-        List<CourseDTO> list = new ArrayList<>();
-        try (PreparedStatement p = conn.prepareStatement(sql)) {
-            p.setString(1, "%" + keyword + "%");
-            ResultSet rs = p.executeQuery();
-            while (rs.next()) list.add(mapRow(rs));
-        }
-        return list;
     }
 
     // course.insert
@@ -77,6 +30,75 @@ public class CourseDAO {
             if (rs.next()) return rs.getLong(1);
         }
         return -1;
+    }
+
+    // course.findAll - 강사 이름 포함
+    public List<CourseDTO> findAll() throws SQLException {
+        String sql =
+                "SELECT c.course_id, c.title, c.member_id, m.name AS teacher_name " +
+                        "FROM courses c " +
+                        "JOIN members m ON c.member_id = m.member_id";
+        List<CourseDTO> list = new ArrayList<>();
+        try (Statement s = conn.createStatement();
+             ResultSet rs = s.executeQuery(sql)) {
+            while (rs.next()) list.add(mapRowWithTeacher(rs));
+        }
+        return list;
+    }
+
+    // course.findByMemberId
+    public List<CourseDTO> findByMemberId(long memberId) throws SQLException {
+        String sql = "SELECT c.course_id, c.title, c.member_id, m.name AS teacher_name " +
+                "FROM courses c JOIN members m ON c.member_id = m.member_id " +
+                "WHERE c.member_id = ?";
+        List<CourseDTO> list = new ArrayList<>();
+        try (PreparedStatement p = conn.prepareStatement(sql)) {
+            p.setLong(1, memberId);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) list.add(mapRowWithTeacher(rs));
+        }
+        return list;
+    }
+
+    // course.searchByTitle - 강사 이름 포함
+    public List<CourseDTO> searchByTitle(String keyword) throws SQLException {
+        String sql =
+                "SELECT c.course_id, c.title, c.member_id, m.name AS teacher_name " +
+                        "FROM courses c " +
+                        "JOIN members m ON c.member_id = m.member_id " +
+                        "WHERE c.title LIKE ?";
+        List<CourseDTO> list = new ArrayList<>();
+        try (PreparedStatement p = conn.prepareStatement(sql)) {
+            p.setString(1, "%" + keyword + "%");
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) list.add(mapRowWithTeacher(rs));
+        }
+        return list;
+    }
+
+    // course.searchByTitleWithRating - 별점 + 강사 이름 포함
+    public List<CourseDTO> searchByTitleWithRating(String keyword) throws SQLException {
+        String sql =
+                "SELECT c.course_id, c.title, c.member_id, m.name AS teacher_name, " +
+                        "ROUND(AVG(r.rating), 1) AS avg_rating, COUNT(r.review_id) AS review_count " +
+                        "FROM courses c " +
+                        "JOIN members m ON c.member_id = m.member_id " +
+                        "LEFT JOIN course_reviews r ON c.course_id = r.course_id " +
+                        "WHERE c.title LIKE ? " +
+                        "GROUP BY c.course_id, c.title, c.member_id, m.name " +
+                        "ORDER BY avg_rating DESC";
+        List<CourseDTO> list = new ArrayList<>();
+        try (PreparedStatement p = conn.prepareStatement(sql)) {
+            p.setString(1, "%" + keyword + "%");
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                CourseDTO dto = mapRowWithTeacher(rs);
+                dto.setAvgRating(rs.getDouble("avg_rating"));
+                dto.setReviewCount(rs.getInt("review_count"));
+                list.add(dto);
+            }
+        }
+        return list;
     }
 
     // course.update
@@ -98,11 +120,13 @@ public class CourseDAO {
         }
     }
 
-    private CourseDTO mapRow(ResultSet rs) throws SQLException {
-        return new CourseDTO(
+    private CourseDTO mapRowWithTeacher(ResultSet rs) throws SQLException {
+        CourseDTO dto = new CourseDTO(
                 rs.getLong("course_id"),
                 rs.getString("title"),
                 rs.getLong("member_id")
         );
+        dto.setTeacherName(rs.getString("teacher_name"));
+        return dto;
     }
 }
