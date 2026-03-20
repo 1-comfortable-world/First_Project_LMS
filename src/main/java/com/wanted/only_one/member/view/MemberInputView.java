@@ -80,47 +80,67 @@ public class MemberInputView {
 
     // 회원가입 처리 - 동의
     private void signUp(String role) {
-        System.out.println();
-        System.out.println("=================================");
-        System.out.println("       개인정보 수집 동의");
-        System.out.println("=================================");
-        System.out.println("개인정보 수집 및 이용에 동의하십니까?");
-        System.out.println("1. 예");
-        System.out.println("2. 아니오");
-        System.out.print("선택 : ");
+        while (true) {
+            System.out.println();
+            System.out.println("=================================");
+            System.out.println("       개인정보 수집 동의");
+            System.out.println("=================================");
+            System.out.println("개인정보 수집 및 이용에 동의하십니까?");
+            System.out.println("1. 예");
+            System.out.println("2. 아니오");
+            System.out.print("선택 : ");
 
-        int agree = inputInt();
-        switch (agree) {
-            case 1:
-                enterInfo(role);  // 동의 → 정보 입력
-                break;
-            case 2:
-                outputView.printMessage("개인정보 수집에 동의하지 않으면 가입할 수 없습니다.");
-                return;  // ← 메인으로
-            default:
-                outputView.printError("올바른 메뉴를 선택해주세요.");
+            int agree = inputInt();
+            switch (agree) {
+                case 1:
+                    enterInfo(role);  // 동의 → 정보 입력
+                    break;
+                case 2:
+                    outputView.printMessage("개인정보 수집에 동의하지 않으면 가입할 수 없습니다.");
+                    return;  // ← 메인으로
+                default:
+                    System.out.println(" ");
+                    outputView.printError("========올바른 메뉴를 선택해주세요.");
+            }
         }
     }
 
     // 회원가입 정보 입력
     private void enterInfo(String role) {
-        System.out.print("이름을 입력하십시오 : ");
-        String name = sc.nextLine();
+        boolean result = false;
+        while (true) {
 
-        System.out.print("이메일을 입력하십시오 : ");
-        String email = sc.nextLine();
 
-        System.out.print("비밀번호를 입력하십시오 (특수기호 포함) : ");
-        String password = sc.nextLine();
+            System.out.print("이름을 입력하십시오 : ");
+            String name = sc.nextLine();
 
-        boolean result = authController.signUp(name, email, password, role);
-        outputView.printSignUpResult(result);
+            System.out.print("이메일을 입력하십시오 : ");
+            String email = sc.nextLine();
+            boolean emailresult = authController.emailMix(email);
+            if (!emailresult) {
+                outputView.printError("\n이미 존재하는 이메일입니다");
+                continue;
 
+            }
+            System.out.print("비밀번호를 입력하십시오 (특수기호 포함) : ");
+            String password = sc.nextLine();
+            boolean pwdResult = authController.pwdInclude(password);
+            if (!pwdResult) {
+                outputView.printError("\n특수기호는 필수입니다");
+                continue;
+            }
+
+            result = authController.signUp(name, email, password, role);
+            outputView.printSignUpResult(result);
+            break;
+        }
         // 회원가입 성공하면 로그인 화면으로 이동
         if (result) {
             displayLoginMenu();  // ← 추가!
         }
     }
+
+
 
     // 로그인 메뉴
     private void displayLoginMenu() {

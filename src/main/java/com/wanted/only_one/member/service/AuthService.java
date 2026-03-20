@@ -152,4 +152,12 @@ public class AuthService {
             try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
     }
+
+    public boolean emailMix(String email) {
+        return MemberDAO.emailMix(email);
+    }
+
+    public boolean pwdInclude(String password) {
+        return MemberDAO.pwdInclude(password);
+    }
 }

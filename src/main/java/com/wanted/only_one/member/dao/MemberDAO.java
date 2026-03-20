@@ -9,9 +9,18 @@ import java.sql.SQLException;
 
 public class MemberDAO {
 
-    private final Connection con;
+    private static Connection con= null;
 
     public MemberDAO(Connection con) { this.con = con; }
+
+    public static boolean emailMix(String email) {
+        return false;
+    }
+
+    public static boolean pwdInclude(String password) {
+        return  false;
+    }
+
 
     //  회원 조회
     public MemberDTO findById(long memberId) {

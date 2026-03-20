@@ -20,7 +20,6 @@ public class MemberService {
     // 회원 정보 조회
     public MemberDTO findMember(long memberId) {
         Connection conn = null;
-
         try {
             conn = JDBCTemplate.getConnection();
             MemberDAO memberDAO = new MemberDAO(conn);

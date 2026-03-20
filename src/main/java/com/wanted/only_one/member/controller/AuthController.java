@@ -33,4 +33,19 @@ public class AuthController {
     public boolean addBlacklist(long memberId) {
         return service.addBlacklist(memberId);
     }
+
+    public boolean emailMix(String email) {
+        return service.emailMix(email);
+    }
+
+    public boolean pwdInclude(String password) {
+        String specialChars = "!@#$%^&*()_+-=[]{}|;':\",./<>?";
+
+        for (char c : password.toCharArray()) {
+            if (specialChars.indexOf(c) >= 0) {
+                return true;  // 특수문자 발견!
+            }
+        }
+        return false;  // 특수문자 없음
+    }
 }
