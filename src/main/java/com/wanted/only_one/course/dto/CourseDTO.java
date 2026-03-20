@@ -35,4 +35,16 @@ public class CourseDTO {
     public void setTeacherName(String teacherName) { this.teacherName = teacherName; }
     public void setAvgRating(double avgRating)     { this.avgRating = avgRating; }
     public void setReviewCount(int reviewCount)    { this.reviewCount = reviewCount; }
+
+    @Override
+    public String toString() {
+        return "CourseDTO{" +
+                "courseId=" + courseId +
+                ", title='" + title + '\'' +
+                ", memberId=" + memberId +
+                ", teacherName='" + teacherName + '\'' +
+                ", avgRating=" + avgRating +
+                ", reviewCount=" + reviewCount +
+                '}';
+    }
 }

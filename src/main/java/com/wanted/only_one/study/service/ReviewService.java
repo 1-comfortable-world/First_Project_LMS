@@ -93,4 +93,12 @@ public class ReviewService {
             throw new RuntimeException("강좌평 조회 중 에러 발생 🚨");
         }
     }
+
+    public boolean checkCourseExists(String description) {
+        try {
+            return reviewDAO.checkCourseExists(description);
+        } catch (SQLException e) {
+            throw new RuntimeException("강좌 조회 중 에러 발생 🚨");
+        }
+    }
 }

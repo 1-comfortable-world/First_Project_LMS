@@ -24,7 +24,7 @@ public class FavDAO {
 
         // 쿼리문 동작
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, 8L); // TODO: 로그인 세션 연결 후 교체 -> getMember_id 등 setter로
+            pstmt.setLong(1, 1L); // TODO: 로그인 세션 연결 후 교체 -> getMember_id 등 setter로
             ResultSet rset = pstmt.executeQuery();
 
             while(rset.next()){

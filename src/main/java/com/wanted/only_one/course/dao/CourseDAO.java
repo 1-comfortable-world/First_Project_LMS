@@ -11,6 +11,10 @@ public class CourseDAO {
 
     private Connection conn;
 
+    public CourseDAO( Connection conn) {
+        this.conn = conn;
+    }
+
     public CourseDAO() {
         try {
             this.conn = JDBCTemplate.getConnection();
@@ -45,6 +49,7 @@ public class CourseDAO {
         }
         return list;
     }
+
 
     // course.findByMemberId
     public List<CourseDTO> findByMemberId(long memberId) throws SQLException {

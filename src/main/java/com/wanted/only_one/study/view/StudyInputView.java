@@ -56,8 +56,8 @@ public class StudyInputView {
             if (!input.isEmpty()) {
                 return input;
             }
-            System.out.println("⚠️ 빈 값은 입력할 수 없습니다. 다시 입력해주세요.");
-            System.out.println("입력을 취소하려면 0번을 누르세요");
+            System.out.print("⚠️ 빈 값은 입력할 수 없습니다. 다시 입력하거나 취소하려면 0을 누르세요 : ");
+
         }
     }
 
@@ -145,13 +145,13 @@ public class StudyInputView {
                     studyOutputView.printError("다시 선택해주세요.");
             }
         }
-
     }
 
     public void chooseCourseList() {
         System.out.println("---수강 예정 목록 강좌 선택---");
-        System.out.print("선택 목록에 넣고자 하는 과목의 제목을 입력하세요 : ");
+        System.out.print("선택 목록에 넣고자 하는 강좌의 제목을 입력하세요 : ");
         String description = inputNoBlank();
+
         if (description == null) {
             studyOutputView.printMessage("== 이전 화면으로 돌아갑니다. ==");
             return;
@@ -160,7 +160,7 @@ public class StudyInputView {
         Boolean result = studyController.addFavList(description);
 
         if (result != null && result == true) {
-            studyOutputView.printSuccess("수강 예정 목록에 강좌 추가 성공! " );
+            studyOutputView.printSuccess("수강 예정 목록에 \"" + description + "\" 강좌가 추가되었습니다!");
         } else {
             studyOutputView.printError("강좌 추가 실패");
         }
@@ -243,12 +243,23 @@ public class StudyInputView {
         System.out.println("<     한 번 작성된 강좌평은 수정하실 수 없습니다     >");
         System.out.println("< 함께 공부하는 다른 사용자를 위해 신중히 작성해주세요 >");
         System.out.println(" ");
-        System.out.print("강좌평을 작성할 강좌의 제목을 입력하세요 : ");
-        String description = inputNoBlank();
-        if (description == null) {
-            studyOutputView.printMessage("== 이전 화면으로 돌아갑니다. ==");
-            return;
+        String description;
+        while (true) {
+            System.out.print("강좌평을 작성할 강좌의 제목을 입력하세요 : ");
+            description = inputNoBlank();
+            if (description == null) {
+                studyOutputView.printMessage("== 이전 화면으로 돌아갑니다. ==");
+                return;
+            }
+            if (studyController.checkCourseExists(description)) {
+                break;
+            }
+            studyOutputView.printError("해당 강좌를 찾을 수 없습니다. 강좌명을 다시 확인해주세요.");
+            System.out.println("이전으로 돌아가려면 0을 누르세요");
+            // while 다시 돌아서 재입력
         }
+
+
         System.out.print("선택한 강좌에 작성할 강좌평을 입력하세요 : ");
         String content =  inputNoBlank();
         if (content == null) {
@@ -281,7 +292,6 @@ public class StudyInputView {
         }
 
         studyOutputView.printMyReview(MyReviewList);
-
 
         while (true) {
             System.out.println(" ");

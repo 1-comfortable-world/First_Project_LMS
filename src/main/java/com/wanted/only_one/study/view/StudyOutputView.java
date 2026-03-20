@@ -28,9 +28,12 @@ public class StudyOutputView {
             return;
         }
         System.out.println(" ");
-        System.out.println("======목록 조회 결과======");
-        for (CourseDTO courseDTO : courseList){
-            System.out.println(courseDTO);
+        System.out.println("================================================");
+        System.out.println("                   목록 조회 결과                ");
+        System.out.println("================================================");
+        for (CourseDTO courseDTO : courseList) {
+            System.out.println("  강좌명 : " + courseDTO.getTitle() + " / 강사명 : " + courseDTO.getTeacherName());
+            System.out.println("------------------------------------------------");
         }
     }
 
@@ -43,9 +46,12 @@ public class StudyOutputView {
         }
 
         System.out.println(" ");
-        System.out.println("======수강 완료한 강좌 목록 전체 조회======");
-        for (CourseDTO courseDTO : completedCourseList){
-            System.out.println(courseDTO);
+        System.out.println("================================================");
+        System.out.println("           수강 완료한 강좌 목록 전체 조회                ");
+        System.out.println("================================================");
+        for (CourseDTO courseDTO : completedCourseList) {
+            System.out.println("강좌명 : " + courseDTO.getTitle());
+            System.out.println("------------------------------------------");
         }
     }
 
@@ -60,7 +66,7 @@ public class StudyOutputView {
         System.out.println( " ");
         System.out.println("======수강 예정 목록 조회 결과======");
         for (FavDTO favDTO : favList){
-            System.out.println( "/ 강좌명 : "+favDTO.getCourse_title() );
+            System.out.println( "- 강좌명 : "+favDTO.getCourse_title() );
         }
     }
 

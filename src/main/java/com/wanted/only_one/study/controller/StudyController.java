@@ -65,4 +65,8 @@ studyController.updateCourseStatus(memberId, courseId);
     public List<ReviewDTO> ShowReviewForTeacher() {
         return reviewService.ShowReviewForTeacher();
     }
+
+    public boolean checkCourseExists(String description) {
+        return reviewService.checkCourseExists(description);
+    }
 }

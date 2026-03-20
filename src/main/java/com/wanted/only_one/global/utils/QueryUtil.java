@@ -61,46 +61,30 @@ public class QueryUtil {
 
             // 각 "query" 노드를 반복하여 처리
             for (int i = 0; i < StudynodeList.getLength(); i++) {
-                // 현재 노드를 Element로 캐스팅
                 Element queryElement = (Element) StudynodeList.item(i);
-                // "id" 속성 값을 가져옴
                 String key = queryElement.getAttribute("key");
-                // 쿼리의 텍스트 내용을 가져와서 공백을 제거
                 String sql = queryElement.getTextContent().trim();
-                // ID를 키로, SQL 쿼리를 값으로 하여 맵에 저장
                 queries.put(key, sql);
             }
 
             for (int i = 0; i < MembernodeList.getLength(); i++) {
-                // 현재 노드를 Element로 캐스팅
                 Element queryElement = (Element) MembernodeList.item(i);
-                // "id" 속성 값을 가져옴
                 String key = queryElement.getAttribute("key");
-                // 쿼리의 텍스트 내용을 가져와서 공백을 제거
                 String sql = queryElement.getTextContent().trim();
-                // ID를 키로, SQL 쿼리를 값으로 하여 맵에 저장
                 queries.put(key, sql);
             }
 
             for (int i = 0; i < CoursenodeList.getLength(); i++) {
-                // 현재 노드를 Element로 캐스팅
                 Element queryElement = (Element) CoursenodeList.item(i);
-                // "id" 속성 값을 가져옴
-                String key = queryElement.getAttribute("key");
-                // 쿼리의 텍스트 내용을 가져와서 공백을 제거
+                String key = queryElement.getAttribute("id");
                 String sql = queryElement.getTextContent().trim();
-                // ID를 키로, SQL 쿼리를 값으로 하여 맵에 저장
                 queries.put(key, sql);
             }
 
             for (int i = 0; i < PaymentsnodeList.getLength(); i++) {
-                // 현재 노드를 Element로 캐스팅
                 Element queryElement = (Element) PaymentsnodeList.item(i);
-                // "id" 속성 값을 가져옴
                 String key = queryElement.getAttribute("key");
-                // 쿼리의 텍스트 내용을 가져와서 공백을 제거
                 String sql = queryElement.getTextContent().trim();
-                // ID를 키로, SQL 쿼리를 값으로 하여 맵에 저장
                 queries.put(key, sql);
             }
         } catch (Exception e) {

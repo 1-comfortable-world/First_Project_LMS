@@ -120,6 +120,18 @@ public class ReviewDAO {
         }
         return false;
     }
+
+    public boolean checkCourseExists(String description) throws SQLException {
+        String query = QueryUtil.getQuery("checkCourseExists");
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, description);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+        return false;
+    }
 }
 
 

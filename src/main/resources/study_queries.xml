@@ -87,4 +87,9 @@
         WHERE r.member_id = ?
         AND c.title LIKE CONCAT('%', ?, '%')
     </query>
+    <query key="checkCourseExists">
+        SELECT COUNT(*)
+        FROM courses
+        WHERE title LIKE CONCAT('%', ?, '%')
+    </query>
 </properties>
