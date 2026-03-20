@@ -28,7 +28,7 @@ public class StudyingDAO {
 
         // 쿼리문 동작
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, 1L); // TODO: 로그인 세션 연결 후 교체
+            pstmt.setLong(1, 8L); // 로그인 세션 연결 후 교체
             ResultSet rset = pstmt.executeQuery();
 
             while(rset.next()){
@@ -47,8 +47,8 @@ public class StudyingDAO {
         List<CourseDTO> list = new ArrayList<>();
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, 11L);   // TODO: 로그인 세션 연결 후 교체
-            pstmt.setInt(2, menu);  // 1,2,3 그대로 넘기면 안 되고 아래 SQL 참고
+            pstmt.setLong(1, 8L);   // TODO: 로그인 세션 연결 후 교체
+            pstmt.setInt(2, menu);
             ResultSet rset = pstmt.executeQuery();
 
             while (rset.next()) {

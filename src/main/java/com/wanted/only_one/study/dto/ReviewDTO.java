@@ -7,6 +7,8 @@ public class ReviewDTO {
     private Long member_id;
     private String contents;
     private String title;
+    private String teacher_name;
+    private String review_writer;
     private Double rating;
 
     public ReviewDTO() {
@@ -20,10 +22,25 @@ public class ReviewDTO {
         this.rating = rating;
     }
 
+    public ReviewDTO(String title, String contents, double rating, String teacher_name, String review_writer) {
+        this.title = title;
+        this.contents = contents;
+        this.rating = rating;
+        this.teacher_name = teacher_name;
+        this.review_writer = review_writer;
+    }
+
     public ReviewDTO(String title, String contents, Double rating) {
         this.title = title;
         this.contents = contents;
         this.rating = rating;
+    }
+
+    public ReviewDTO(String title, String contents, double rating, String review_writer) {
+        this.title = title;
+        this.contents = contents;
+        this.rating = rating;
+        this.review_writer = review_writer;
     }
 
     public Double getRating() {
@@ -74,6 +91,22 @@ public class ReviewDTO {
         this.title = title;
     }
 
+    public String getTeacher_name() {
+        return teacher_name;
+    }
+
+    public void setTeacher_name(String teacher_name) {
+        this.teacher_name = teacher_name;
+    }
+
+    public String getReview_writer() {
+        return review_writer;
+    }
+
+    public void setReview_writer(String review_writer) {
+        this.review_writer = review_writer;
+    }
+
     @Override
     public String toString() {
         return "ReviewDTO{" +
@@ -82,6 +115,8 @@ public class ReviewDTO {
                 ", member_id=" + member_id +
                 ", contents='" + contents + '\'' +
                 ", title='" + title + '\'' +
+                ", teacher_name='" + teacher_name + '\'' +
+                ", review_writer='" + review_writer + '\'' +
                 ", rating=" + rating +
                 '}';
     }

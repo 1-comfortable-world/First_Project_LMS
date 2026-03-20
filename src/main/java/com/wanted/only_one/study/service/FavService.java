@@ -39,7 +39,7 @@ public class FavService {
             Long addededCourseId = favDAO.addFav(description);
 
             if(addededCourseId == null){
-                throw new SQLException("🚨강좌 ID 생성에 실패했습니다 ");
+                throw new SQLException("🚨해당 강좌를 찾을 수 없습니다 ");
             }
 
             connection.commit();
@@ -50,7 +50,7 @@ public class FavService {
                 connection.rollback();
 
             } catch (SQLException ex) {
-                throw new RuntimeException("롤백 중 에러 발생"+ex);
+                throw new RuntimeException("롤백 중 에러 발생");
             }
             return false;
         }finally{
@@ -67,7 +67,7 @@ public class FavService {
         try {
             return favDAO.showFavList();
         } catch (SQLException e) {
-            throw new RuntimeException("선택 목록 조최 중 에러 발생 🚨"+e);
+            throw new RuntimeException("선택 목록 조회 중 에러 발생 🚨");
         }
     }
 

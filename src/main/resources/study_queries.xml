@@ -56,4 +56,35 @@
         JOIN course_reviews r ON c.course_id = r.course_id
         WHERE r.member_id=?
     </query>
+    <query key="ShowReviewInCourse">
+        SELECT
+        c.title        AS title,
+        teacher.name   AS teacher_name,
+        r.contents     AS contents,
+        r.rating       AS rating,
+        CONCAT(LEFT(student.name, 1), ' ● ● ') AS review_writer
+        FROM courses c
+        JOIN course_reviews r  ON c.course_id  = r.course_id
+        JOIN members teacher   ON c.member_id  = teacher.member_id AND teacher.role = 'TEACHER'
+        JOIN members student   ON r.member_id  = student.member_id AND student.role = 'STUDENT'
+        WHERE c.title LIKE CONCAT('%', ?, '%');
+    </query>
+    <query key="ShowReviewForTeacher">
+        SELECT
+        c.title AS title,
+        r.contents AS contents,
+        r.rating AS rating,
+        CONCAT(LEFT(student.name, 1), ' ● ● ') AS review_writer
+        FROM courses c
+        JOIN course_reviews r ON c.course_id = r.course_id
+        JOIN members student ON r.member_id = student.member_id AND student.role = 'STUDENT'
+        WHERE c.member_id = ?
+    </query>
+    <query key="existsReview">
+        SELECT COUNT(*)
+        FROM course_reviews r
+        JOIN courses c ON r.course_id = c.course_id
+        WHERE r.member_id = ?
+        AND c.title LIKE CONCAT('%', ?, '%')
+    </query>
 </properties>

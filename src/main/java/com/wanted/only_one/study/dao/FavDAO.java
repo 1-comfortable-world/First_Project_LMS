@@ -3,10 +3,7 @@ package com.wanted.only_one.study.dao;
 import com.wanted.only_one.global.utils.QueryUtil;
 import com.wanted.only_one.study.dto.FavDTO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +24,7 @@ public class FavDAO {
 
         // 쿼리문 동작
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, 6L); // TODO: 로그인 세션 연결 후 교체 -> getMember_id 등 setter로
+            pstmt.setLong(1, 8L); // TODO: 로그인 세션 연결 후 교체 -> getMember_id 등 setter로
             ResultSet rset = pstmt.executeQuery();
 
             while(rset.next()){
@@ -44,7 +41,7 @@ public class FavDAO {
     public Long addFav(String description) throws SQLException {
         String query = QueryUtil.getQuery("addFavList");
 
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        try (PreparedStatement pstmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setInt(1,1);  // 나중에 현재 로그인 되어있는 사용자의 member_id 를 삽입
             pstmt.setString(2, description);
 

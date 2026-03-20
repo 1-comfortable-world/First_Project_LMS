@@ -11,6 +11,8 @@ import java.util.List;
 
 public class ReviewService {
 
+    // 강좌평은 수강 완료한 강좌에 대해서만 작성 가능
+    // StudyingDAO는 수강 완료한 강의목록을 가져오기 위해 선언
     private final StudyingDAO studyingDAO;
     private final ReviewDAO reviewDAO;
     private final Connection connection;
@@ -27,7 +29,7 @@ public class ReviewService {
         try {
             return studyingDAO.showcompletedCourseList();
         } catch (SQLException e) {
-            throw new RuntimeException("수강 완료 강좌 조최 중 에러 발생 🚨"+e);
+            throw new RuntimeException("수강 완료 강좌 조회 중 에러 발생 🚨");
         }
     }
 
@@ -35,11 +37,17 @@ public class ReviewService {
         try {
             connection.setAutoCommit(false);
 
-            // save(newfavcourse)를 통해 얻은 추가할 과목 목록에의 과목id를 저장
+            // 이미 작성한 강좌평이 있는지 확인
+            boolean alreadyExists = reviewDAO.checkExistingReview(description);
+            if (alreadyExists) {
+                connection.rollback();
+                return null; // = 이미 작성한 강좌평 있다
+            }
+
             Long writereview = reviewDAO.WriteReview(description,content,rating);
 
             if(writereview == null){
-                throw new SQLException("🚨강좌 ID 생성에 실패했습니다 ");
+                throw new SQLException("🚨해당 강좌를 찾을 수 없습니다 ");
             }
 
             connection.commit();
@@ -50,7 +58,7 @@ public class ReviewService {
                 connection.rollback();
 
             } catch (SQLException ex) {
-                throw new RuntimeException("롤백 중 에러 발생"+ex);
+                throw new RuntimeException("롤백 중 에러 발생");
             }
             return false;
         }finally{
@@ -66,7 +74,23 @@ public class ReviewService {
         try {
             return reviewDAO.showMyReviewList();
         } catch (SQLException e) {
-            throw new RuntimeException("강좌평 조회 중 에러 발생 🚨"+e);
+            throw new RuntimeException("강좌평 조회 중 에러 발생 🚨");
+        }
+    }
+
+    public List<ReviewDTO> ShowReviewInCourse(String description) {
+        try {
+            return reviewDAO.ShowReviewInCourse(description);
+        } catch (SQLException e) {
+            throw new RuntimeException("강좌평 조회 중 에러 발생 🚨");
+        }
+    }
+
+    public List<ReviewDTO> ShowReviewForTeacher() {
+        try {
+            return reviewDAO.ShowReviewForTeacher();
+        } catch (SQLException e) {
+            throw new RuntimeException("강좌평 조회 중 에러 발생 🚨");
         }
     }
 }

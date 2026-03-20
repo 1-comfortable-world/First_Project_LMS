@@ -40,6 +40,8 @@ public class Application2 {
             case 2: studyInputView.Review(); break;
             case 3: studyInputView.MyStudying(); break;
             case 4: studyInputView.showMyReview(); break;
+            case 5: studyInputView.ShowReviewForTeacher(); break;
+            case 6: studyInputView.ShowReviewInCourse(); break;
         }
     }
 }

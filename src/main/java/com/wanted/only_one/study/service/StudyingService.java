@@ -24,7 +24,7 @@ public class StudyingService {
         try {
             return studyingDAO.showMyStudyingList(menu);
         } catch (SQLException e) {
-            throw new RuntimeException("수강 강좌 조회 중 에러 발생 🚨"+e);
+            throw new RuntimeException("수강 강좌 조회 중 에러 발생 🚨");
         }
     }
 
@@ -36,7 +36,7 @@ public class StudyingService {
                 studyingDAO.updateCourseStatus(memberId, courseId);
             }
         } catch (SQLException e) {
-            throw new RuntimeException("강좌 상태 업데이트 중 에러 발생 🚨" + e);
+            throw new RuntimeException("강좌 상태 업데이트 중 에러 발생 🚨" );
         }
     }
 }

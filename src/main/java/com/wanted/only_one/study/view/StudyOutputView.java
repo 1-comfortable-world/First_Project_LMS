@@ -27,8 +27,8 @@ public class StudyOutputView {
             System.out.println("조회된 강좌가 없습니다. ");
             return;
         }
-
-        System.out.println("====목록 조회 결과====");
+        System.out.println(" ");
+        System.out.println("======목록 조회 결과======");
         for (CourseDTO courseDTO : courseList){
             System.out.println(courseDTO);
         }
@@ -42,7 +42,8 @@ public class StudyOutputView {
             return;
         }
 
-        System.out.println("  ====수강 완료한 강좌 목록 전체 조회====");
+        System.out.println(" ");
+        System.out.println("======수강 완료한 강좌 목록 전체 조회======");
         for (CourseDTO courseDTO : completedCourseList){
             System.out.println(courseDTO);
         }
@@ -56,9 +57,10 @@ public class StudyOutputView {
             return;
         }
 
-        System.out.println("====강좌 선택 목록 조회 결과====");
+        System.out.println( " ");
+        System.out.println("======수강 예정 목록 조회 결과======");
         for (FavDTO favDTO : favList){
-            System.out.println( "회원명 : "+favDTO.getMember_name() +"/ 강좌명 : "+favDTO.getCourse_title() );
+            System.out.println( "/ 강좌명 : "+favDTO.getCourse_title() );
         }
     }
 
@@ -69,12 +71,47 @@ public class StudyOutputView {
             return;
         }
 
-        System.out.println("====내가 작성한 강좌평 조회====");
+        System.out.println( " ");
+        System.out.println("======내가 작성한 강좌평 조회======");
         for (ReviewDTO reviewDTO : myReviewList){
             System.out.println("강좌명 : " + reviewDTO.getTitle());
             System.out.println("강좌평 : " + reviewDTO.getContents());
             System.out.println("별점 : " + reviewDTO.getRating());
-            System.out.println("----------------------------");
+            System.out.println("---------------------------------");
+        }
+    }
+
+    public void printReviewInCourse(List<ReviewDTO> reviewInCourse) {
+        if(reviewInCourse == null || reviewInCourse.isEmpty()){
+            System.out.println("작성하신 강좌평이 없습니다. ");
+            return;
+        }
+
+        System.out.println(" ");
+        System.out.println("======입력하신 강좌의 강좌평 조회======");
+        for (ReviewDTO reviewDTO : reviewInCourse) {
+            System.out.println("강좌명 : " + reviewDTO.getTitle());
+            System.out.println("강사명 : " + reviewDTO.getTeacher_name());
+            System.out.println("강좌평 : " + reviewDTO.getContents());
+            System.out.println("별점   : " + reviewDTO.getRating());
+            System.out.println("작성자 : " + reviewDTO.getReview_writer());
+            System.out.println("---------------------------------");
+        }
+    }
+
+    public void printReviewForTeacher(List<ReviewDTO> reviewForTeacher) {
+        if(reviewForTeacher == null || reviewForTeacher.isEmpty()){
+            System.out.println("강좌에 작성된 강좌평이 없습니다. ");
+            return;
+        }
+
+        System.out.println("======내 강좌에 작성된 강좌평 조회======");
+        for (ReviewDTO reviewDTO : reviewForTeacher){
+            System.out.println("강좌명 : " + reviewDTO.getTitle());
+            System.out.println("강좌평 : " + reviewDTO.getContents());
+            System.out.println("별점 : " + reviewDTO.getRating());
+            System.out.println("작성자 : " + reviewDTO.getReview_writer());
+            System.out.println("---------------------------------");
         }
     }
 }

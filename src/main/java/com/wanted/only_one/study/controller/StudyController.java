@@ -57,4 +57,12 @@ studyController.updateCourseStatus(memberId, courseId);
     public List<ReviewDTO> showMyReviewList() {
         return reviewService.showMyReviewList();
     }
+
+    public List<ReviewDTO> ShowReviewInCourse(String description) {
+        return reviewService.ShowReviewInCourse(description);
+    }
+
+    public List<ReviewDTO> ShowReviewForTeacher() {
+        return reviewService.ShowReviewForTeacher();
+    }
 }

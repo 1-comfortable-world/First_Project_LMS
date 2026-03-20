@@ -4,10 +4,7 @@ import com.wanted.only_one.course.dto.CourseDTO;
 import com.wanted.only_one.global.utils.QueryUtil;
 import com.wanted.only_one.study.dto.ReviewDTO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,8 +21,8 @@ public class ReviewDAO {
 
         String query = QueryUtil.getQuery("writeReview");
 
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setInt(1,1);  // 나중에 현재 로그인 되어있는 사용자의 member_id 를 삽입
+        try (PreparedStatement pstmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            pstmt.setInt(1,8);  // 나중에 현재 로그인 되어있는 사용자의 member_id 를 삽입
             pstmt.setString(2, content);
             pstmt.setDouble(3, rating);
             pstmt.setString(4, description);
@@ -49,7 +46,7 @@ public class ReviewDAO {
 
         // 쿼리문 동작
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, 11L); // TODO: 로그인 세션 연결 후 교체
+            pstmt.setLong(1, 8L); // TODO: 로그인 세션 연결 후 교체
             ResultSet rset = pstmt.executeQuery();
 
             while(rset.next()){
@@ -62,6 +59,66 @@ public class ReviewDAO {
             }
         }
         return MyReviewList;
+    }
+
+    public List<ReviewDTO> ShowReviewInCourse(String description) throws SQLException {
+        // 동작시킬 쿼리문 준비
+        String query = QueryUtil.getQuery("ShowReviewInCourse");
+        List<ReviewDTO> ReviewInCourse = new ArrayList<>();
+
+        // 쿼리문 동작
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, description);
+            ResultSet rset = pstmt.executeQuery();
+
+            while(rset.next()){
+                ReviewDTO review = new ReviewDTO(
+                        rset.getString("title"),
+                        rset.getString("contents"),
+                        rset.getDouble("rating"),
+                        rset.getString("teacher_name"),
+                        rset.getString("review_writer")
+                );
+                ReviewInCourse.add(review);
+            }
+        }
+        return ReviewInCourse;
+    }
+
+    public List<ReviewDTO> ShowReviewForTeacher() throws SQLException {
+
+        String query = QueryUtil.getQuery("ShowReviewForTeacher");
+        List<ReviewDTO> ReviewForTeacher = new ArrayList<>();
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setLong(1, 8L); // TODO: 로그인 세션 연결 후 교체
+            ResultSet rset = pstmt.executeQuery();
+
+            while(rset.next()){
+                ReviewDTO reviewforteacher = new ReviewDTO(
+                        rset.getString("title"),
+                        rset.getString("contents"),
+                        rset.getDouble("rating"),
+                        rset.getString("review_writer")
+                );
+                ReviewForTeacher.add(reviewforteacher);
+            }
+        }
+        return ReviewForTeacher;
+    }
+
+    public boolean checkExistingReview(String description) throws SQLException {
+        String query = QueryUtil.getQuery("existsReview");
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setLong(1, 8L); // TODO: 현재 로그인한 member_id로 변경
+            pstmt.setString(2, description);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // 1 이상이면 이미 작성한 강좌평 존재
+            }
+        }
+        return false;
     }
 }
 
