@@ -1,5 +1,7 @@
 package com.wanted.only_one.member.dao;
 
+import com.wanted.only_one.global.utils.QueryUtil;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +15,8 @@ public class ConnectionDAO {
         this.con = con;
 
     }
+
+
     public boolean insertConnection(long memberId) {
         String sql = "INSERT INTO connection_status (member_id) VALUES (?)";
         PreparedStatement pstmt = null;
@@ -30,6 +34,7 @@ public class ConnectionDAO {
             try { if (pstmt != null) pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
         return false;
+
     }
 
     // 접속 삭제확인하느거
@@ -77,4 +82,9 @@ public class ConnectionDAO {
     }
 
 
+    public void logout(String email) throws SQLException {
+        QueryUtil.getQuery("member.logout");
+        PreparedStatement pstmt = null;
+        pstmt.setString(1, email);
+    }
 }

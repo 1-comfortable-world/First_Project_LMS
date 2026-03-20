@@ -5,10 +5,10 @@ import java.util.List;
 
 public class PaymentController {
 
-    private final PaymentService paymentService;
+    private PaymentService paymentService;
 
-    public PaymentController(PaymentService paymentService) {
-        this.paymentService = paymentService;
+    public PaymentController() {
+
     }
 
     public static boolean payMoney(String email) {

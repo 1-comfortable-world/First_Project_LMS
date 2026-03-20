@@ -12,11 +12,13 @@ import java.sql.SQLException;
 public class AuthService {
 
     private MemberDAO memberDAO;
+    private ConnectionDAO connectionDAO;
     private Connection con;
 
     public AuthService(Connection connection) {
         this.memberDAO = new MemberDAO(connection);
         this.con = con;
+        this.connectionDAO = new ConnectionDAO(connection);
     }
 
     // 1. 회원가입
@@ -58,6 +60,7 @@ public class AuthService {
             MemberDTO member = memberDAO.findByEmailAndPassword(email, password);
             if (member == null) {
                 System.out.println("이메일 또는 비밀번호가 틀렸습니다.");
+                return false;
             }
 
             // 블랙리스트 확인
@@ -160,5 +163,9 @@ public class AuthService {
 
     public boolean pwdCheck(String email, String password) {
         return memberDAO.pwdCheck(email,password);
+    }
+
+    public void logout(String email) throws SQLException {
+        connectionDAO.logout(email);
     }
 }

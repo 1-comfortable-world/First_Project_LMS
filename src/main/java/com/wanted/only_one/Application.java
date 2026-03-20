@@ -28,9 +28,13 @@ public class Application {
             AuthController authController = new AuthController(authService);
             MemberController memberController = new MemberController(memberService);
 
-            MemberOutputView outputView = new MemberOutputView();
+            MemberOutputView memberoutputView = new MemberOutputView();
+            PaymentOutputView paymentOutputView = new PaymentOutputView();
+            PaymentController paymentController = new PaymentController();
+            PaymentInputView payInputView = new PaymentInputView(paymentController, paymentOutputView);
 
-            MemberInputView InputView= new MemberInputView(authController, outputView);
+
+            MemberInputView InputView= new MemberInputView(authController, memberoutputView, payInputView);
 
             InputView.displayMainMenu();
 

@@ -5,6 +5,13 @@
         from members
         where email = ? and password = ?
     </query>
+
+    <query key ="member.logout">
+        INSERT INTO connection_status (member_id)
+        SELECT member_id
+        FROM members
+        WHERE email = ?
+    </query>
 </properties>
 
 

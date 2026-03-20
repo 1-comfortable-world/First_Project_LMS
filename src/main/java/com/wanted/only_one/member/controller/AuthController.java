@@ -2,6 +2,8 @@ package com.wanted.only_one.member.controller;
 
 import com.wanted.only_one.member.service.AuthService;
 
+import java.sql.SQLException;
+
 public class AuthController {
 
     private final AuthService service;
@@ -52,5 +54,9 @@ public class AuthController {
 
     public boolean pwdCheck(String email, String password) {
         return service.pwdCheck(email,password);
+    }
+
+    public void logout(String email) throws SQLException {
+        service.logout(email);
     }
 }

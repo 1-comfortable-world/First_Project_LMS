@@ -1,19 +1,25 @@
 package com.wanted.only_one.member.view;
 
 import com.wanted.only_one.member.controller.AuthController;
+import com.wanted.only_one.payments.PaymentInputView;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class MemberInputView {
 
     private final AuthController authController;
     private final MemberOutputView outputView;
+    private final PaymentInputView payInputView;
     private final Scanner sc = new Scanner(System.in);
 
+    private String loggedInEmail;
+
     public MemberInputView(AuthController authController,
-                           MemberOutputView outputView) {
+                           MemberOutputView outputView, PaymentInputView payInputView) {
         this.authController = authController;
         this.outputView = outputView;
+        this.payInputView = payInputView;
     }
 
     // 메인 메뉴
@@ -195,6 +201,11 @@ public class MemberInputView {
 
         boolean result = authController.signIn(email, password);
         outputView.printSignInResult(result);
+
+        if (result) {
+            this.loggedInEmail = email; // 로그인 성공 시 저장
+            selectMenu();               // 메인 메뉴로 이동
+        }
     }
 
     // 강사 로그인 처리
@@ -210,6 +221,11 @@ public class MemberInputView {
 
         boolean result = authController.signIn(email, password);
         outputView.printSignInResult(result);
+
+        if (result) {
+            this.loggedInEmail = email; // 로그인 성공 시 저장
+            selectMenu();               // 메인 메뉴로 이동
+        }
     }
 
     // 비밀번호 초기화
@@ -238,4 +254,62 @@ public class MemberInputView {
             }
         }
     }
+
+    public void selectMenu() {
+        while (true) {
+            System.out.println();
+            System.out.println("=================================");
+            System.out.println("            메인메뉴");
+            System.out.println("=================================");
+            System.out.println("1. 결제하기");
+            System.out.println("2. 강좌 전체 보기");
+            System.out.println("3. 강좌 즐겨찾기");
+            System.out.println("4. 강좌 수강하기");
+            System.out.println("5. 강좌평 작성");
+            System.out.println("6. 강좌 검색하기");
+            System.out.println("7. 로그아웃");
+            System.out.println("=================================");
+            System.out.print("메뉴 선택 : ");
+
+            int menu = inputInt();
+
+            switch (menu) {
+                case 1:
+                    payInputView.pay();
+                    break;
+                case 2:
+//                    강좌 전체 보기();
+                    break;
+                case 3:
+//                    강좌 즐겨찾기();
+                    break;
+                case 4:
+//                    강좌 수강하기();
+                    break;
+                case 5:
+//                    강좌평 작성();
+                    break;
+                case 6:
+//                    강좌 검색하기();
+                    break;
+                case 7:
+                    logout(loggedInEmail);
+                    loggedInEmail = null; // 초기화
+                    return;
+                default:
+                    outputView.printError("올바른 메뉴를 선택해주세요.");
+            }
+        }
+
+    }
+
+    public void logout(String email) {
+        try {
+            authController.logout(email);
+        } catch (SQLException e) {
+            outputView.printError("들어올 땐 마음대로 였지만, 나갈 땐 아니란다");
+        }
+
+    }
+
 }

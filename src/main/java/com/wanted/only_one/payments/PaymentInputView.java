@@ -10,11 +10,10 @@ import java.util.Scanner;
 public class PaymentInputView {
 
     private MemberInputView memberInputView;
-    private final PaymentController paycontroller;
-    private final PaymentOutputView payoutputView;
+    private PaymentController paycontroller;
+    private PaymentOutputView payoutputView;
     private final Scanner sc = new Scanner(System.in);
-    private PaymentInputView PayController;
-    Scanner payoption = new Scanner(System.in);
+    private PaymentInputView paymentInputView;
 
     public PaymentInputView(PaymentController paycontroller, PaymentOutputView payoutputView) {
         this.paycontroller = paycontroller;
@@ -36,9 +35,8 @@ public class PaymentInputView {
                 case 1:
                     payMoney();
                     break;
-//                case 2:
-//                    logInDisplay();
-//                    break;
+                case 2:
+                    return;
                 default:
                     payoutputView.printError("숫자를 제대로 입력하세요.");
             }
