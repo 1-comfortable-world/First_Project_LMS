@@ -18,7 +18,8 @@ public class CourseSectionDAO {
         try {
             this.conn = JDBCTemplate.getConnection();
         } catch (SQLException e) {
-            System.out.println("[CourseDAO] DB 연결 실패: " + e.getMessage());
+            throw new RuntimeException("[CourseDAO] DB 연결 실패: " + e.getMessage(), e);
+            // 연결 실패 즉시 터뜨려서 null 상태로 넘어가지 않게 함
         }
     }
 
@@ -31,9 +32,9 @@ public class CourseSectionDAO {
                         "LEFT JOIN lectures l ON c.course_id = l.course_id " +
                         "WHERE c.course_id = ?";
 
-        try (PreparedStatement p = conn.prepareStatement(sql)) {
+        try (PreparedStatement p = conn.prepareStatement(sql);
+             ResultSet rs = p.executeQuery()) { // ← try 안으로 이동, 자동으로 닫힘
             p.setLong(1, courseId);
-            ResultSet rs = p.executeQuery();
 
             SectionDTO section = null;
             List<LectureDTO> lectures = new ArrayList<>();

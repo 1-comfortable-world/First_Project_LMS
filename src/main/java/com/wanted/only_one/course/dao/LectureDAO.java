@@ -15,7 +15,8 @@ public class LectureDAO {
         try {
             this.conn = JDBCTemplate.getConnection();
         } catch (SQLException e) {
-            System.out.println("[CourseDAO] DB 연결 실패: " + e.getMessage());
+            throw new RuntimeException("[CourseDAO] DB 연결 실패: " + e.getMessage(), e);
+            // 연결 실패 즉시 터뜨려서 null 상태로 넘어가지 않게 함
         }
     }
 

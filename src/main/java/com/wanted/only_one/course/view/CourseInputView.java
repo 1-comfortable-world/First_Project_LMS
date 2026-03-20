@@ -97,12 +97,20 @@ public class CourseInputView {
 
         if (lectureId == 0) return;
 
-        // study 팀 메서드 호출 → 강의 수강완료 + 강좌 상태 자동 변경
-        studyController.updateCourseStatus(memberId, courseId);
+        // 강의 ID가 이 강좌에 실제로 존재하는지 확인
+        boolean exists = detail.getLectures().stream()
+                .anyMatch(l -> l.getLectureId() == lectureId);
+
+        if (!exists) {
+            outputView.printFail("존재하지 않는 강의 ID입니다.");
+            return;
+        }
+
+        // study 팀 연동 시 아래 주석 해제
+//  studyController.updateCourseStatus(memberId, courseId);
 
         outputView.printSuccess("강의 수강 완료!");
     }
-
     // ── 강사용 ───────────────────────────────────────
 
     public void teacherCourseMenu(long memberId) throws SQLException {
@@ -159,9 +167,12 @@ public class CourseInputView {
     }
 
     private void createCourse(long memberId) throws SQLException {
-        outputView.printMessage("\n--- 강좌 등록 ---");
         System.out.print("강좌 제목 : ");
         String title = sc.nextLine().trim();
+        if (title.isEmpty()) {
+            outputView.printFail("강좌 제목을 입력해주세요.");
+            return;
+        }
 
         long courseId = controller.addCourse(title, memberId);
         if (courseId == -1) { outputView.printFail("강좌 등록에 실패했습니다."); return; }
@@ -171,6 +182,10 @@ public class CourseInputView {
             System.out.print("강의 제목 (그만하려면 0 입력) : ");
             String lTitle = sc.nextLine().trim();
             if (lTitle.equals("0")) break;
+            if (lTitle.isEmpty()) {        // 빈 제목 막기
+                outputView.printFail("강의 제목을 입력해주세요.");
+                continue;
+            }
             if (controller.addLecture(courseId, lTitle))
                 outputView.printSuccess("강의 '" + lTitle + "' 등록 완료!");
             else outputView.printFail("강의 등록 실패.");
@@ -183,7 +198,10 @@ public class CourseInputView {
         long courseId = inputLong();
         System.out.print("새 강좌 제목 : ");
         String newTitle = sc.nextLine().trim();
-
+        if (newTitle.isEmpty()) {
+            outputView.printFail("강좌 제목을 입력해주세요.");
+            return;
+        }
         if (controller.updateCourse(courseId, newTitle, memberId))
             outputView.printSuccess("강좌 수정 완료!");
         else outputView.printFail("강좌 수정 실패.");
