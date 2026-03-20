@@ -21,27 +21,81 @@ public class QueryUtil {
 
     private static void loadQueries() {
         try {
-            InputStream inputStream = QueryUtil.class.getClassLoader().getResourceAsStream("study_queries.xml");
+            InputStream StudyinputStream = QueryUtil.class.getClassLoader().getResourceAsStream("study_queries.xml");
+            InputStream MemberinputStream = QueryUtil.class.getClassLoader().getResourceAsStream("member_queries.xml");
+            InputStream CourseinputStream = QueryUtil.class.getClassLoader().getResourceAsStream("queries.xml");
+            InputStream PaymentsinputStream = QueryUtil.class.getClassLoader().getResourceAsStream("payments_queries.xml");
 
-            if (inputStream == null) {
+            if (StudyinputStream == null) {
                 throw new RuntimeException("study_queries.xml 파일을 찾을 수 없습니다.");
             }
+            if (MemberinputStream == null) {
+                throw new RuntimeException("member_queries.xml 파일을 찾을 수 없습니다.");
+            } if (CourseinputStream == null) {
+                throw new RuntimeException("course_queries.xml 파일을 찾을 수 없습니다.");
+            }
+            if (PaymentsinputStream == null) {
+                throw new RuntimeException("payments_queries.xml 파일을 찾을 수 없습니다.");
+            }
+
 
             // DocumentBuilderFactory를 사용하여 DocumentBuilder 인스턴스를 생성
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
 
             // InputStream으로부터 XML 문서를 파싱하여 Document 객체 생성
-            Document document = builder.parse(inputStream);
+            Document Studydocument = builder.parse(StudyinputStream);
+            Document Memberdocument = builder.parse(MemberinputStream);
+            Document Coursedocument = builder.parse(CourseinputStream);
+            Document Paymentsdocument = builder.parse(PaymentsinputStream);
             // 문서의 구조를 정규화 (노드의 표준 형태로 변환)
-            document.getDocumentElement().normalize();
+            Studydocument.getDocumentElement().normalize();
+            Memberdocument.getDocumentElement().normalize();
+            Coursedocument.getDocumentElement().normalize();
+            Paymentsdocument.getDocumentElement().normalize();
             // "query" 태그를 가진 모든 노드를 가져옴
-            NodeList nodeList = document.getElementsByTagName("query");
+            NodeList StudynodeList = Studydocument.getElementsByTagName("query");
+            NodeList MembernodeList = Memberdocument.getElementsByTagName("query");
+            NodeList CoursenodeList = Coursedocument.getElementsByTagName("query");
+            NodeList PaymentsnodeList = Paymentsdocument.getElementsByTagName("query");
 
             // 각 "query" 노드를 반복하여 처리
-            for (int i = 0; i < nodeList.getLength(); i++) {
+            for (int i = 0; i < StudynodeList.getLength(); i++) {
                 // 현재 노드를 Element로 캐스팅
-                Element queryElement = (Element) nodeList.item(i);
+                Element queryElement = (Element) StudynodeList.item(i);
+                // "id" 속성 값을 가져옴
+                String key = queryElement.getAttribute("key");
+                // 쿼리의 텍스트 내용을 가져와서 공백을 제거
+                String sql = queryElement.getTextContent().trim();
+                // ID를 키로, SQL 쿼리를 값으로 하여 맵에 저장
+                queries.put(key, sql);
+            }
+
+            for (int i = 0; i < MembernodeList.getLength(); i++) {
+                // 현재 노드를 Element로 캐스팅
+                Element queryElement = (Element) MembernodeList.item(i);
+                // "id" 속성 값을 가져옴
+                String key = queryElement.getAttribute("key");
+                // 쿼리의 텍스트 내용을 가져와서 공백을 제거
+                String sql = queryElement.getTextContent().trim();
+                // ID를 키로, SQL 쿼리를 값으로 하여 맵에 저장
+                queries.put(key, sql);
+            }
+
+            for (int i = 0; i < CoursenodeList.getLength(); i++) {
+                // 현재 노드를 Element로 캐스팅
+                Element queryElement = (Element) CoursenodeList.item(i);
+                // "id" 속성 값을 가져옴
+                String key = queryElement.getAttribute("key");
+                // 쿼리의 텍스트 내용을 가져와서 공백을 제거
+                String sql = queryElement.getTextContent().trim();
+                // ID를 키로, SQL 쿼리를 값으로 하여 맵에 저장
+                queries.put(key, sql);
+            }
+
+            for (int i = 0; i < PaymentsnodeList.getLength(); i++) {
+                // 현재 노드를 Element로 캐스팅
+                Element queryElement = (Element) PaymentsnodeList.item(i);
                 // "id" 속성 값을 가져옴
                 String key = queryElement.getAttribute("key");
                 // 쿼리의 텍스트 내용을 가져와서 공백을 제거
@@ -55,12 +109,6 @@ public class QueryUtil {
         }
     }
 
-
-    /**
-     * 📌 특정 쿼리 ID로 SQL 가져오기
-     * @param id XML에서 정의한 query의 id
-     * @return SQL 쿼리 문자열
-     */
     public static String getQuery(String key) {
         return queries.get(key);
     }
