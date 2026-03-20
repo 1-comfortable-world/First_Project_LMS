@@ -6,6 +6,10 @@ import com.wanted.only_one.member.controller.MemberController;
 import com.wanted.only_one.member.service.AuthService;
 import com.wanted.only_one.member.service.MemberService;
 import com.wanted.only_one.member.view.*;
+import com.wanted.only_one.payments.PaymentController;
+import com.wanted.only_one.payments.PaymentInputView;
+import com.wanted.only_one.payments.PaymentOutputView;
+import com.wanted.only_one.payments.PaymentService;
 
 import java.sql.Connection;
 import java.sql.SQLException;
