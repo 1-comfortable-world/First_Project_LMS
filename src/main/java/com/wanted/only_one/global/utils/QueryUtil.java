@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /* comment.
- *   queries.xml 파일에서 쿼리를 읽어와 관리하느 유틸 클래스
+ *   member_queries.xml 파일에서 쿼리를 읽어와 관리하느 유틸 클래스
  * */
 public class QueryUtil {
 
@@ -27,12 +27,12 @@ public class QueryUtil {
      */
     private static void loadQueries() {
         try {
-            // 클래스 로더를 통해 "queries.xml" 파일을 InputStream으로 가져옴
-            InputStream inputStream = QueryUtil.class.getClassLoader().getResourceAsStream("queries.xml");
+            // 클래스 로더를 통해 "member_queries.xml" 파일을 InputStream으로 가져옴
+            InputStream inputStream = QueryUtil.class.getClassLoader().getResourceAsStream("member_queries.xml");
 
             // InputStream이 null인 경우, 즉 파일을 찾지 못한 경우 예외 발생
             if (inputStream == null) {
-                throw new RuntimeException("queries.xml 파일을 찾을 수 없습니다.");
+                throw new RuntimeException("member_queries.xml 파일을 찾을 수 없습니다.");
             }
 
             // DocumentBuilderFactory를 사용하여 DocumentBuilder 인스턴스를 생성

@@ -1,5 +1,6 @@
 package com.wanted.only_one.member.dao;
 
+import com.wanted.only_one.global.utils.QueryUtil;
 import com.wanted.only_one.member.dto.MemberDTO;
 
 import java.sql.Connection;
@@ -13,12 +14,27 @@ public class MemberDAO {
 
     public MemberDAO(Connection con) { this.con = con; }
 
-    public static boolean emailMix(String email) {
-        return false;
-    }
+    public  boolean emailMix(String email) {
+        String sql = "SELECT COUNT(*) FROM members WHERE email = ?";
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
-    public static boolean pwdInclude(String password) {
-        return  false;
+        try {
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, email);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (pstmt != null) pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return false;
     }
 
 
@@ -208,5 +224,38 @@ public class MemberDAO {
                 rs.getTimestamp("enrolled_at").toLocalDateTime(),
                 rs.getInt("acc_count")
         );
+    }
+
+
+    // 로그인중 이메일 패스워드 중복 확인
+    public boolean pwdCheck(String email, String password) {
+        String sql = "SELECT COUNT(*) FROM members WHERE email = ?";
+        String sql2 = QueryUtil.getQuery("member.pwdCheck");
+        PreparedStatement pstmt = null;
+        PreparedStatement pstmt2 = null;
+        ResultSet rs = null;
+        ResultSet rs2 = null;
+
+        try {
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, email);
+            rs = pstmt.executeQuery();
+
+            pstmt2 = con.prepareStatement(sql2);
+            pstmt2.setString(1, email);
+            pstmt2.setString(2, password);
+            rs2 = pstmt2.executeQuery();
+
+            if (rs.next() && rs2.next()) {
+                return rs.getInt(1) > 0;
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (pstmt != null) pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return false;
     }
 }

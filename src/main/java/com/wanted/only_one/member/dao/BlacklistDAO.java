@@ -12,7 +12,7 @@ public class BlacklistDAO {
         this.con = connection;
 
     }
-    public Boolean insertBlaclist (long memberid){
+    public Boolean insertBlacklist (long memberid){
         String sql = "Insert Into blacklists(member_id) Values(?)";
         // 이게 저 내용 새끼들 잡아와 블랙리스트에 넣을거니까
         PreparedStatement pstmt = null;
@@ -54,7 +54,4 @@ public class BlacklistDAO {
         return false;
     }
 
-    public boolean insertBlacklist(long memberId) {
-        return false;
-    }
 }

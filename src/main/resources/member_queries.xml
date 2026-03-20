@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<properties>
+    <query key ="member.pwCheck">
+     select count(*)
+        from members
+        where email = ? and password = ?
+    </query>
+</properties>
+
+
+

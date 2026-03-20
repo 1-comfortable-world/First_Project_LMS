@@ -107,7 +107,8 @@ public class MemberInputView {
 
     // 회원가입 정보 입력
     private void enterInfo(String role) {
-        boolean result = false;
+
+        boolean result = true;
         while (true) {
 
 
@@ -117,11 +118,12 @@ public class MemberInputView {
             System.out.print("이메일을 입력하십시오 : ");
             String email = sc.nextLine();
             boolean emailresult = authController.emailMix(email);
-            if (!emailresult) {
+            if (emailresult) {
                 outputView.printError("\n이미 존재하는 이메일입니다");
                 continue;
 
             }
+
             System.out.print("비밀번호를 입력하십시오 (특수기호 포함) : ");
             String password = sc.nextLine();
             boolean pwdResult = authController.pwdInclude(password);
@@ -143,7 +145,7 @@ public class MemberInputView {
 
 
     // 로그인 메뉴
-    private void displayLoginMenu() {
+    public void displayLoginMenu() {
         while (true) {
             System.out.println();
             System.out.println("=================================");
@@ -160,8 +162,10 @@ public class MemberInputView {
 
             switch (menu) {
                 case 1:
-                case 2:  // 학생/강사 로그인 동일하게 처리
-                    signIn();
+                    studentLogin();
+                    break;
+                case 2:
+                    teacherLogin();
                     break;
                 case 3:
                     resetPassword();
@@ -174,11 +178,31 @@ public class MemberInputView {
         }
     }
 
-    // 로그인 처리
-    private void signIn() {
+
+
+    // 학생 로그인 처리
+    private void studentLogin() {
         System.out.println("이메일을 입력하십시오");
         System.out.print("이메일 : ");
         String email = sc.nextLine();
+//        boolean emailRs = authController.emailMix(email);
+
+        System.out.println("비밀번호를 입력하십시오");
+        System.out.print("비밀번호 : ");
+        String password = sc.nextLine();
+//        boolean pwdRs = authController.pwdCheck(email,password);
+
+
+        boolean result = authController.signIn(email, password);
+        outputView.printSignInResult(result);
+    }
+
+    // 강사 로그인 처리
+    private void teacherLogin() {
+        System.out.println("이메일을 입력하십시오");
+        System.out.print("이메일 : ");
+        String email = sc.nextLine();
+        boolean emailRs = authController.emailMix(email);
 
         System.out.println("비밀번호를 입력하십시오");
         System.out.print("비밀번호 : ");

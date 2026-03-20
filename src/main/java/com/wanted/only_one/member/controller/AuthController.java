@@ -48,4 +48,9 @@ public class AuthController {
         }
         return false;  // 특수문자 없음
     }
+
+
+    public boolean pwdCheck(String email, String password) {
+        return service.pwdCheck(email,password);
+    }
 }

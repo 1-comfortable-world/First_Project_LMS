@@ -12,16 +12,16 @@ import java.sql.SQLException;
 public class AuthService {
 
     private MemberDAO memberDAO;
-    private Connection connection;
+    private Connection con;
 
     public AuthService(Connection connection) {
         this.memberDAO = new MemberDAO(connection);
-        this.connection = connection;
+        this.con = con;
     }
 
     // 1. 회원가입
     public boolean signUp(String name, String email, String password, String role) {
-        Connection con = null;
+
 
         try {
             con = JDBCTemplate.getConnection();
@@ -46,13 +46,13 @@ public class AuthService {
 
     // 2. 로그인
     public boolean signIn(String email, String password) {
-        Connection conn = null;
+
 
         try {
-            conn = JDBCTemplate.getConnection();
-            MemberDAO memberDAO = new MemberDAO(conn);
-            BlacklistDAO blacklistDAO = new BlacklistDAO(conn);
-            ConnectionDAO connectionDAO = new ConnectionDAO(conn);
+            con = JDBCTemplate.getConnection();
+            MemberDAO memberDAO = new MemberDAO(con);
+            BlacklistDAO blacklistDAO = new BlacklistDAO(con);
+            ConnectionDAO connectionDAO = new ConnectionDAO(con);
 
             //  회원 조회
             MemberDTO member = memberDAO.findByEmailAndPassword(email, password);
@@ -85,10 +85,10 @@ public class AuthService {
             return connectionDAO.insertConnection(member.getMemberId());
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println("로딩 중 오류 발생");
             return false;
         } finally {
-            try { if (conn != null) conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (con != null) con.close(); } catch (SQLException e) { e.printStackTrace(); }
         }
     }
 
@@ -154,10 +154,11 @@ public class AuthService {
     }
 
     public boolean emailMix(String email) {
-        return MemberDAO.emailMix(email);
+        return memberDAO.emailMix(email);
     }
 
-    public boolean pwdInclude(String password) {
-        return MemberDAO.pwdInclude(password);
+
+    public boolean pwdCheck(String email, String password) {
+        return memberDAO.pwdCheck(email,password);
     }
 }
