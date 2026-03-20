@@ -3,7 +3,6 @@ package com.wanted.only_one.study.controller;
 import com.wanted.only_one.course.dto.CourseDTO;
 import com.wanted.only_one.study.dto.FavDTO;
 import com.wanted.only_one.study.dto.ReviewDTO;
-import com.wanted.only_one.study.dto.StudyingDTO;
 import com.wanted.only_one.study.service.FavService;
 import com.wanted.only_one.study.service.ReviewService;
 import com.wanted.only_one.study.service.StudyingService;

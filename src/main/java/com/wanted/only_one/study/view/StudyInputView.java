@@ -1,11 +1,9 @@
 package com.wanted.only_one.study.view;
 
 import com.wanted.only_one.course.dto.CourseDTO;
-import com.wanted.only_one.member.dto.MemberDTO;
 import com.wanted.only_one.study.controller.StudyController;
 import com.wanted.only_one.study.dto.FavDTO;
 import com.wanted.only_one.study.dto.ReviewDTO;
-import com.wanted.only_one.study.dto.StudyingDTO;
 
 import java.util.List;
 import java.util.Scanner;
