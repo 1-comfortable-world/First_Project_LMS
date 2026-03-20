@@ -167,7 +167,6 @@ public class StudyInputView {
     }
 
 
-
     /* comment
         사용자가 로그인 후 나타나는 선택 목록에서 강좌평 작성하기를 누른 경우
      */

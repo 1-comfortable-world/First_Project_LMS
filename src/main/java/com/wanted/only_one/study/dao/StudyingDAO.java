@@ -32,9 +32,8 @@ public class StudyingDAO {
             ResultSet rset = pstmt.executeQuery();
 
             while(rset.next()){
-                CourseDTO completedCourse = new CourseDTO(
-                        rset.getString("title")
-                );
+                CourseDTO completedCourse = new CourseDTO();
+                completedCourse.setTitle(rset.getString("title"));
                 completedCourseList.add(completedCourse);
             }
         }
@@ -52,7 +51,9 @@ public class StudyingDAO {
             ResultSet rset = pstmt.executeQuery();
 
             while (rset.next()) {
-                list.add(new CourseDTO(rset.getString("title")));
+                CourseDTO course = new CourseDTO();
+                course.setTitle(rset.getString("title"));
+                list.add(course);
             }
         }
         return list;
