@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<properties>
+    <query key="addFavList">
+        INSERT INTO favorites (member_id, course_id)
+        SELECT ?, c.course_id
+        FROM courses c
+        WHERE c.title LIKE CONCAT('%', ?, '%');
+    </query>
+    <query key="showFavList">
+        SELECT m.name as member_name, c.title as course_title
+        FROM favorites f
+        JOIN members m ON f.member_id = m.member_id
+        JOIN courses c ON f.course_id = c.course_id
+        WHERE f.member_id = ?
+    </query>
+    <query key="showcompletedCourseList">
+        SELECT  c.title
+        FROM courses c
+        JOIN studying_courses s ON c.course_id = s.course_id
+        WHERE s.status = '수강완료'
+        and s.member_id=?
+    </query>
+    <query key="writeReview">
+        INSERT INTO course_reviews (member_id, course_id, contents, rating)
+        SELECT ?, c.course_id, ?, ?
+        FROM courses c
+        WHERE c.title LIKE CONCAT('%', ?, '%');
+    </query>
+    <query key="showMyStudyingList">
+        SELECT c.title
+        FROM courses c
+        JOIN studying_courses s ON c.course_id = s.course_id
+        WHERE s.member_id = ?
+        AND s.status = CASE ?
+        WHEN 2 THEN '수강 중'
+        WHEN 3 THEN '수강완료'
+        END
+    </query>
+    <query key="AllLecturesCompleted">
+        SELECT COUNT(*)
+        FROM lecture_histories lh
+        JOIN lectures l ON lh.lecture_id = l.lecture_id
+        WHERE lh.member_id = ?
+        AND l.course_id = ?
+        AND lh.status = '미수강'
+    </query>
+    <query key="updateCourseStatus">
+        UPDATE studying_courses
+        SET status = '수강완료'
+        WHERE member_id = ?
+        AND course_id = ?
+    </query>
+    <query key="showMyReviewList">
+        SELECT  c.title as title , r.contents as contents, r.rating as rating
+        FROM courses c
+        JOIN course_reviews r ON c.course_id = r.course_id
+        WHERE r.member_id=?
+    </query>
+    <query key="ShowReviewInCourse">
+        SELECT
+        c.title        AS title,
+        teacher.name   AS teacher_name,
+        r.contents     AS contents,
+        r.rating       AS rating,
+        CONCAT(LEFT(student.name, 1), ' ● ● ') AS review_writer
+        FROM courses c
+        JOIN course_reviews r  ON c.course_id  = r.course_id
+        JOIN members teacher   ON c.member_id  = teacher.member_id AND teacher.role = 'TEACHER'
+        JOIN members student   ON r.member_id  = student.member_id AND student.role = 'STUDENT'
+        WHERE c.title LIKE CONCAT('%', ?, '%');
+    </query>
+    <query key="ShowReviewForTeacher">
+        SELECT
+        c.title AS title,
+        r.contents AS contents,
+        r.rating AS rating,
+        CONCAT(LEFT(student.name, 1), ' ● ● ') AS review_writer
+        FROM courses c
+        JOIN course_reviews r ON c.course_id = r.course_id
+        JOIN members student ON r.member_id = student.member_id AND student.role = 'STUDENT'
+        WHERE c.member_id = ?
+    </query>
+    <query key="existsReview">
+        SELECT COUNT(*)
+        FROM course_reviews r
+        JOIN courses c ON r.course_id = c.course_id
+        WHERE r.member_id = ?
+        AND c.title LIKE CONCAT('%', ?, '%')
+    </query>
+</properties>
