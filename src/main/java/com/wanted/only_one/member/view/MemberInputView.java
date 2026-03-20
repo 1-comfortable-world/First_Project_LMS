@@ -140,7 +140,7 @@ public class MemberInputView {
         }
         // 회원가입 성공하면 로그인 화면으로 이동
         if (result) {
-            displayLoginMenu();  // ← 추가!
+            displayLoginMenu();
         }
         return false;
     }
@@ -222,7 +222,7 @@ public class MemberInputView {
 
         if (result) {
             this.loggedInEmail = email; // 로그인 성공 시 저장
-            return selectMenu();               // 메인 메뉴로 이동
+//            return 강사메인메뉴();
         }
         return false;
     }

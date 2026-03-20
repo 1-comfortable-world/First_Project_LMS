@@ -12,7 +12,7 @@ import java.sql.SQLException;
 public class AuthService {
 
     public AuthService(Connection connection) {
-        // 생성자에서 DAO나 Connection을 필드로 보관하지 않음
+
     }
 
     // 1. 회원가입
