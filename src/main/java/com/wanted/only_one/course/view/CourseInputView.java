@@ -3,6 +3,7 @@ package com.wanted.only_one.course.view;
 import com.wanted.only_one.course.controller.CourseController;
 import com.wanted.only_one.course.dto.CourseDTO;
 import com.wanted.only_one.course.dto.SectionDTO;
+import com.wanted.only_one.study.view.StudyInputView;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -12,12 +13,15 @@ public class CourseInputView {
 
     private final CourseController controller;
     private final CourseOutputView outputView;
+    private final StudyInputView studyInputView;
     private final Scanner sc = new Scanner(System.in);
 
-    public CourseInputView(CourseController controller, CourseOutputView outputView) {
+    public CourseInputView(CourseController controller, CourseOutputView outputView, StudyInputView studyInputView) {
         this.controller = controller;
         this.outputView = outputView;
+        this.studyInputView = studyInputView;
     }
+
 
     // ── 학생용 ───────────────────────────────────────
 
@@ -32,7 +36,7 @@ public class CourseInputView {
             outputView.printCourses(courseList);
 
             System.out.println("=================================");
-            System.out.println("        강좌 수강하기");
+            System.out.println("          강좌 수강하기");
             System.out.println("=================================");
             System.out.println("1. 수강할 강좌 선택");
             System.out.println("2. 강좌평 조회하기");
@@ -42,11 +46,19 @@ public class CourseInputView {
             int menu = inputInt();
             switch (menu) {
                 case 1:
+
+                    if (!controller.hasPaid(memberId)) {
+                        outputView.printMessage("=================================");
+                        outputView.printMessage("  결제 후 수강 신청이 가능합니다.");
+                        outputView.printMessage("  결제 메뉴에서 먼저 결제해주세요.");
+                        outputView.printMessage("=================================");
+                        break;
+                    }
                     long courseId = selectCourseByNumber(courseList);
                     if (courseId > 0) studyLecture(memberId, courseId);
                     break;
                 case 2:
-                    outputView.printMessage("강좌평 조회는 준비 중입니다.");
+                    studyInputView.Review();
                     break;
                 case 3:
                     return;
@@ -153,7 +165,9 @@ public class CourseInputView {
         int menu = inputInt();
         switch (menu) {
             case 1: outputView.printMessage("수강생 조회는 study 팀과 연동됩니다."); break;
-            case 2: outputView.printMessage("강좌평 조회는 study 팀과 연동됩니다."); break;
+            case 2:
+                studyInputView.ShowReviewInCourse();
+                break;
             case 3: return;
             default: outputView.printError("");
         }
@@ -200,7 +214,7 @@ public class CourseInputView {
             outputView.printMessage("\n--- 수정 후 강좌 목록 ---");
             outputView.printCourses(controller.T_showAllCourses(memberId));
         } else {
-            outputView.printFail("강좌 수정 실패.");
+            outputView.printFail("강좌 수정 실패");
         }
     }
 

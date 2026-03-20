@@ -5,7 +5,11 @@ import com.wanted.only_one.course.dto.LectureDTO;
 import com.wanted.only_one.course.dto.SectionDTO;
 import com.wanted.only_one.course.service.CourseService;
 import com.wanted.only_one.course.service.LectureService;
+import com.wanted.only_one.global.config.JDBCTemplate;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -69,4 +73,16 @@ public class CourseController {
     public boolean deleteCourse(long courseId) throws SQLException {
         return courseService.deleteCourse(courseId);
     }
+
+    // 결제 여부 확인
+    public boolean hasPaid(long memberId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM payments WHERE member_id = ?";
+        Connection conn = JDBCTemplate.getConnection();
+         try (PreparedStatement p = conn.prepareStatement(sql)) {
+             p.setLong(1, memberId);
+             ResultSet rs = p.executeQuery();
+
+             if (rs.next()) return rs.getInt(1) > 0;
+         }
+         return false;}
 }

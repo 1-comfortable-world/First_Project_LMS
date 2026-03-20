@@ -14,7 +14,9 @@ public class CourseOutputView {
             System.out.println("등록된 강좌가 없습니다.");
             return;
         }
-        System.out.println("=================================");
+
+        System.out.println(" ");
+        System.out.println("===============전체 강좌 리스트=================");
         for (int i = 0; i < list.size(); i++) {
             CourseDTO c = list.get(i);
             System.out.println((i + 1) + ". 강좌명 : " + c.getTitle());
@@ -30,7 +32,9 @@ public class CourseOutputView {
             System.out.println("검색 결과가 없습니다.");
             return;
         }
-        System.out.println("=================================");
+
+        System.out.println(" ");
+        System.out.println("================================");
         for (int i = 0; i < list.size(); i++) {
             CourseDTO c = list.get(i);
             System.out.println((i + 1) + ". 강좌명 : " + c.getTitle());
