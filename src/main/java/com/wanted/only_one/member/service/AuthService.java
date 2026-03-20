@@ -17,7 +17,7 @@ public class AuthService {
 
     public AuthService(Connection connection) {
         this.memberDAO = new MemberDAO(connection);
-        this.con = con;
+        this.con = connection;
         this.connectionDAO = new ConnectionDAO(connection);
     }
 
@@ -165,7 +165,7 @@ public class AuthService {
         return memberDAO.pwdCheck(email,password);
     }
 
-    public void logout(String email) throws SQLException {
-        connectionDAO.logout(email);
+    public boolean logout(String email) throws SQLException {
+        return connectionDAO.logout(email);
     }
 }

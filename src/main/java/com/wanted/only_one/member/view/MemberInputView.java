@@ -293,9 +293,10 @@ public class MemberInputView {
 //                    강좌 검색하기();
                     break;
                 case 7:
-                    logout(loggedInEmail);
+                    boolean out = logout(loggedInEmail);
                     loggedInEmail = null; // 초기화
-                    return;
+                    if(out){
+                    return;}
                 default:
                     outputView.printError("올바른 메뉴를 선택해주세요.");
             }
@@ -303,11 +304,23 @@ public class MemberInputView {
 
     }
 
-    public void logout(String email) {
+    public boolean logout(String email) {
         try {
-            authController.logout(email);
+            boolean out = authController.logout(email);
+
+            if(out) {
+                System.out.println("===============================");
+                System.out.println("          공부 더 안해?          ");
+                System.out.println("===============================");
+                return out;
+            }
+            else {
+                return out;
+            }
+
         } catch (SQLException e) {
             outputView.printError("들어올 땐 마음대로 였지만, 나갈 땐 아니란다");
+            return false;
         }
 
     }

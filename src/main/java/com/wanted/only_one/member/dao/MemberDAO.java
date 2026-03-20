@@ -1,5 +1,6 @@
 package com.wanted.only_one.member.dao;
 
+import com.wanted.only_one.global.config.JDBCTemplate;
 import com.wanted.only_one.global.utils.QueryUtil;
 import com.wanted.only_one.member.dto.MemberDTO;
 
@@ -10,17 +11,14 @@ import java.sql.SQLException;
 
 public class MemberDAO {
 
-    private static Connection con= null;
+
 
     public MemberDAO(Connection con) { this.con = con; }
 
     public  boolean emailMix(String email) {
         String sql = "SELECT COUNT(*) FROM members WHERE email = ?";
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-
-        try {
-            pstmt = con.prepareStatement(sql);
+        try(Connection con = JDBCTemplate.getConnection();
+            PreparedStatement pstmt = con.prepareStatement(sql)) {
             pstmt.setString(1, email);
             rs = pstmt.executeQuery();
 

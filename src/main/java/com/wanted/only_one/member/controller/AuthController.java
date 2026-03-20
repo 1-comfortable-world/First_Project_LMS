@@ -52,11 +52,7 @@ public class AuthController {
     }
 
 
-    public boolean pwdCheck(String email, String password) {
-        return service.pwdCheck(email,password);
-    }
-
-    public void logout(String email) throws SQLException {
-        service.logout(email);
+    public boolean logout(String email) throws SQLException {
+        return service.logout(email);
     }
 }

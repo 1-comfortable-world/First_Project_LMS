@@ -82,9 +82,15 @@ public class ConnectionDAO {
     }
 
 
-    public void logout(String email) throws SQLException {
-        QueryUtil.getQuery("member.logout");
-        PreparedStatement pstmt = null;
-        pstmt.setString(1, email);
+    public boolean logout(String email) throws SQLException {
+        String sql = QueryUtil.getQuery("member.logout");
+        try {
+            PreparedStatement pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, email);
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.out.println("들어올 땐 마음대로였지만 나갈 땐 아니란다.");
+            return false;
+        }
     }
 }
