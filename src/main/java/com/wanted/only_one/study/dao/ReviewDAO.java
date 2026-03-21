@@ -17,12 +17,12 @@ public class ReviewDAO {
         this.connection = connection;
     }
 
-    public Long WriteReview(String description, String content, Double rating) throws SQLException{
+    public Long WriteReview(long memberId,String description, String content, Double rating) throws SQLException{
 
         String query = QueryUtil.getQuery("writeReview");
 
         try (PreparedStatement pstmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            pstmt.setInt(1,8);  // 나중에 현재 로그인 되어있는 사용자의 member_id 를 삽입
+            pstmt.setLong(1,memberId);  // 나중에 현재 로그인 되어있는 사용자의 member_id 를 삽입
             pstmt.setString(2, content);
             pstmt.setDouble(3, rating);
             pstmt.setString(4, description);
@@ -39,14 +39,14 @@ public class ReviewDAO {
         return null;
     }
 
-    public List<ReviewDTO> showMyReviewList() throws SQLException {
+    public List<ReviewDTO> showMyReviewList(long memberId) throws SQLException {
         // 동작시킬 쿼리문 준비
         String query = QueryUtil.getQuery("showMyReviewList");
         List<ReviewDTO> MyReviewList = new ArrayList<>();
 
         // 쿼리문 동작
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, 8L); // TODO: 로그인 세션 연결 후 교체
+            pstmt.setLong(1, memberId); // TODO: 로그인 세션 연결 후 교체
             ResultSet rset = pstmt.executeQuery();
 
             while(rset.next()){
@@ -85,13 +85,13 @@ public class ReviewDAO {
         return ReviewInCourse;
     }
 
-    public List<ReviewDTO> ShowReviewForTeacher() throws SQLException {
+    public List<ReviewDTO> ShowReviewForTeacher(long memberId) throws SQLException {
 
         String query = QueryUtil.getQuery("ShowReviewForTeacher");
         List<ReviewDTO> ReviewForTeacher = new ArrayList<>();
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, 8L); // TODO: 로그인 세션 연결 후 교체
+            pstmt.setLong(1, memberId); // TODO: 로그인 세션 연결 후 교체
             ResultSet rset = pstmt.executeQuery();
 
             while(rset.next()){
@@ -107,11 +107,11 @@ public class ReviewDAO {
         return ReviewForTeacher;
     }
 
-    public boolean checkExistingReview(String description) throws SQLException {
+    public boolean checkExistingReview(long memberId,String description) throws SQLException {
         String query = QueryUtil.getQuery("existsReview");
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, 8L); // TODO: 현재 로그인한 member_id로 변경
+            pstmt.setLong(1, memberId); // TODO: 현재 로그인한 member_id로 변경
             pstmt.setString(2, description);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {

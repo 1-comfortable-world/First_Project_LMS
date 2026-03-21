@@ -43,7 +43,7 @@ public class AuthService {
     }
 
     // 2. 로그인
-    public boolean signIn(String email, String password) {
+    public MemberDTO signIn(String email, String password) {
         Connection con = null;
 
         try {
@@ -55,12 +55,12 @@ public class AuthService {
             MemberDTO member = memberDAO.findByEmailAndPassword(email, password);
             if (member == null) {
                 System.out.println("이메일 또는 비밀번호가 틀렸습니다.");
-                return false;
+                return null;
             }
 
             if (blacklistDAO.existsBlacklist(member.getMemberId())) {
                 System.out.println("블랙리스트 회원입니다. 로그인이 불가합니다.");
-                return false;
+                return null;
             }
 
             if (connectionDAO.existsConnection(member.getMemberId())) {
@@ -72,15 +72,16 @@ public class AuthService {
                 } else {
                     System.out.println("이미 접속 중인 계정입니다.");
                 }
-                return false;
+                return null;
             }
 
-            return connectionDAO.insertConnection(member.getMemberId());
+            boolean connected = connectionDAO.insertConnection(member.getMemberId());
+            return connected ? member : null;
 
         } catch (SQLException e) {
             System.out.println("로딩 중 오류 발생");
             e.printStackTrace();
-            return false;
+            return null;
         } finally {
             try {
                 if (con != null) con.close();

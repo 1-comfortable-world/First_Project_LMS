@@ -7,6 +7,7 @@ import com.wanted.only_one.course.service.CourseService;
 import com.wanted.only_one.course.service.LectureService;
 import com.wanted.only_one.global.config.JDBCTemplate;
 import com.wanted.only_one.member.dto.MemberDTO;
+import com.wanted.only_one.study.controller.StudyController;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,6 +19,11 @@ public class CourseController {
 
     private CourseService  courseService  = new CourseService();
     private LectureService lectureService = new LectureService();
+    private StudyController studyController;
+
+    public CourseController(StudyController studyController) {
+        this.studyController = studyController;
+    }
 
     // ── 학생용 ───────────────────────────────────────
 
@@ -41,8 +47,7 @@ public class CourseController {
 
     // 강의 수강완료 + 강좌 상태 자동 변경 → study 팀 연동 대기 중
     public void updateCourseStatus(long memberId, long courseId) throws SQLException {
-        // studyController.updateCourseStatus(memberId, courseId);
-        System.out.println("수강완료 처리 예정 (study 팀 연동 대기 중)");
+         studyController.updateCourseStatus(memberId, courseId);
     }
 
     // ── 강사용 ───────────────────────────────────────

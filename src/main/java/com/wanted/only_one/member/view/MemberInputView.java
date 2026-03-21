@@ -2,6 +2,7 @@ package com.wanted.only_one.member.view;
 
 import com.wanted.only_one.course.view.CourseInputView;
 import com.wanted.only_one.member.controller.AuthController;
+import com.wanted.only_one.member.dto.MemberDTO;
 import com.wanted.only_one.payments.PaymentInputView;
 import com.wanted.only_one.study.view.StudyInputView;
 
@@ -18,6 +19,7 @@ public class MemberInputView {
     private final Scanner sc = new Scanner(System.in);
 
     private String loggedInEmail;
+    private MemberDTO loggedInMember;
 
     public MemberInputView(AuthController authController,
                            MemberOutputView outputView,
@@ -197,11 +199,13 @@ public class MemberInputView {
         System.out.print("비밀번호 : ");
         String password = sc.nextLine();
 
-        boolean result = authController.signIn(email, password);
-        outputView.printSignInResult(result);
+        MemberDTO member = authController.signIn(email, password);
+        outputView.printSignInResult(member != null);
 
-        if (result) {
+        if (member != null) {
             this.loggedInEmail = email;
+            this.loggedInMember = member;           // ← 저장
+            studyInputView.setMember(member);        // ← StudyInputView에 전달
             return selectMenu();
         }
         return false;
@@ -218,14 +222,15 @@ public class MemberInputView {
         System.out.print("비밀번호 : ");
         String password = sc.nextLine();
 
-        boolean result = authController.signIn(email, password);
-        outputView.printSignInResult(result);
+        MemberDTO result = authController.signIn(email, password);
+        outputView.printSignInResult(result != null);
 
-        if (result) {
+        if (result != null) {
             this.loggedInEmail = email;
+            this.loggedInMember = result;
+            studyInputView.setMember(result);
             try {
-                // 강사 전용 메뉴 호출 연결
-                courseInputView.teacherCourseMenu(1L);
+                courseInputView.teacherCourseMenu(result.getMemberId());
                 return true;
             } catch (SQLException e) {
                 outputView.printError("강사 메뉴 로드 중 오류 발생");
@@ -295,13 +300,13 @@ public class MemberInputView {
                     studyInputView.ChooseFav();
                     break;
                 case 3:
-                    try { courseInputView.courseSelection(memberId); } catch (SQLException e) {}
+                    try { courseInputView.courseSelection(loggedInMember.getMemberId()); } catch (SQLException e) {}
                     break;
                 case 4:
                     studyInputView.Review();
                     break;
                 case 5:
-                    // 강좌 검색하기();
+//                     강좌 검색하기();
                     break;
                 case 6:
                     resetPassword();
@@ -312,6 +317,7 @@ public class MemberInputView {
                 case 8:
                     boolean out = logout(loggedInEmail);
                     loggedInEmail = null;
+                    loggedInMember = null;
                     if(out){
                         return true;
                     } else {
@@ -321,6 +327,7 @@ public class MemberInputView {
                 case 9:
                     boolean kill = getOut(loggedInEmail);
                     loggedInEmail = null;
+                    loggedInMember = null;
                     if(kill){
                         return true;
                     } else {
@@ -337,9 +344,9 @@ public class MemberInputView {
         try {
             boolean kill = authController.getOut(email);
             if(kill) {
-                System.out.println("===============================");
+                System.out.println("==================================");
                 System.out.println("    결국 포기한거야? 나약한 녀석...");
-                System.out.println("===============================");
+                System.out.println("==================================");
                 return kill;
             } else {
                 return kill;

@@ -1,5 +1,6 @@
 package com.wanted.only_one.member.controller;
 
+import com.wanted.only_one.member.dto.MemberDTO;
 import com.wanted.only_one.member.service.AuthService;
 
 import java.sql.SQLException;
@@ -18,7 +19,7 @@ public class AuthController {
     }
 
     // 강사 ,학생 로그인
-    public boolean signIn(String email, String password) {
+    public MemberDTO signIn(String email, String password) {
         return service.signIn(email, password);
     }
     // 비번 초기화

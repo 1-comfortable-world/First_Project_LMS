@@ -21,14 +21,14 @@ public class StudyingDAO {
     }
 
 
-    public List<CourseDTO> showcompletedCourseList() throws SQLException {
+    public List<CourseDTO> showcompletedCourseList(long memberId) throws SQLException {
         // 동작시킬 쿼리문 준비
         String query = QueryUtil.getQuery("showcompletedCourseList");
         List<CourseDTO> completedCourseList = new ArrayList<>();
 
         // 쿼리문 동작
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, 8L); // 로그인 세션 연결 후 교체
+            pstmt.setLong(1, memberId); // 로그인 세션 연결 후 교체
             ResultSet rset = pstmt.executeQuery();
 
             while(rset.next()){
@@ -41,12 +41,12 @@ public class StudyingDAO {
     }
 
 
-    public List<CourseDTO> showMyStudyingList(int menu) throws SQLException {
+    public List<CourseDTO> showMyStudyingList(long memberId,int menu) throws SQLException {
         String query = QueryUtil.getQuery("showMyStudyingList");
         List<CourseDTO> list = new ArrayList<>();
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, 8L);   // TODO: 로그인 세션 연결 후 교체
+            pstmt.setLong(1, memberId);   // TODO: 로그인 세션 연결 후 교체
             pstmt.setInt(2, menu);
             ResultSet rset = pstmt.executeQuery();
 

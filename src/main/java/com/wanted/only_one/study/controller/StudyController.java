@@ -25,25 +25,24 @@ public class StudyController {
         return favService.showCourseList();
     }
 
-    public boolean addFavList(String description) {
-        return favService.addFavList(description);
+    public boolean addFavList(long memberId,String description) {
+        return favService.addFavList(memberId,description);
     }
 
-    public List<FavDTO> showFavList() {
-        return favService.showFavList();
+    public List<FavDTO> showFavList(long memberId) {
+        return favService.showFavList(memberId);
     }
 
-    public List<CourseDTO> showcompletedCourseList() {
-        return reviewService.showcompletedCourseList();
+    public List<CourseDTO> showcompletedCourseList(long memberId) {
+        return reviewService.showcompletedCourseList(memberId);
     }
 
-    public Boolean WriteReview(String description, String content, Double rating) {
-        return reviewService.WriteReview(description,content,rating);
-
+    public Boolean WriteReview(long memberId, String description, String content, Double rating) {
+        return reviewService.WriteReview(memberId, description, content, rating);
     }
 
-    public List<CourseDTO> showMyStudyingList(int menu) {
-        return studyingService.showMyStudyingList(menu);
+    public List<CourseDTO> showMyStudyingList(long memberId,int menu) {
+        return studyingService.showMyStudyingList(memberId,menu);
     }
 
 /*강의 수강완료 처리할 때
@@ -53,16 +52,16 @@ studyController.updateCourseStatus(memberId, courseId);
         studyingService.updateCourseStatus(memberId, courseId);
     }
 
-    public List<ReviewDTO> showMyReviewList() {
-        return reviewService.showMyReviewList();
+    public List<ReviewDTO> showMyReviewList(long memberId) {
+        return reviewService.showMyReviewList(memberId);
     }
 
     public List<ReviewDTO> ShowReviewInCourse(String description) {
         return reviewService.ShowReviewInCourse(description);
     }
 
-    public List<ReviewDTO> ShowReviewForTeacher() {
-        return reviewService.ShowReviewForTeacher();
+    public List<ReviewDTO> ShowReviewForTeacher(long memberId) {
+        return reviewService.ShowReviewForTeacher(memberId);
     }
 
     public boolean checkCourseExists(String description) {

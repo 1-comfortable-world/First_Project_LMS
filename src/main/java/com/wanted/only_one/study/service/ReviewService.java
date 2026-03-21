@@ -25,26 +25,26 @@ public class ReviewService {
     }
 
 // 수강 완료한 강좌 조회
-    public List<CourseDTO> showcompletedCourseList() {
+    public List<CourseDTO> showcompletedCourseList(long memberId) {
         try {
-            return studyingDAO.showcompletedCourseList();
+            return studyingDAO.showcompletedCourseList(memberId);
         } catch (SQLException e) {
             throw new RuntimeException("수강 완료 강좌 조회 중 에러 발생 🚨");
         }
     }
 
-    public Boolean WriteReview(String description, String content, Double rating) {
+    public Boolean WriteReview(long memberId, String description, String content, Double rating) {
         try {
             connection.setAutoCommit(false);
 
             // 이미 작성한 강좌평이 있는지 확인
-            boolean alreadyExists = reviewDAO.checkExistingReview(description);
+            boolean alreadyExists = reviewDAO.checkExistingReview(memberId,description);
             if (alreadyExists) {
                 connection.rollback();
                 return null; // = 이미 작성한 강좌평 있다
             }
 
-            Long writereview = reviewDAO.WriteReview(description,content,rating);
+            Long writereview = reviewDAO.WriteReview(memberId, description,content,rating);
 
             if(writereview == null){
                 throw new SQLException("🚨해당 강좌를 찾을 수 없습니다 ");
@@ -70,9 +70,9 @@ public class ReviewService {
         }
     }
 
-    public List<ReviewDTO> showMyReviewList() {
+    public List<ReviewDTO> showMyReviewList(long memberId) {
         try {
-            return reviewDAO.showMyReviewList();
+            return reviewDAO.showMyReviewList(memberId);
         } catch (SQLException e) {
             throw new RuntimeException("강좌평 조회 중 에러 발생 🚨");
         }
@@ -86,9 +86,9 @@ public class ReviewService {
         }
     }
 
-    public List<ReviewDTO> ShowReviewForTeacher() {
+    public List<ReviewDTO> ShowReviewForTeacher(long memberId) {
         try {
-            return reviewDAO.ShowReviewForTeacher();
+            return reviewDAO.ShowReviewForTeacher(memberId);
         } catch (SQLException e) {
             throw new RuntimeException("강좌평 조회 중 에러 발생 🚨");
         }

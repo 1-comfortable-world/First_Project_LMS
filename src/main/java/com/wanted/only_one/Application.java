@@ -31,7 +31,7 @@ public class Application {
             StudyInputView studyView = new StudyInputView(new StudyOutputView(), studyCtrl);
 
             // 2. 서비스 & 컨트롤러 & 뷰 조립 (Course)
-            CourseInputView courseView = new CourseInputView(new CourseController(), new CourseOutputView(), studyView);
+            CourseInputView courseView = new CourseInputView(new CourseController(studyCtrl), new CourseOutputView(), studyView);
 
             // 3. 결제 조립
             PaymentInputView payView = new PaymentInputView(new PaymentController(new PaymentService(con)), new PaymentOutputView());

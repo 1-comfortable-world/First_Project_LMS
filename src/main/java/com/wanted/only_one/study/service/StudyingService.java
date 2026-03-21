@@ -20,9 +20,9 @@ public class StudyingService {
         this.connection = connection;
     }
 
-    public List<CourseDTO> showMyStudyingList(int menu) {
+    public List<CourseDTO> showMyStudyingList(long memberId,int menu) {
         try {
-            return studyingDAO.showMyStudyingList(menu);
+            return studyingDAO.showMyStudyingList(memberId,menu);
         } catch (SQLException e) {
             throw new RuntimeException("수강 강좌 조회 중 에러 발생 🚨");
         }
