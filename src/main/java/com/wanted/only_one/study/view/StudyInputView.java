@@ -76,9 +76,10 @@ public class StudyInputView {
             System.out.println("=================================");
             System.out.println("         선택 목록 고르기");
             System.out.println("=================================");
-            System.out.println("1. 전체 강좌 목록 보기");
-            System.out.println("2. 선택 목록 강좌 조회하기");
-            System.out.println("3. 전으로 돌아가기");
+            System.out.println("1. 전체 강좌 목록보기");
+            System.out.println("2. 수강 예정 강좌 고르기");
+            System.out.println("3. 수강예정 강좌 조회하기");
+            System.out.println("4. 전으로 돌아가기");
             System.out.print("번호를 입력해주세요 : ");
 
             int menu = inputInt();
@@ -88,9 +89,12 @@ public class StudyInputView {
                     showCourseList();
                     break;
                 case 2:
-                    showFavList();
+                    chooseCourseList();
                     break;
                 case 3:
+                    showFavList();
+                    break;
+                case 4:
                     studyOutputView.printMessage("== 이전 화면으로 돌아갑니다. ==");
                     return;
                 default:

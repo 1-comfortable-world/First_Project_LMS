@@ -287,7 +287,6 @@ public class MemberInputView {
             System.out.print("메뉴 선택 : ");
 
             int menu = inputInt();
-            long memberId = 2L;
 
             switch (menu) {
                 case 0:
