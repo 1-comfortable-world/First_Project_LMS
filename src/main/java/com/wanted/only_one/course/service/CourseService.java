@@ -4,8 +4,14 @@ import com.wanted.only_one.course.dao.CourseDAO;
 import com.wanted.only_one.course.dao.CourseSectionDAO;
 import com.wanted.only_one.course.dto.CourseDTO;
 import com.wanted.only_one.course.dto.SectionDTO;
+import com.wanted.only_one.global.config.JDBCTemplate;
+import com.wanted.only_one.member.dto.MemberDTO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class CourseService {
@@ -56,5 +62,39 @@ public class CourseService {
     // 강좌 검색 + 별점 (별점 높은 순)
     public List<CourseDTO> searchCourseWithRating(String keyword) throws SQLException {
         return courseDAO.searchByTitleWithRating(keyword);
+    }
+
+    public List<MemberDTO> getEnrolledStudents(long courseId) throws SQLException {
+        // 1. 에러 원인 해결: 테이블명을 영어(members, studying_courses)로 수정
+        // 2. 에러 원인 해결: 존재하지 않는 enrolled_at 컬럼 제거
+        String sql = "SELECT m.member_id, m.name, m.email, m.role, m.acc_count " +
+                "FROM members m " +
+                "JOIN studying_courses s ON m.member_id = s.member_id " +
+                "WHERE s.course_id = ?";
+
+        List<MemberDTO> students = new ArrayList<>();
+
+        // try-with-resources로 자원 해제 확실히 처리
+        try (Connection conn = JDBCTemplate.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setLong(1, courseId);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    // 3. 에러 원인 해결: 생성자 파라미터 개수와 타입을 MemberDTO 정의에 맞게 수정
+                    // password는 조회하지 않으므로 null 처리, 가입일은 제거
+                    MemberDTO student = new MemberDTO();
+                    student.setMemberId(rs.getLong("member_id"));
+                    student.setName(rs.getString("name"));
+                    student.setEmail(rs.getString("email"));
+                    student.setRole(rs.getString("role"));
+                    student.setAccCount(rs.getInt("acc_count"));
+
+                    students.add(student);
+                }
+            }
+        }
+        return students;
     }
 }

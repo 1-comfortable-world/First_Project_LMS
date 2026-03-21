@@ -6,6 +6,7 @@ import com.wanted.only_one.course.dto.SectionDTO;
 import com.wanted.only_one.course.service.CourseService;
 import com.wanted.only_one.course.service.LectureService;
 import com.wanted.only_one.global.config.JDBCTemplate;
+import com.wanted.only_one.member.dto.MemberDTO;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -72,6 +73,12 @@ public class CourseController {
 
     public boolean deleteCourse(long courseId) throws SQLException {
         return courseService.deleteCourse(courseId);
+    }
+
+    // 강사가 특정 강좌의 수강생 목록을 조회
+    public List<MemberDTO> getEnrolledStudents(long courseId) throws SQLException {
+        // 컨트롤러는 서비스를 호출합니다.
+        return courseService.getEnrolledStudents(courseId);
     }
 
     // 결제 여부 확인

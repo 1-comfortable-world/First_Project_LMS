@@ -164,7 +164,28 @@ public class CourseInputView {
 
         int menu = inputInt();
         switch (menu) {
-            case 1: outputView.printMessage("수강생 조회는 study 팀과 연동됩니다."); break;
+            case 1:
+                outputView.printMessage("\n--- 현재 수강생 목록 ---");
+                try {
+                    List<com.wanted.only_one.member.dto.MemberDTO> students = controller.getEnrolledStudents(courseId);
+
+                    if (students == null || students.isEmpty()) {
+                        outputView.printMessage("현재 수강 중인 학생이 없습니다.");
+                    } else {
+                        System.out.println("-------------------------------------------");
+                        System.out.printf("%-15s | %-25s\n", "이름", "이메일");
+                        System.out.println("-------------------------------------------");
+                        for (com.wanted.only_one.member.dto.MemberDTO student : students) {
+                            System.out.printf("%-15s | %-25s\n",
+                                    student.getName(),
+                                    student.getEmail());
+                        }
+                        System.out.println("-------------------------------------------");
+                    }
+                } catch (SQLException e) {
+                    outputView.printError("데이터 조회 중 오류 발생");
+                }
+                break;
             case 2:
                 studyInputView.ShowReviewInCourse();
                 break;
