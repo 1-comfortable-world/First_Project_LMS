@@ -261,13 +261,14 @@ public class MemberInputView {
             System.out.println("=================================");
             System.out.println("            메인메뉴");
             System.out.println("=================================");
-            System.out.println("1. 결제하기");
-            System.out.println("2. 강좌 전체 보기");
-            System.out.println("3. 강좌 즐겨찾기");
-            System.out.println("4. 강좌 수강하기");
-            System.out.println("5. 강좌평 작성");
-            System.out.println("6. 강좌 검색하기");
-            System.out.println("7. 비밀번호 재설정");
+            System.out.println("0. 결제하기");
+            System.out.println("1. 강좌 전체 보기");
+            System.out.println("2. 강좌 즐겨찾기");
+            System.out.println("3. 강좌 수강하기");
+            System.out.println("4. 강좌평 작성");
+            System.out.println("5. 강좌 검색하기");
+            System.out.println("6. 비밀번호 재설정");
+            System.out.println("7. 결제 내역 보기");
             System.out.println("8. 로그아웃");
             System.out.println("9. 회원탈퇴");
             System.out.println("=================================");
@@ -276,26 +277,29 @@ public class MemberInputView {
             int menu = inputInt();
 
             switch (menu) {
-                case 1:
+                case 0:
                     payInputView.pay();
                     break;
-                case 2:
+                case 1:
 //                    강좌 전체 보기();
                     break;
-                case 3:
+                case 2:
 //                    강좌 즐겨찾기();
                     break;
-                case 4:
+                case 3:
 //                    강좌 수강하기();
                     break;
-                case 5:
+                case 4:
 //                    강좌평 작성();
                     break;
-                case 6:
+                case 5:
 //                    강좌 검색하기();
                     break;
-                case 7:
+                case 6:
                     resetPassword();
+                    break;
+                case 7:
+                    payInputView.showPayment();
                     break;
                 case 8:
                     boolean out = logout(loggedInEmail);

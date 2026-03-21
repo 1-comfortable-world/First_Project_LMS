@@ -80,6 +80,7 @@ public class PaymentInputView {
         String email = inputEmail();
         List<PaymentDTO> payList= paycontroller.findMyPayment(email);
         payoutputView.printPayments(payList);
+
     }
 
     private String inputEmail() {
