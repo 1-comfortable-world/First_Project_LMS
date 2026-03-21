@@ -22,6 +22,8 @@ public class QueryUtil {
         try {
             loadQueryFile("member_queries.xml");
             loadQueryFile("payments_queries.xml");
+            loadQueryFile("study_queries.xml");
+            loadQueryFile("queries.xml");
         } catch (Exception e) {
             throw new RuntimeException("쿼리 로딩 중 오류 발생", e);
         }
