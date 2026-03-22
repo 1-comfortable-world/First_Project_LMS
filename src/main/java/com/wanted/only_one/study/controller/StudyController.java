@@ -52,6 +52,14 @@ studyController.updateCourseStatus(memberId, courseId);
         studyingService.updateCourseStatus(memberId, courseId);
     }
 
+    public void completeLecture(long memberId, long lectureId, long courseId) {
+        studyingService.completeLecture(memberId, lectureId, courseId);
+    }
+
+    public void enrollCourse(long memberId, long courseId) {
+        studyingService.enrollCourse(memberId, courseId);
+    }
+
     public List<ReviewDTO> showMyReviewList(long memberId) {
         return reviewService.showMyReviewList(memberId);
     }

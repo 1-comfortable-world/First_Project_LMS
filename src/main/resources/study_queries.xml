@@ -38,11 +38,14 @@
     </query>
     <query key="AllLecturesCompleted">
         SELECT COUNT(*)
+        FROM lectures l
+        WHERE l.course_id = ?
+        AND l.lecture_id NOT IN (
+        SELECT lh.lecture_id
         FROM lecture_histories lh
-        JOIN lectures l ON lh.lecture_id = l.lecture_id
         WHERE lh.member_id = ?
-        AND l.course_id = ?
-        AND lh.status = '미수강'
+        AND lh.status = 'COMPLETED'
+        )
     </query>
     <query key="updateCourseStatus">
         UPDATE studying_courses
@@ -91,5 +94,17 @@
         SELECT COUNT(*)
         FROM courses
         WHERE title LIKE CONCAT('%', ?, '%')
+    </query>
+    <query key="insertLectureHistory">
+        INSERT INTO lecture_histories (member_id, lecture_id, status)
+        VALUES (?, ?, 'COMPLETED')
+    </query>
+    <query key="insertStudyingCourse">
+        INSERT INTO studying_courses (course_id, member_id, status)
+        VALUES (?, ?, '수강 중')
+    </query>
+    <query key="existsStudyingCourse">
+        SELECT COUNT(*) FROM studying_courses
+        WHERE member_id = ? AND course_id = ?
     </query>
 </properties>

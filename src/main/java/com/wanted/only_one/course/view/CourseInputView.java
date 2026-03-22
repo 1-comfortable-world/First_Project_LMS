@@ -2,6 +2,7 @@ package com.wanted.only_one.course.view;
 
 import com.wanted.only_one.course.controller.CourseController;
 import com.wanted.only_one.course.dto.CourseDTO;
+import com.wanted.only_one.course.dto.LectureDTO;
 import com.wanted.only_one.course.dto.SectionDTO;
 import com.wanted.only_one.study.view.StudyInputView;
 
@@ -58,7 +59,7 @@ public class CourseInputView {
                     if (courseId > 0) studyLecture(memberId, courseId);
                     break;
                 case 2:
-                    studyInputView.Review();
+                    studyInputView.ShowReviewInCourse();
                     break;
                 case 3:
                     return;
@@ -98,18 +99,31 @@ public class CourseInputView {
     }
 
     private void studyLecture(long memberId, long courseId) throws SQLException {
+        controller.enrollCourse(memberId, courseId);
         SectionDTO detail = controller.findJoin(courseId);
         outputView.printCourseDetail(detail);
+
+        List<LectureDTO> lectures = detail.getLectures();
+        if (lectures == null || lectures.isEmpty()) {
+            outputView.printMessage("등록된 강의가 없습니다.");
+            return;
+        }
 
         System.out.println("=================================");
         System.out.println("수강할 강의를 선택해주세요.");
         System.out.println("0. 뒤로가기");
         System.out.println("=================================");
         System.out.print("강의 ID : ");
-        long lectureId = inputLong();
+        int num = inputInt();
 
-        if (lectureId == 0) return;
-        controller.updateCourseStatus(memberId, courseId);
+        if (num == 0) return;
+        if (num < 1 || num > lectures.size()) {
+            outputView.printMessage("올바른 번호를 입력해주세요.");
+            return;
+        }
+
+        long lectureId = lectures.get(num - 1).getLectureId();
+        controller.completeLecture(memberId, lectureId, courseId);
         outputView.printSuccess("강의 수강 완료!");
     }
 

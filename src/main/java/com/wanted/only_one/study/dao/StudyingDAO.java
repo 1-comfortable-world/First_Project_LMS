@@ -68,4 +68,24 @@ public class StudyingDAO {
             pstmt.executeUpdate();
         }
     }
+
+    public boolean insertStudyingCourse(long memberId, long courseId) throws SQLException {
+        String query = QueryUtil.getQuery("insertStudyingCourse");
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setLong(1, courseId);
+            pstmt.setLong(2, memberId);
+            return pstmt.executeUpdate() > 0;
+        }
+    }
+
+    public boolean existsStudyingCourse(long memberId, long courseId) throws SQLException {
+        String query = QueryUtil.getQuery("existsStudyingCourse");
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setLong(1, memberId);
+            pstmt.setLong(2, courseId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) return rs.getInt(1) > 0;
+        }
+        return false;
+    }
 }

@@ -332,9 +332,14 @@ public class StudyInputView {
 
             List<ReviewDTO> reviewInCourse = studyController.ShowReviewInCourse(description);
 
+            if (!studyController.checkCourseExists(description)) {
+                studyOutputView.printError("존재하지 않는 강좌입니다. 다시 입력해주십시오.");
+                continue;
+            }
+
             if (reviewInCourse == null || reviewInCourse.isEmpty()) {
-                studyOutputView.printError("\"" + description + "\"에 관한 검색결과가 없습니다. 다시 입력해주십시오.");
-                continue;  // 다시 입력받기
+                studyOutputView.printMessage("\"" + description + "\"에 작성된 강좌평이 없습니다.");
+                return;
             }
 
             studyOutputView.printReviewInCourse(reviewInCourse);

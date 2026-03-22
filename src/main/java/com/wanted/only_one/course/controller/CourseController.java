@@ -45,9 +45,12 @@ public class CourseController {
         return courseService.findCourseWithSections(courseId);
     }
 
-    // 강의 수강완료 + 강좌 상태 자동 변경 → study 팀 연동 대기 중
-    public void updateCourseStatus(long memberId, long courseId) throws SQLException {
-         studyController.updateCourseStatus(memberId, courseId);
+    public void completeLecture(long memberId, long lectureId, long courseId) {
+        studyController.completeLecture(memberId, lectureId, courseId);
+    }
+
+    public void enrollCourse(long memberId, long courseId) {
+        studyController.enrollCourse(memberId, courseId);
     }
 
     // ── 강사용 ───────────────────────────────────────

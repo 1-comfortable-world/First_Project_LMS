@@ -39,4 +39,25 @@ public class StudyingService {
             throw new RuntimeException("강좌 상태 업데이트 중 에러 발생 🚨" );
         }
     }
+
+    public void completeLecture(long memberId, long lectureId, long courseId) {
+        try {
+            lectureHistoryDAO.insertLectureHistory(memberId, lectureId); // 강의 수강 기록 저장
+            updateCourseStatus(memberId, courseId); // 전체 완료 여부 체크
+        } catch (SQLException e) {
+            throw new RuntimeException("강의 수강 처리 중 에러 발생 🚨");
+        }
+    }
+
+    public void enrollCourse(long memberId, long courseId) {
+        try {
+            if (!studyingDAO.existsStudyingCourse(memberId, courseId)) {
+                studyingDAO.insertStudyingCourse(memberId, courseId);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("수강 신청 중 에러 발생 🚨");
+        }
+    }
+
+
 }
