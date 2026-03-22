@@ -34,28 +34,38 @@ public class FavService {
     }
 
 
-    public boolean addFavList(long memberId,String description){
+    public int addFavList(long memberId, String description) {
         try {
             connection.setAutoCommit(false);
 
-            Long addededCourseId = favDAO.addFav(memberId, description);
+            if (favDAO.checkAlreadyFav(memberId, description)) {
+                connection.rollback();
+                return 2;
+            }
 
-            if(addededCourseId == null){
-                throw new SQLException("🚨해당 강좌를 찾을 수 없습니다 ");
+            if (favDAO.checkAlreadyStudying(memberId, description)) {
+                connection.rollback();
+                return 3;
+            }
+
+            Long addedCourseId = favDAO.addFav(memberId, description);
+
+            if (addedCourseId == null) {
+                connection.rollback();
+                return 0;
             }
 
             connection.commit();
-            return true;
+            return 1;
 
         } catch (SQLException e) {
             try {
                 connection.rollback();
-
             } catch (SQLException ex) {
                 throw new RuntimeException("롤백 중 에러 발생");
             }
-            return false;
-        }finally{
+            return 0;
+        } finally {
             try {
                 connection.setAutoCommit(true);
             } catch (SQLException e) {
@@ -73,4 +83,33 @@ public class FavService {
         }
     }
 
+    public Boolean deleteFavList(long memberId, String description) {
+        try {
+            connection.setAutoCommit(false);
+
+            Boolean result = favDAO.deleteFav(memberId, description);
+
+            if (result == null) {
+                connection.rollback();
+                return null;
+            }
+
+            connection.commit();
+            return true;
+
+        } catch (SQLException e) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                throw new RuntimeException("롤백 중 에러 발생");
+            }
+            return false;
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 }

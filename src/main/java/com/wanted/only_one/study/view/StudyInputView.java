@@ -144,15 +144,51 @@ public class StudyInputView {
 
         while (true) {
             System.out.println(" ");
-            System.out.print("이전 화면으로 나가시려면 0번을 누르세요 : ");
+            System.out.println("1. 수강 예정 목록에서 강좌 삭제하기");
+            System.out.println("2. 이전 화면으로 돌아가기");
+            System.out.print("번호를 입력해주세요 : ");
             int menu = inputInt();
             switch (menu) {
-                case 0:
+                case 1:
+                    deleteFav(favList);
+                    break; // 삭제 후 목록 재조회는 break / 나가는 건 return
+                case 2:
                     studyOutputView.printMessage("== 이전 화면으로 돌아갑니다. ==");
                     return;
                 default:
                     studyOutputView.printError("다시 선택해주세요.");
             }
+        }
+    }
+
+    public void deleteFav(List<FavDTO> favList) {
+        System.out.print("삭제할 강좌의 제목을 입력하세요 : ");
+        String description = inputNoBlank();
+
+        if (description == null) {
+            studyOutputView.printMessage("== 이전 화면으로 돌아갑니다. ==");
+            return;
+        }
+
+        boolean exists = false;
+        for (FavDTO fav : favList) {
+            if (fav.getCourse_title().contains(description)) {
+                exists = true;
+                break;
+            }
+        }
+
+        if (!exists) {
+            studyOutputView.printError("수강 예정 목록에 없는 강좌입니다.");
+            return;
+        }
+
+        Boolean result = studyController.deleteFavList(loggedInMember.getMemberId(), description);
+
+        if (result) {
+            studyOutputView.printSuccess("\"" + description + "\" 강좌가 수강 예정 목록에서 삭제되었습니다.");
+        } else {
+            studyOutputView.printError("삭제 중 문제가 발생했습니다.");
         }
     }
 
@@ -165,13 +201,20 @@ public class StudyInputView {
             studyOutputView.printMessage("== 이전 화면으로 돌아갑니다. ==");
             return;
         }
+        int result = studyController.addFavList(loggedInMember.getMemberId(), description);
 
-        Boolean result = studyController.addFavList(loggedInMember.getMemberId(), description);
-
-        if (result != null && result == true) {
-            studyOutputView.printSuccess("수강 예정 목록에 \"" + description + "\" 강좌가 추가되었습니다!");
-        } else {
-            studyOutputView.printError("강좌 추가 실패");
+        switch (result) {
+            case 1:
+                studyOutputView.printSuccess("수강 예정 목록에 \"" + description + "\" 강좌가 추가되었습니다!");
+                break;
+            case 2:
+                studyOutputView.printError("이미 수강 예정 목록에 있는 강좌입니다.");
+                break;
+            case 3:
+                studyOutputView.printError("이미 수강 중이거나 수강완료한 강좌입니다.");
+                break;
+            default:
+                studyOutputView.printError("\"" + description + "\"에 해당하는 강좌가 존재하지 않습니다.");
         }
     }
 
@@ -281,7 +324,7 @@ public class StudyInputView {
         Boolean result = studyController.WriteReview(loggedInMember.getMemberId(), description, content, rating);
 
         if (result == null) {
-            studyOutputView.printError("❗이미 해당 강좌에 강좌평을 작성하셨습니다."); // ✅ 친절한 안내
+            studyOutputView.printError("❗이미 해당 강좌에 강좌평을 작성하셨습니다.");
         } else if (result) {
             studyOutputView.printSuccess("✅강좌평이 성공적으로 생성되었습니다.");
         } else {
@@ -320,9 +363,9 @@ public class StudyInputView {
     public void ShowReviewInCourse() {
         while (true) {
             System.out.println("=========================================");
-            System.out.println(" 강좌평을 조회하고자 하는 강좌명을 입력하세요 ");
+            System.out.println("               강좌평 조회 ");
             System.out.println("=========================================");
-            System.out.println("입력 : ");
+            System.out.print("강좌평을 조회하고자 하는 강좌명을 입력하세요 : ");
             String description = inputNoBlank();
 
             if (description == null) {
@@ -330,12 +373,13 @@ public class StudyInputView {
                 return;
             }
 
-            List<ReviewDTO> reviewInCourse = studyController.ShowReviewInCourse(description);
-
             if (!studyController.checkCourseExists(description)) {
                 studyOutputView.printError("존재하지 않는 강좌입니다. 다시 입력해주십시오.");
                 continue;
             }
+
+            List<ReviewDTO> reviewInCourse = studyController.ShowReviewInCourse(description);
+
 
             if (reviewInCourse == null || reviewInCourse.isEmpty()) {
                 studyOutputView.printMessage("\"" + description + "\"에 작성된 강좌평이 없습니다.");
@@ -363,7 +407,7 @@ public class StudyInputView {
 
         if (ReviewForTeacher == null || ReviewForTeacher.isEmpty()) {
             studyOutputView.printError("개설하신 강좌가 없거나 작성된 강좌평이 없습니다.");
-            return;  // 이전 화면으로 바로 복귀
+            return;
         }
 
         studyOutputView.printReviewForTeacher(ReviewForTeacher);

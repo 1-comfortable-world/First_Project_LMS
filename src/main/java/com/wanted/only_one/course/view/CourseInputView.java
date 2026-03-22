@@ -135,7 +135,7 @@ public class CourseInputView {
             outputView.printCourses(courseList);
 
             System.out.println("=================================");
-            System.out.println("           강좌 관리");
+            System.out.println("           강사 메인페이지");
             System.out.println("=================================");
             System.out.println("1. 나의 강좌 전체 보기");
             System.out.println("2. 강좌/강의 등록하기");

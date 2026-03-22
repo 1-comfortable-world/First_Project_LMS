@@ -56,4 +56,36 @@ public class FavDAO {
         }
         return null;
     }
+
+    public Boolean deleteFav(long memberId, String description) throws SQLException {
+        String query = QueryUtil.getQuery("deleteFavList");
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setLong(1, memberId);
+            pstmt.setString(2, description);
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0 ? true : null;
+        }
+    }
+
+    public boolean checkAlreadyFav(long memberId, String description) throws SQLException {
+        String query = QueryUtil.getQuery("checkAlreadyFav");
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setLong(1, memberId);
+            pstmt.setString(2, description);
+            ResultSet rs = pstmt.executeQuery();
+            return rs.next() && rs.getInt(1) > 0;
+        }
+    }
+
+    public boolean checkAlreadyStudying(long memberId, String description) throws SQLException {
+        String query = QueryUtil.getQuery("checkAlreadyStudying");
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setLong(1, memberId);
+            pstmt.setString(2, description);
+            ResultSet rs = pstmt.executeQuery();
+            return rs.next() && rs.getInt(1) > 0;
+        }
+    }
 }

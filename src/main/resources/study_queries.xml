@@ -107,4 +107,17 @@
         SELECT COUNT(*) FROM studying_courses
         WHERE member_id = ? AND course_id = ?
     </query>
+    <query key="deleteFavList">
+        DELETE FROM favorites
+        WHERE member_id = ?
+        AND course_id = (SELECT course_id FROM courses WHERE title LIKE CONCAT('%', ?, '%'))
+    </query>
+    <query key="checkAlreadyFav">
+        SELECT COUNT(*) FROM favorites
+        WHERE member_id = ? AND course_id = (SELECT course_id FROM courses WHERE title LIKE CONCAT('%', ?, '%'))
+    </query>
+    <query key="checkAlreadyStudying">
+        SELECT COUNT(*) FROM studying_courses
+        WHERE member_id = ? AND course_id = (SELECT course_id FROM courses WHERE title LIKE CONCAT('%', ?, '%'))
+    </query>
 </properties>
