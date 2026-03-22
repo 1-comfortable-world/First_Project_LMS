@@ -1,7 +1,10 @@
 package com.wanted.only_one.member.view;
 
+import com.wanted.only_one.course.view.CourseInputView;
 import com.wanted.only_one.member.controller.AuthController;
+import com.wanted.only_one.member.dto.MemberDTO;
 import com.wanted.only_one.payments.PaymentInputView;
+import com.wanted.only_one.study.view.StudyInputView;
 
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -11,15 +14,23 @@ public class MemberInputView {
     private final AuthController authController;
     private final MemberOutputView outputView;
     private final PaymentInputView payInputView;
+    private final CourseInputView courseInputView; // 주입 추가
+    private final StudyInputView studyInputView;   // 주입 추가
     private final Scanner sc = new Scanner(System.in);
 
     private String loggedInEmail;
+    private MemberDTO loggedInMember;
 
     public MemberInputView(AuthController authController,
-                           MemberOutputView outputView, PaymentInputView payInputView) {
+                           MemberOutputView outputView,
+                           PaymentInputView payInputView,
+                           CourseInputView courseInputView,
+                           StudyInputView studyInputView) {
         this.authController = authController;
         this.outputView = outputView;
         this.payInputView = payInputView;
+        this.courseInputView = courseInputView;
+        this.studyInputView = studyInputView;
     }
 
     // 메인 메뉴
@@ -77,7 +88,7 @@ public class MemberInputView {
                     signUp("TEACHER");
                     break;
                 case 3:
-                    return;  // ← while 빠져나가서 메인으로
+                    return;
                 default:
                     outputView.printError("올바른 메뉴를 선택해주세요.");
             }
@@ -138,14 +149,11 @@ public class MemberInputView {
             outputView.printSignUpResult(result);
             break;
         }
-        // 회원가입 성공하면 로그인 화면으로 이동
         if (result) {
             displayLoginMenu();
         }
         return false;
     }
-
-
 
     // 로그인 메뉴
     public boolean displayLoginMenu() {
@@ -174,34 +182,31 @@ public class MemberInputView {
                     }
                     break;
                 case 3:
-                    return true;  // ← 메인으로
+                    return true;
                 default:
                     outputView.printError("올바른 메뉴를 선택해주세요.");
             }
         }
     }
 
-
-
     // 학생 로그인 처리
     private boolean studentLogin() {
         System.out.println("이메일을 입력하십시오");
         System.out.print("이메일 : ");
         String email = sc.nextLine();
-//        boolean emailRs = authController.emailMix(email);
 
         System.out.println("비밀번호를 입력하십시오");
         System.out.print("비밀번호 : ");
         String password = sc.nextLine();
-//        boolean pwdRs = authController.pwdCheck(email,password);
 
+        MemberDTO member = authController.signIn(email, password);
+        outputView.printSignInResult(member != null);
 
-        boolean result = authController.signIn(email, password);
-        outputView.printSignInResult(result);
-
-        if (result) {
-            this.loggedInEmail = email; // 로그인 성공 시 저장
-            return selectMenu();               // 메인 메뉴로 이동
+        if (member != null) {
+            this.loggedInEmail = email;
+            this.loggedInMember = member;           // ← 저장
+            studyInputView.setMember(member);        // ← StudyInputView에 전달
+            return selectMenu();
         }
         return false;
     }
@@ -211,18 +216,25 @@ public class MemberInputView {
         System.out.println("이메일을 입력하십시오");
         System.out.print("이메일 : ");
         String email = sc.nextLine();
-        boolean emailRs = authController.emailMix(email);
+        boolean emailRs = authController.emailMix(email); // 네 원본에 있던 로직
 
         System.out.println("비밀번호를 입력하십시오");
         System.out.print("비밀번호 : ");
         String password = sc.nextLine();
 
-        boolean result = authController.signIn(email, password);
-        outputView.printSignInResult(result);
+        MemberDTO result = authController.signIn(email, password);
+        outputView.printSignInResult(result != null);
 
-        if (result) {
-            this.loggedInEmail = email; // 로그인 성공 시 저장
-//            return 강사메인메뉴();
+        if (result != null) {
+            this.loggedInEmail = email;
+            this.loggedInMember = result;
+            studyInputView.setMember(result);
+            try {
+                courseInputView.teacherCourseMenu(result.getMemberId());
+                return true;
+            } catch (SQLException e) {
+                outputView.printError("강사 메뉴 로드 중 오류 발생");
+            }
         }
         return false;
     }
@@ -281,19 +293,19 @@ public class MemberInputView {
                     payInputView.pay();
                     break;
                 case 1:
-//                    강좌 전체 보기();
+                    try { courseInputView.showAllCourses(); } catch (SQLException e) {}
                     break;
                 case 2:
-//                    강좌 즐겨찾기();
+                    studyInputView.ChooseFav();
                     break;
                 case 3:
-//                    강좌 수강하기();
+                    try { courseInputView.courseSelection(loggedInMember.getMemberId()); } catch (SQLException e) {}
                     break;
                 case 4:
-//                    강좌평 작성();
+                    studyInputView.Review();
                     break;
                 case 5:
-//                    강좌 검색하기();
+//                     강좌 검색하기();
                     break;
                 case 6:
                     resetPassword();
@@ -304,6 +316,7 @@ public class MemberInputView {
                 case 8:
                     boolean out = logout(loggedInEmail);
                     loggedInEmail = null;
+                    loggedInMember = null;
                     if(out){
                         return true;
                     } else {
@@ -313,6 +326,7 @@ public class MemberInputView {
                 case 9:
                     boolean kill = getOut(loggedInEmail);
                     loggedInEmail = null;
+                    loggedInMember = null;
                     if(kill){
                         return true;
                     } else {
@@ -323,22 +337,20 @@ public class MemberInputView {
                     outputView.printError("올바른 메뉴를 선택해주세요.");
             }
         }
-
     }
 
     public boolean getOut(String email) {
         try {
             boolean kill = authController.getOut(email);
-
             if(kill) {
-                System.out.println("===============================");
+                System.out.println("==================================");
                 System.out.println("    결국 포기한거야? 나약한 녀석...");
-                System.out.println("===============================");
+                System.out.println("==================================");
                 return kill;
             } else {
                 return kill;
             }
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             outputView.printError("들어올 땐 마음대로였지만, 나갈 땐 아니란다.");
             return false;
         }
@@ -347,22 +359,17 @@ public class MemberInputView {
     public boolean logout(String email) {
         try {
             boolean out = authController.logout(email);
-
             if(out) {
                 System.out.println("===============================");
                 System.out.println("          공부 더 안해?          ");
                 System.out.println("===============================");
                 return out;
-            }
-            else {
+            } else {
                 return out;
             }
-
         } catch (SQLException e) {
             outputView.printError("들어올 땐 마음대로 였지만, 나갈 땐 아니란다");
             return false;
         }
-
     }
-
 }

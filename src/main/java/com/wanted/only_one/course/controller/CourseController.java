@@ -6,6 +6,8 @@ import com.wanted.only_one.course.dto.SectionDTO;
 import com.wanted.only_one.course.service.CourseService;
 import com.wanted.only_one.course.service.LectureService;
 import com.wanted.only_one.global.config.JDBCTemplate;
+import com.wanted.only_one.member.dto.MemberDTO;
+import com.wanted.only_one.study.controller.StudyController;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -17,6 +19,11 @@ public class CourseController {
 
     private CourseService  courseService  = new CourseService();
     private LectureService lectureService = new LectureService();
+    private StudyController studyController;
+
+    public CourseController(StudyController studyController) {
+        this.studyController = studyController;
+    }
 
     // ── 학생용 ───────────────────────────────────────
 
@@ -38,10 +45,12 @@ public class CourseController {
         return courseService.findCourseWithSections(courseId);
     }
 
-    // 강의 수강완료 + 강좌 상태 자동 변경 → study 팀 연동 대기 중
-    public void updateCourseStatus(long memberId, long courseId) throws SQLException {
-        // studyController.updateCourseStatus(memberId, courseId);
-        System.out.println("수강완료 처리 예정 (study 팀 연동 대기 중)");
+    public void completeLecture(long memberId, long lectureId, long courseId) {
+        studyController.completeLecture(memberId, lectureId, courseId);
+    }
+
+    public void enrollCourse(long memberId, long courseId) {
+        studyController.enrollCourse(memberId, courseId);
     }
 
     // ── 강사용 ───────────────────────────────────────
@@ -72,6 +81,12 @@ public class CourseController {
 
     public boolean deleteCourse(long courseId) throws SQLException {
         return courseService.deleteCourse(courseId);
+    }
+
+    // 강사가 특정 강좌의 수강생 목록을 조회
+    public List<MemberDTO> getEnrolledStudents(long courseId) throws SQLException {
+        // 컨트롤러는 서비스를 호출합니다.
+        return courseService.getEnrolledStudents(courseId);
     }
 
     // 결제 여부 확인

@@ -17,14 +17,14 @@ public class FavDAO {
 
 
 // 전체 선택
-    public List<FavDTO> showFavList() throws SQLException{
+    public List<FavDTO> showFavList(long memberId) throws SQLException{
         // 동작시킬 쿼리문 준비
         String query = QueryUtil.getQuery("showFavList");
         List<FavDTO> favList = new ArrayList<>();
 
         // 쿼리문 동작
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, 1L); // TODO: 로그인 세션 연결 후 교체 -> getMember_id 등 setter로
+            pstmt.setLong(1, memberId); // TODO: 로그인 세션 연결 후 교체 -> getMember_id 등 setter로
             ResultSet rset = pstmt.executeQuery();
 
             while(rset.next()){
@@ -38,11 +38,11 @@ public class FavDAO {
         return favList;
     }
 
-    public Long addFav(String description) throws SQLException {
+    public Long addFav(long memberId,String description) throws SQLException {
         String query = QueryUtil.getQuery("addFavList");
 
         try (PreparedStatement pstmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            pstmt.setInt(1,1);  // 나중에 현재 로그인 되어있는 사용자의 member_id 를 삽입
+            pstmt.setLong(1,memberId);  // 나중에 현재 로그인 되어있는 사용자의 member_id 를 삽입
             pstmt.setString(2, description);
 
             int affectedRows = pstmt.executeUpdate();

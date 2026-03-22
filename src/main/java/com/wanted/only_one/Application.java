@@ -1,47 +1,55 @@
 package com.wanted.only_one;
 
+import com.wanted.only_one.course.controller.CourseController;
+import com.wanted.only_one.course.view.CourseInputView;
+import com.wanted.only_one.course.view.CourseOutputView;
 import com.wanted.only_one.global.config.JDBCTemplate;
 import com.wanted.only_one.member.controller.AuthController;
-import com.wanted.only_one.member.controller.MemberController;
 import com.wanted.only_one.member.service.AuthService;
-import com.wanted.only_one.member.service.MemberService;
-import com.wanted.only_one.member.view.*;
+import com.wanted.only_one.member.view.MemberInputView;
+import com.wanted.only_one.member.view.MemberOutputView;
 import com.wanted.only_one.payments.PaymentController;
 import com.wanted.only_one.payments.PaymentInputView;
 import com.wanted.only_one.payments.PaymentOutputView;
 import com.wanted.only_one.payments.PaymentService;
+import com.wanted.only_one.study.controller.StudyController;
+import com.wanted.only_one.study.service.FavService;
+import com.wanted.only_one.study.service.ReviewService;
+import com.wanted.only_one.study.service.StudyingService;
+import com.wanted.only_one.study.view.StudyInputView;
+import com.wanted.only_one.study.view.StudyOutputView;
 
 import java.sql.Connection;
-import java.sql.SQLException;
 
 public class Application {
     public static void main(String[] args) {
-
         try (Connection con = JDBCTemplate.getConnection()) {
-            System.out.println("✅데이터베이스 연결 성공");
-            JDBCTemplate.printConnectionStatus();
+            System.out.println("✅ 시스템 연결 성공");
 
-            AuthService authService = new AuthService(con);
-            MemberService memberService = new MemberService(con);
+            // 1. 서비스 & 컨트롤러 & 뷰 조립 (Study)
+            StudyController studyCtrl = new StudyController(new FavService(con), new ReviewService(con), new StudyingService(con));
+            StudyInputView studyView = new StudyInputView(new StudyOutputView(), studyCtrl);
 
+            // 2. 서비스 & 컨트롤러 & 뷰 조립 (Course)
+            CourseInputView courseView = new CourseInputView(new CourseController(studyCtrl), new CourseOutputView(), studyView);
 
-            AuthController authController = new AuthController(authService);
-            MemberController memberController = new MemberController(memberService);
+            // 3. 결제 조립
+            PaymentInputView payView = new PaymentInputView(new PaymentController(new PaymentService(con)), new PaymentOutputView());
 
-            MemberOutputView memberoutputView = new MemberOutputView();
-            PaymentOutputView paymentOutputView = new PaymentOutputView();
-            PaymentService paymentService = new PaymentService(con);
-            PaymentController paymentController = new PaymentController(paymentService);
-            PaymentInputView payInputView = new PaymentInputView(paymentController, paymentOutputView);
+            // 4. 메인 메뉴 조립 (모든 뷰 주입)
+            MemberInputView mainView = new MemberInputView(
+                    new AuthController(new AuthService(con)),
+                    new MemberOutputView(),
+                    payView,
+                    courseView,
+                    studyView
+            );
 
+            mainView.displayMainMenu();
 
-            MemberInputView InputView= new MemberInputView(authController, memberoutputView, payInputView);
-
-            InputView.displayMainMenu();
-
-        } catch (SQLException e) {
-            System.err.println("🚨데이터베이스 연결 실패");
-        }finally{
+        } catch (Exception e) {
+            System.err.println("🚨 실행 오류: " + e.getMessage());
+        } finally {
             JDBCTemplate.close();
         }
     }

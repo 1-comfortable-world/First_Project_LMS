@@ -34,12 +34,11 @@ public class FavService {
     }
 
 
-    public boolean addFavList(String description){
+    public boolean addFavList(long memberId,String description){
         try {
             connection.setAutoCommit(false);
 
-            // save(newfavcourse)를 통해 얻은 추가할 과목 목록에의 과목id를 저장
-            Long addededCourseId = favDAO.addFav(description);
+            Long addededCourseId = favDAO.addFav(memberId, description);
 
             if(addededCourseId == null){
                 throw new SQLException("🚨해당 강좌를 찾을 수 없습니다 ");
@@ -66,9 +65,9 @@ public class FavService {
     }
 
 
-    public List<FavDTO> showFavList() {
+    public List<FavDTO> showFavList(long memberId) {
         try {
-            return favDAO.showFavList();
+            return favDAO.showFavList(memberId);
         } catch (SQLException e) {
             throw new RuntimeException("선택 목록 조회 중 에러 발생 🚨");
         }
