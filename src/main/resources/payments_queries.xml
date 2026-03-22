@@ -21,4 +21,11 @@
         where email = ?;
     </query>
 
+    <query key="payment.getRefund">
+        delete from payments
+        where member_id = (select member_id
+        from members
+        where email = ? );
+    </query>
+
 </properties>

@@ -9,11 +9,9 @@ import java.util.Scanner;
 
 public class PaymentInputView {
 
-    private MemberInputView memberInputView;
     private PaymentController paycontroller;
     private PaymentOutputView payoutputView;
     private final Scanner sc = new Scanner(System.in);
-    private PaymentInputView paymentInputView;
 
     public PaymentInputView(PaymentController paycontroller, PaymentOutputView payoutputView) {
         this.paycontroller = paycontroller;
@@ -26,7 +24,8 @@ public class PaymentInputView {
             System.out.println();
             System.out.println("==========---결제를 하시겠습니까?---==========");
             System.out.println("1. 결제하기");
-            System.out.println("2. 뒤로 가기");
+            System.out.println("2. 환불하기");
+            System.out.println("3. 뒤로 가기");
             System.out.print("번호를 입력해 주세요 : ");
 
             int option = inputInt();
@@ -38,6 +37,11 @@ public class PaymentInputView {
                     }
                     break;
                 case 2:
+                    if(getRefund()){
+                        return;
+                    }
+                    break;
+                case 3:
                     return;
                 default:
                     payoutputView.printError("숫자를 제대로 입력하세요.");
@@ -46,15 +50,40 @@ public class PaymentInputView {
         }
     }
 
+    private boolean getRefund() {
+        System.out.println(" ");
+        System.out.print("---본인 확인을 위해 이메일을 입력해주세요 : ");
+        String email = inputEmail();
+        List<PaymentDTO> payList= paycontroller.findMyPayment(email);
+        boolean result = paycontroller.refund(email);
+        if(result) {
+            payoutputView.printMessage("========================================");
+            payoutputView.printMessage("😒환불이 완료되기 싫지만 일단 해달라니 했다...");
+            payoutputView.printMessage("========================================");
+            return true;
+        } else if (payList == null || payList.isEmpty()) {
+            payoutputView.printMessage("========================================");
+            payoutputView.printMessage("       아직 결제를 하지 않았습니다.");
+            payoutputView.printMessage("========================================");
+            return false;
+        } else {
+            payoutputView.printMessage("😏낙장불입이다 어딜 ~ ㅋ ");
+            return false;
+        }
+
+    }
+
     private boolean payMoney() {
         System.out.println(" ");
-        System.out.println("---본인 확인을 위해 아이디를 입력해주세요 : ");
+        System.out.print("---본인 확인을 위해 이메일을 입력해주세요 : ");
         String email = inputEmail();
         payoutputView.printMessage("\n---결제중...---");
-        boolean result = PaymentController.payMoney(email);
+        boolean result = paycontroller.payMoney(email);
 
         if(result) {
-            payoutputView.printMessage("💰💰결제가 완료되었습니다.");
+            payoutputView.printMessage("========================================");
+            payoutputView.printMessage("       💰💰결제가 완료되었습니다.");
+            payoutputView.printMessage("========================================");
             return true;
         } else {
             payoutputView.printMessage("🤣🤣🤣 결제 처리 중 문제가 발생했습니다!!!");

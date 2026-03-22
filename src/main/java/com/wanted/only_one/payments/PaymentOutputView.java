@@ -10,7 +10,9 @@ public class PaymentOutputView  {
 
     public void printPayments(List<PaymentDTO> payList) {
         if (payList == null || payList.isEmpty()) {
-            System.out.println("아직 결제를 하지 않았습니다.");
+            System.out.println("==============================");
+            System.out.println("   아직 결제를 하지 않았습니다.");
+            System.out.println("==============================");
             return;
         }
         System.out.println("==========결제 내역==========");
@@ -24,4 +26,5 @@ public class PaymentOutputView  {
         System.out.println(s);
 
     }
+
 }

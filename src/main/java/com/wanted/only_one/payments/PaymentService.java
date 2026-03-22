@@ -23,6 +23,14 @@ public class PaymentService {
 
     }
 
+    public boolean refund(String email) {
+        try {
+            return paymentDAO.refund(email);
+        } catch (SQLException e) {
+            throw new RuntimeException("응 환불 안해줘~~~");
+        }
+    }
+
     public List<PaymentDTO> findMyPayment(String payEmail) {
 
         try {

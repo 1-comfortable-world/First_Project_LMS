@@ -28,6 +28,16 @@ public class    PaymentDAO {
 
     }
 
+    public boolean refund(String email) throws SQLException {
+        String query = QueryUtil.getQuery("payment.getRefund");
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, email);
+
+            int result = pstmt.executeUpdate();
+            return result > 0;
+        }
+    }
+
     public List<PaymentDTO> findPayment(String payEmail) throws SQLException {
         String query = QueryUtil.getQuery("payment.findPayment");
         List<PaymentDTO> payList = new ArrayList<>();
@@ -61,4 +71,5 @@ public class    PaymentDAO {
             return rs.next();
         }
     }
+
 }

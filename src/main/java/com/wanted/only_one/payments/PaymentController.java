@@ -12,8 +12,8 @@ public class PaymentController {
 
     }
 
-    public static boolean payMoney(String email) {
-        return PaymentService.payingMoney(email);
+    public boolean payMoney(String email) {
+        return paymentService.payingMoney(email);
     }
 
 
@@ -23,5 +23,9 @@ public class PaymentController {
 
     public boolean checkEmail(String value) throws SQLException {
         return paymentService.checkEmail(value);
+    }
+
+    public boolean refund(String email) {
+        return paymentService.refund(email);
     }
 }
