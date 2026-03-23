@@ -9,6 +9,7 @@ import com.wanted.only_one.study.view.StudyInputView;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+
 public class MemberInputView {
 
     private final AuthController authController;
@@ -36,14 +37,14 @@ public class MemberInputView {
     // 메인 메뉴
     public void displayMainMenu() {
         while (true) {
-            System.out.println();
-            System.out.println("=================================");
-            System.out.println("only one에 오신 걸 환영합니다");
-            System.out.println("=================================");
-            System.out.println("1. 회원가입");
-            System.out.println("2. 로그인");
-            System.out.println("3. 종료");
-            System.out.println("=================================");
+            System.out.println("╔═══════════════════════════════╗");
+            System.out.println("║     ✨  ONLY  ONE  ✨          ║");
+            System.out.println("║  only one에 오신 걸 환영합니다  ║");
+            System.out.println("╠═══════════════════════════════╣");
+            System.out.println("║  1. 회원가입                   ║");
+            System.out.println("║  2. 로그인                     ║");
+            System.out.println("║  3. 종료                       ║");
+            System.out.println("╚═══════════════════════════════╝");
             System.out.print("메뉴 선택 : ");
 
             int menu = inputInt();
@@ -124,22 +125,26 @@ public class MemberInputView {
         }
     }
 
-    // 회원가입 정보 입력
+    // 회원가입 정보 입력--------trim 추가했습니다
     private boolean enterInfo(String role) {
         boolean result = true;
         while (true) {
             System.out.print("이름을 입력하십시오 : ");
-            String name = sc.nextLine();
+            String name = sc.nextLine().trim();
 
             System.out.print("이메일을 입력하십시오 : ");
-            String email = sc.nextLine();
+            String email = sc.nextLine().replaceAll("\\s","");
+            if (!email.endsWith("@lms.com")) {
+                outputView.printError("이메일은 @lms.com 형식이어야 합니다.");
+                continue;
+            }
             boolean emailresult = authController.emailMix(email);
             if (emailresult) {
                 outputView.printError("\n이미 존재하는 이메일입니다");
                 continue;
             }
             System.out.print("비밀번호를 입력하십시오 (특수기호 포함) : ");
-            String password = sc.nextLine();
+            String password = sc.nextLine().replaceAll("\\s","");
             boolean pwdResult = authController.pwdInclude(password);
             if (!pwdResult) {
                 outputView.printError("\n특수기호는 필수입니다");
@@ -193,19 +198,25 @@ public class MemberInputView {
     private boolean studentLogin() {
         System.out.println("이메일을 입력하십시오");
         System.out.print("이메일 : ");
-        String email = sc.nextLine();
+        String email = sc.nextLine().replaceAll("\\s","");
 
         System.out.println("비밀번호를 입력하십시오");
         System.out.print("비밀번호 : ");
-        String password = sc.nextLine();
+        String password = sc.nextLine().replaceAll("\\s","");
 
-        MemberDTO member = authController.signIn(email, password);
-        outputView.printSignInResult(member != null);
+        MemberDTO result = authController.signIn(email, password);
+        if (result != null && !result.getRole().equals("STUDENT")) {
+            System.out.println("강사 계정이 아닙니다.");
+            authController.signOut(result.getMemberId());
+            outputView.printSignInResult(false);
+            return false;
+        }
+        outputView.printSignInResult(result != null);
 
-        if (member != null) {
+        if (result != null) {
             this.loggedInEmail = email;
-            this.loggedInMember = member;           // ← 저장
-            studyInputView.setMember(member);        // ← StudyInputView에 전달
+            this.loggedInMember = result;
+            studyInputView.setMember(result);
             return selectMenu();
         }
         return false;
@@ -215,14 +226,20 @@ public class MemberInputView {
     private boolean teacherLogin() {
         System.out.println("이메일을 입력하십시오");
         System.out.print("이메일 : ");
-        String email = sc.nextLine();
+        String email = sc.nextLine().replaceAll("\\s","");
         boolean emailRs = authController.emailMix(email); // 네 원본에 있던 로직
 
         System.out.println("비밀번호를 입력하십시오");
         System.out.print("비밀번호 : ");
-        String password = sc.nextLine();
+        String password = sc.nextLine().replaceAll("\\s","");
 
         MemberDTO result = authController.signIn(email, password);
+        if (result != null && !result.getRole().equals("TEACHER")) {
+            System.out.println("학생 계정이 아닙니다.");
+            authController.signOut(result.getMemberId());
+            outputView.printSignInResult(false);
+            return false;
+        }
         outputView.printSignInResult(result != null);
 
         if (result != null) {
@@ -247,13 +264,22 @@ public class MemberInputView {
         System.out.println("=================================");
         System.out.println("본인 확인을 위해 이메일을 입력해주세요");
         System.out.print("이메일 : ");
-        String email = sc.nextLine();
+        String email = sc.nextLine().replaceAll("\\s", "");
 
-        System.out.print("새 비밀번호 : ");
-        String newPassword = sc.nextLine();
+        while (true) {
+            System.out.print("새 비밀번호 : ");
+            String newPassword = sc.nextLine().replaceAll("\\s", "");
 
-        boolean result = authController.resetPassword(email, newPassword);
-        outputView.printResetPasswordResult(result);
+            if (!authController.pwdInclude(newPassword)) {
+                outputView.printError("특수기호는 필수입니다. 다시 입력해주세요.");
+                continue;
+            }
+
+
+            boolean result = authController.resetPassword(email, newPassword);
+            outputView.printResetPasswordResult(result);
+            break;
+        }
     }
 
     // 숫자 입력 예외처리
