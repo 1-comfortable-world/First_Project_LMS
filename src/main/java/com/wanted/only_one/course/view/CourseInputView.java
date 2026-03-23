@@ -11,6 +11,7 @@ import com.wanted.only_one.study.view.StudyInputView;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class CourseInputView {
@@ -22,20 +23,21 @@ public class CourseInputView {
     private final AuthController authController;
     private final MemberOutputView memberOutputView;
 
-    public CourseInputView(CourseController controller, CourseOutputView outputView, StudyInputView studyInputView, AuthController authController, MemberOutputView memberOutputView) {
-        this.controller = controller;
-        this.outputView = outputView;
-        this.studyInputView = studyInputView;
-        this.authController = authController;
+    public CourseInputView(CourseController controller, CourseOutputView outputView,
+                           StudyInputView studyInputView, AuthController authController,
+                           MemberOutputView memberOutputView) {
+        this.controller       = controller;
+        this.outputView       = outputView;
+        this.studyInputView   = studyInputView;
+        this.authController   = authController;
         this.memberOutputView = memberOutputView;
     }
 
     // ── 학생용 ───────────────────────────────────────
 
     public void showAllCourses() throws SQLException {
-        List<CourseDTO> list = controller.showAllCourses();
         outputView.printMessage("\n--- 강좌 목록 전체 조회 ---");
-        outputView.printCourses(list);
+        outputView.printCourses(controller.showAllCourses());
     }
 
     public void searchCourse() throws SQLException {
@@ -44,15 +46,9 @@ public class CourseInputView {
         System.out.println("=================================");
         System.out.print("검색할 강좌 키워드 입력 : ");
         String keyword = sc.nextLine().trim();
+        if (keyword.isEmpty()) { outputView.printMessage("검색어를 입력해주세요."); return; }
 
-        if (keyword.isEmpty()) {
-            outputView.printMessage("검색어를 입력해주세요.");
-            return;
-        }
-
-        // 서비스에 이미 있는 searchCourseWithRating 호출
         List<CourseDTO> list = controller.searchCourseWithRating(keyword);
-
         if (list == null || list.isEmpty()) {
             outputView.printMessage("\n[안내] '" + keyword + "' 검색 결과가 없습니다.");
         } else {
@@ -64,7 +60,10 @@ public class CourseInputView {
     public void courseSelection(long memberId) throws SQLException {
         while (true) {
             List<CourseDTO> courseList = controller.showAllCourses();
-
+            if (courseList == null || courseList.isEmpty()) {
+                outputView.printMessage("\n[안내] 현재 수강 가능한 강좌가 없습니다.");
+                return;
+            }
             outputView.printCourses(courseList);
 
             System.out.println("=================================");
@@ -72,23 +71,22 @@ public class CourseInputView {
             System.out.println("=================================");
             System.out.println("1. 수강할 강좌 선택");
             System.out.println("2. 강좌평 조회");
-            System.out.println("3. 이전으로 ");
+            System.out.println("3. 이전으로");
             System.out.print("번호를 입력해주세요 : ");
 
             int menu = inputInt();
-
-            if (menu == 1 && (courseList == null || courseList.isEmpty())) {
-                outputView.printMessage("\n[안내] 현재 수강 가능한 강좌가 없습니다.");
-                continue;
-            }
-
             switch (menu) {
                 case 1:
-                    if (!controller.hasPaid(memberId)) {
-                        outputView.printMessage("=================================");
-                        outputView.printMessage("  결제 후 수강 신청이 가능합니다.");
-                        outputView.printMessage("  결제 메뉴에서 먼저 결제해주세요.");
-                        outputView.printMessage("=================================");
+                    try {
+                        if (!controller.hasPaid(memberId)) {
+                            outputView.printMessage("=================================");
+                            outputView.printMessage("  결제 후 수강 신청이 가능합니다.");
+                            outputView.printMessage("  결제 메뉴에서 먼저 결제해주세요.");
+                            outputView.printMessage("=================================");
+                            break;
+                        }
+                    } catch (SQLException e) {
+                        outputView.printFail("결제 정보를 확인할 수 없습니다.");
                         break;
                     }
                     long courseId = selectCourseByNumber(courseList);
@@ -109,7 +107,6 @@ public class CourseInputView {
         outputView.printCourses(courseList);
         System.out.print("\n수강할 강좌 번호를 입력해주세요 (0: 뒤로가기) : ");
         int num = inputInt();
-
         if (num == 0) return -1;
         if (num < 1 || num > courseList.size()) {
             outputView.printMessage("올바른 번호를 입력해주세요.");
@@ -126,39 +123,85 @@ public class CourseInputView {
         System.out.println("2. 뒤로가기");
         System.out.println("=================================");
         System.out.print("번호를 입력해주세요 : ");
-
         int choice = inputInt();
         return (choice == 1) ? courseId : -1;
     }
 
+    // ── 강의 수강 루프 ────────────────────────────────
+    // 탈출 조건 1 : 강의 번호 선택 후 3번 누르면 수강완료 메시지 출력 후 강좌 선택 화면으로
+    // 탈출 조건 2 : 0 입력 → 강좌 선택 화면으로 그냥 나가기
     private void studyLecture(long memberId, long courseId) throws SQLException {
         controller.enrollCourse(memberId, courseId);
-        SectionDTO detail = controller.findJoin(courseId);
-        outputView.printCourseDetail(detail);
 
-        List<LectureDTO> lectures = detail.getLectures();
-        if (lectures == null || lectures.isEmpty()) {
-            outputView.printMessage("등록된 강의가 없습니다.");
-            return;
+        while (true) {
+            SectionDTO detail = controller.findJoin(courseId);
+            if (detail == null) { outputView.printMessage("강좌 정보를 찾을 수 없습니다."); return; }
+
+            List<LectureDTO> lectures = detail.getLectures();
+            if (lectures == null || lectures.isEmpty()) {
+                outputView.printMessage("등록된 강의가 없습니다.");
+                return;
+            }
+
+            Map<Long, String> statusMap = controller.getLectureStatusMap(memberId, courseId);
+
+            // 강의 목록 + 상태 출력
+            System.out.println("=================================");
+            System.out.println("강좌명 : " + detail.getCourseTitle());
+            System.out.println("---------------------------------");
+            System.out.println("[강의 목록]");
+            for (int i = 0; i < lectures.size(); i++) {
+                LectureDTO lec = lectures.get(i);
+                String status = statusMap.getOrDefault(lec.getLectureId(), "미수강");
+                System.out.println("  " + (i + 1) + ". " + lec.getTitle() + "  [" + status + "]");
+            }
+            System.out.println("=================================");
+
+            // 모든 강의 완료 체크 → 탈출
+            boolean allDone = true;
+            for (LectureDTO lec : lectures) {
+                String s = statusMap.getOrDefault(lec.getLectureId(), "미수강");
+                if (!"COMPLETED".equals(s) && !"수강완료".equals(s)) {
+                    allDone = false;
+                    break;
+                }
+            }
+            if (allDone && !statusMap.isEmpty()) {
+                outputView.printSuccess("수강완료 되셨습니다.");
+                controller.updateCourseStatus(memberId, courseId);
+                return;
+            }
+
+            System.out.println("1. 수강하기");
+            System.out.println("2. 뒤로가기");
+            System.out.println("=================================");
+            System.out.print("번호를 입력해주세요 : ");
+
+            int menu = inputInt();
+            if (menu == 2) return;
+            if (menu != 1) { outputView.printError(""); continue; }
+
+            System.out.print("강의 번호를 입력해주세요 : ");
+            int num = inputInt();
+            if (num < 1 || num > lectures.size()) {
+                outputView.printMessage("올바른 번호를 입력해주세요. (1 ~ " + lectures.size() + ")");
+                continue;
+            }
+
+            long lectureId = lectures.get(num - 1).getLectureId();
+            String currentStatus = statusMap.getOrDefault(lectureId, "미수강");
+
+            if ("COMPLETED".equals(currentStatus) || "수강완료".equals(currentStatus)) {
+                outputView.printMessage("이미 수강 완료한 강의입니다.");
+                continue;
+            }
+
+            controller.completeLecture(memberId, lectureId, courseId);
+            outputView.printSuccess("강의 수강 완료!");
+            // while 처음으로 → 최신 상태 다시 출력 → 전부 완료면 탈출
         }
-
-        System.out.println("=================================");
-        System.out.println("수강할 강의를 번호를 선택해주세요.");
-        System.out.println("0. 뒤로가기");
-        System.out.println("=================================");
-        System.out.print("강의 번호 : ");
-        int num = inputInt();
-
-        if (num == 0) return;
-        if (num < 1 || num > lectures.size()) {
-            outputView.printMessage("올바른 번호를 입력해주세요.");
-            return;
-        }
-
-        long lectureId = lectures.get(num - 1).getLectureId();
-        controller.completeLecture(memberId, lectureId, courseId);
-        outputView.printSuccess("강의 수강 완료!");
     }
+
 
     // ── 강사용 ───────────────────────────────────────
 
@@ -199,13 +242,16 @@ public class CourseInputView {
                         outputView.printError("로그아웃 중 오류 발생");
                     }
                     return false;
-                case 7:try {
-                    boolean deleteResult = authController.getOut(email);
-                    memberOutputView.printDeleteMemberResult(deleteResult);
-                } catch (Exception e) {
-                    outputView.printError("회원탈퇴 중 오류 발생");
-                }
+                case 7:
+                    try {
+                        boolean deleteResult = authController.getOut(email);
+                        memberOutputView.printDeleteMemberResult(deleteResult);
+                    } catch (Exception e) {
+                        outputView.printError("회원탈퇴 중 오류 발생");
+                    }
                     return true;
+                default:
+                    outputView.printError("");
             }
         }
     }
@@ -223,7 +269,6 @@ public class CourseInputView {
             System.out.print("메뉴 선택 : ");
 
             int menu = inputInt();
-
             switch (menu) {
                 case 1:
                     System.out.println("=================================");
@@ -233,9 +278,7 @@ public class CourseInputView {
                     System.out.println("가입일 : " + member.getEnrolledAt());
                     System.out.println("=================================");
                     break;
-                case 2:
-                    resetTeacherPassword();
-                    break;
+                case 2: resetTeacherPassword(); break;
                 case 3: return;
                 default: outputView.printError("");
             }
@@ -254,35 +297,23 @@ public class CourseInputView {
             System.out.print("새 비밀번호 (특수기호 포함) : ");
             String newPassword = sc.nextLine().replaceAll("\\s", "");
 
-
             String specialChars = "!@#$%^&*()_+-=[]{}|;':\",./<>?";
             boolean hasSpecial = false;
             for (char c : newPassword.toCharArray()) {
-                if (specialChars.indexOf(c) >= 0) {
-                    hasSpecial = true;
-                    break;
-                }
+                if (specialChars.indexOf(c) >= 0) { hasSpecial = true; break; }
             }
-
-            if (!hasSpecial) {
-                outputView.printMessage("특수기호는 필수입니다. 다시 입력해주세요.");
-                continue;
-            }
+            if (!hasSpecial) { outputView.printMessage("특수기호는 필수입니다. 다시 입력해주세요."); continue; }
 
             try {
                 boolean result = authController.resetPassword(email, newPassword);
-                if (result) {
-                    outputView.printMessage("비밀번호가 변경되었습니다.");
-                } else {
-                    outputView.printMessage("비밀번호 변경에 실패하였습니다.");
-                }
+                if (result) outputView.printMessage("비밀번호가 변경되었습니다.");
+                else outputView.printMessage("비밀번호 변경에 실패하였습니다.");
             } catch (Exception e) {
                 outputView.printError("비밀번호 변경 중 오류 발생");
             }
             break;
         }
     }
-
 
     private void viewTeacherCourseDetail(long memberId, List<CourseDTO> courseList) throws SQLException {
         outputView.printCourses(courseList);
@@ -322,16 +353,8 @@ public class CourseInputView {
         while (true) {
             System.out.print("강의 제목 : ");
             String lTitle = sc.nextLine().trim();
-
-            if (lTitle.equals("0")) {
-                outputView.printMessage("강의 등록을 완료했습니다.");
-                break;
-            }
-            if (lTitle.isEmpty()) {
-                outputView.printFail("강의 제목을 입력해주세요. (종료하려면 '0' 입력)");
-                continue;
-            }
-
+            if (lTitle.equals("0")) { outputView.printMessage("강의 등록을 완료했습니다."); break; }
+            if (lTitle.isEmpty()) { outputView.printFail("강의 제목을 입력해주세요. ('0' 입력 시 종료)"); continue; }
             if (controller.addLecture(courseId, lTitle))
                 outputView.printSuccess("강의 '" + lTitle + "' 등록 완료!");
             else outputView.printFail("강의 등록 실패.");
@@ -348,12 +371,11 @@ public class CourseInputView {
         long courseId = courseList.get(num - 1).getCourseId();
         System.out.print("새 강좌 제목 : ");
         String newTitle = sc.nextLine().trim();
+        if (newTitle.isEmpty()) { outputView.printFail("제목을 입력해주세요."); return; }
 
-        if (controller.updateCourse(courseId, newTitle, memberId)) {
+        if (controller.updateCourse(courseId, newTitle, memberId))
             outputView.printSuccess("강좌 수정 완료!");
-        } else {
-            outputView.printFail("강좌 수정 실패");
-        }
+        else outputView.printFail("강좌 수정 실패");
     }
 
     private void deleteCourse(long memberId, List<CourseDTO> courseList) throws SQLException {
@@ -367,25 +389,23 @@ public class CourseInputView {
         System.out.print("정말 삭제하시겠습니까? (Y/N) : ");
         if (!sc.nextLine().trim().equalsIgnoreCase("Y")) { outputView.printMessage("삭제를 취소했습니다."); return; }
 
-        if (controller.deleteCourse(courseId)) {
+        if (controller.deleteCourse(courseId))
             outputView.printSuccess("강좌 삭제 완료!");
-        } else {
-            outputView.printFail("강좌 삭제 실패.");
-        }
+        else outputView.printFail("강좌 삭제 실패.");
     }
 
     private void showStudentList(long courseId) {
         outputView.printMessage("\n--- 현재 수강생 목록 ---");
         try {
-            List<com.wanted.only_one.member.dto.MemberDTO> students = controller.getEnrolledStudents(courseId);
+            List<MemberDTO> students = controller.getEnrolledStudents(courseId);
             if (students == null || students.isEmpty()) {
                 outputView.printMessage("현재 수강 중인 학생이 없습니다.");
             } else {
                 System.out.println("-------------------------------------------");
-                System.out.printf("%-15s | %-25s\n", "이름", "이메일");
+                System.out.printf("%-15s | %-25s%n", "이름", "이메일");
                 System.out.println("-------------------------------------------");
-                for (var student : students) {
-                    System.out.printf("%-15s | %-25s\n", student.getName(), student.getEmail());
+                for (MemberDTO student : students) {
+                    System.out.printf("%-15s | %-25s%n", student.getName(), student.getEmail());
                 }
                 System.out.println("-------------------------------------------");
             }

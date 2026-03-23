@@ -8,6 +8,7 @@ import com.wanted.only_one.study.service.ReviewService;
 import com.wanted.only_one.study.service.StudyingService;
 
 import java.util.List;
+import java.util.Map;
 
 public class StudyController {
 
@@ -41,13 +42,10 @@ public class StudyController {
         return reviewService.WriteReview(memberId, description, content, rating);
     }
 
-    public List<CourseDTO> showMyStudyingList(long memberId,int menu) {
-        return studyingService.showMyStudyingList(memberId,menu);
+    public List<CourseDTO> showMyStudyingList(long memberId, int menu) {
+        return studyingService.showMyStudyingList(memberId, menu);
     }
 
-/*강의 수강완료 처리할 때
-studyController.updateCourseStatus(memberId, courseId);
-같이 호출*/
     public void updateCourseStatus(long memberId, long courseId) {
         studyingService.updateCourseStatus(memberId, courseId);
     }
@@ -58,6 +56,16 @@ studyController.updateCourseStatus(memberId, courseId);
 
     public void enrollCourse(long memberId, long courseId) {
         studyingService.enrollCourse(memberId, courseId);
+    }
+
+    // 강의별 수강 상태 Map<lectureId, status> 반환 → CourseController에서 사용
+    public Map<Long, String> getLectureStatusMap(long memberId, long courseId) {
+        return studyingService.getLectureStatusMap(memberId, courseId);
+    }
+
+    // 강좌 내 모든 강의 완료 여부 → CourseController에서 사용
+    public boolean isAllLecturesComplete(long memberId, long courseId) {
+        return studyingService.isAllLecturesComplete(memberId, courseId);
     }
 
     public List<ReviewDTO> showMyReviewList(long memberId) {
