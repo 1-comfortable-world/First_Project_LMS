@@ -14,11 +14,12 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 public class CourseController {
 
-    private CourseService  courseService  = new CourseService();
-    private LectureService lectureService = new LectureService();
+    private CourseService   courseService   = new CourseService();
+    private LectureService  lectureService  = new LectureService();
     private StudyController studyController;
 
     public CourseController(StudyController studyController) {
@@ -31,12 +32,10 @@ public class CourseController {
         return courseService.getAllCourses();
     }
 
-    // 강좌 검색 (기본)
     public List<CourseDTO> searchCourse(String keyword) throws SQLException {
         return courseService.searchCourse(keyword);
     }
 
-    // 강좌 검색 + 별점 (별점 높은 순)
     public List<CourseDTO> searchCourseWithRating(String keyword) throws SQLException {
         return courseService.searchCourseWithRating(keyword);
     }
@@ -51,6 +50,32 @@ public class CourseController {
 
     public void enrollCourse(long memberId, long courseId) {
         studyController.enrollCourse(memberId, courseId);
+    }
+
+    public void updateCourseStatus(long memberId, long courseId) {
+        studyController.updateCourseStatus(memberId, courseId);
+    }
+
+    // study 팀 통해서 강의 상태 조회
+    public Map<Long, String> getLectureStatusMap(long memberId, long courseId) {
+        return studyController.getLectureStatusMap(memberId, courseId);
+    }
+
+    // study 팀 통해서 전체 완료 여부 확인
+    public boolean isAllLecturesComplete(long memberId, long courseId) {
+        return studyController.isAllLecturesComplete(memberId, courseId);
+    }
+
+    // 결제 여부 확인
+    public boolean hasPaid(long memberId) throws SQLException {
+        String sql = "SELECT COUNT(*) FROM payments WHERE member_id = ?";
+        Connection conn = JDBCTemplate.getConnection();
+        try (PreparedStatement p = conn.prepareStatement(sql)) {
+            p.setLong(1, memberId);
+            ResultSet rs = p.executeQuery();
+            if (rs.next()) return rs.getInt(1) > 0;
+        }
+        return false;
     }
 
     // ── 강사용 ───────────────────────────────────────
@@ -83,21 +108,7 @@ public class CourseController {
         return courseService.deleteCourse(courseId);
     }
 
-    // 강사가 특정 강좌의 수강생 목록을 조회
     public List<MemberDTO> getEnrolledStudents(long courseId) throws SQLException {
-        // 컨트롤러는 서비스를 호출합니다.
         return courseService.getEnrolledStudents(courseId);
     }
-
-    // 결제 여부 확인
-    public boolean hasPaid(long memberId) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM payments WHERE member_id = ?";
-        Connection conn = JDBCTemplate.getConnection();
-         try (PreparedStatement p = conn.prepareStatement(sql)) {
-             p.setLong(1, memberId);
-             ResultSet rs = p.executeQuery();
-
-             if (rs.next()) return rs.getInt(1) > 0;
-         }
-         return false;}
 }
