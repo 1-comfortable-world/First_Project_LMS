@@ -38,11 +38,34 @@ public class CourseInputView {
         outputView.printCourses(list);
     }
 
+    // [추가] 강좌 검색하기 (case 5 연결용)
+    public void searchCourse() throws SQLException {
+        System.out.println("\n=================================");
+        System.out.println("           강좌 검색");
+        System.out.println("=================================");
+        System.out.print("검색할 강좌 키워드 입력 : ");
+        String keyword = sc.nextLine().trim();
+
+        if (keyword.isEmpty()) {
+            outputView.printMessage("검색어를 입력해주세요.");
+            return;
+        }
+
+        // 서비스에 이미 있는 searchCourseWithRating 호출
+        List<CourseDTO> list = controller.searchCourseWithRating(keyword);
+
+        if (list == null || list.isEmpty()) {
+            outputView.printMessage("\n[안내] '" + keyword + "' 검색 결과가 없습니다.");
+        } else {
+            outputView.printMessage("\n--- '" + keyword + "' 검색 결과 ---");
+            outputView.printCoursesWithRating(list);
+        }
+    }
+
     public void courseSelection(long memberId) throws SQLException {
         while (true) {
             List<CourseDTO> courseList = controller.showAllCourses();
 
-            // 학생은 수강할 목록을 먼저 보는 것이 흐름상 맞으므로 유지
             outputView.printCourses(courseList);
 
             System.out.println("=================================");
@@ -124,7 +147,7 @@ public class CourseInputView {
         System.out.println("수강할 강의를 선택해주세요.");
         System.out.println("0. 뒤로가기");
         System.out.println("=================================");
-        System.out.print("강의 번호 : ");
+        System.out.print("강의 번 : ");
         int num = inputInt();
 
         if (num == 0) return;
@@ -143,8 +166,6 @@ public class CourseInputView {
     public boolean teacherCourseMenu(long memberId, String email, MemberDTO member) throws SQLException {
         while (true) {
             List<CourseDTO> courseList = controller.T_showAllCourses(memberId);
-
-            // 삭제된 부분: 여기서 outputView.printCourses(courseList)를 강제로 띄우던 걸 없앴습니다.
 
             System.out.println("=================================");
             System.out.println("           강사 메인페이지");
@@ -213,7 +234,7 @@ public class CourseInputView {
                     System.out.println("가입일 : " + member.getEnrolledAt());
                     System.out.println("=================================");
                     break;
-                case 2: 
+                case 2:
                     resetTeacherPassword();
                     break;
                 case 3: return;

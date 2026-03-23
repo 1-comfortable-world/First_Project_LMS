@@ -332,7 +332,13 @@ public class MemberInputView {
                     studyInputView.Review();
                     break;
                 case 5:
-//                     강좌 검색하기();
+                    // 강좌 검색하기 (별점순 조회 로직 연결)
+                    try {
+                        courseInputView.searchCourse();
+                    } catch (SQLException e) {
+                        // SQL 예외 발생 시 출력 뷰를 통해 에러 메시지 표시
+                        System.out.println("[오류] 강좌 검색 중 문제가 발생했습니다: " + e.getMessage());
+                    }
                     break;
                 case 6:
                     resetPassword();
