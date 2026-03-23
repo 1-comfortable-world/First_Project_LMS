@@ -49,12 +49,11 @@ public class StudyOutputView {
         System.out.println("================================================");
         System.out.println("           수강 완료한 강좌 목록 전체 조회                ");
         System.out.println("================================================");
-        for (CourseDTO courseDTO : completedCourseList) {
-            System.out.println("강좌명 : " + courseDTO.getTitle());
+        for (int i = 0; i < completedCourseList.size(); i++) {
+            System.out.println((i + 1) + ". " + completedCourseList.get(i).getTitle());
             System.out.println("------------------------------------------");
         }
     }
-
 
     public void printFavCourses(List<FavDTO> favList) {
 
@@ -69,7 +68,6 @@ public class StudyOutputView {
             System.out.println( "- 강좌명 : "+favDTO.getCourse_title() );
         }
     }
-
 
     public void printMyReview(List<ReviewDTO> myReviewList) {
         if(myReviewList == null || myReviewList.isEmpty()){
@@ -111,6 +109,7 @@ public class StudyOutputView {
             return;
         }
 
+        System.out.println(" ");
         System.out.println("======내 강좌에 작성된 강좌평 조회======");
         for (ReviewDTO reviewDTO : reviewForTeacher){
             System.out.println("강좌명 : " + reviewDTO.getTitle());
@@ -122,6 +121,7 @@ public class StudyOutputView {
     }
 
     public void printCoursesWithIndex(List<CourseDTO> courseList) {
+        System.out.println(" ");
         System.out.println("=============== 검색 결과 ================");
         for (int i = 0; i < courseList.size(); i++) {
             System.out.println((i + 1) + ". " + courseList.get(i).getTitle() + " / " + courseList.get(i).getTeacherName());

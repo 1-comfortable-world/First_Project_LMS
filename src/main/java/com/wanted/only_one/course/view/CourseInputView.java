@@ -38,7 +38,6 @@ public class CourseInputView {
         outputView.printCourses(list);
     }
 
-    // [추가] 강좌 검색하기 (case 5 연결용)
     public void searchCourse() throws SQLException {
         System.out.println("\n=================================");
         System.out.println("           강좌 검색");
@@ -72,8 +71,8 @@ public class CourseInputView {
             System.out.println("          강좌 수강하기");
             System.out.println("=================================");
             System.out.println("1. 수강할 강좌 선택");
-            System.out.println("2. 강좌평 조회하기");
-            System.out.println("3. 이전으로 돌아가기");
+            System.out.println("2. 강좌평 조회");
+            System.out.println("3. 이전으로 ");
             System.out.print("번호를 입력해주세요 : ");
 
             int menu = inputInt();
@@ -144,10 +143,10 @@ public class CourseInputView {
         }
 
         System.out.println("=================================");
-        System.out.println("수강할 강의를 선택해주세요.");
+        System.out.println("수강할 강의를 번호를 선택해주세요.");
         System.out.println("0. 뒤로가기");
         System.out.println("=================================");
-        System.out.print("강의 번 : ");
+        System.out.print("강의 번호 : ");
         int num = inputInt();
 
         if (num == 0) return;
@@ -170,10 +169,10 @@ public class CourseInputView {
             System.out.println("=================================");
             System.out.println("           강사 메인페이지");
             System.out.println("=================================");
-            System.out.println("1. 나의 강좌 전체 보기");
-            System.out.println("2. 강좌/강의 등록하기");
-            System.out.println("3. 강좌 수정하기");
-            System.out.println("4. 강좌 삭제하기");
+            System.out.println("1. 나의 강좌 전체 조회");
+            System.out.println("2. 강좌/강의 등록");
+            System.out.println("3. 강좌 수정");
+            System.out.println("4. 강좌 삭제");
             System.out.println("5. 마이페이지");
             System.out.println("6. 로그아웃");
             System.out.println("7. 회원탈퇴");
@@ -218,7 +217,7 @@ public class CourseInputView {
             System.out.println("           마이페이지");
             System.out.println("=================================");
             System.out.println("1. 내 정보 보기");
-            System.out.println("2. 내 정보 수정하기");
+            System.out.println("2. 비밀번호 변경");
             System.out.println("3. 나가기");
             System.out.println("=================================");
             System.out.print("메뉴 선택 : ");
@@ -300,7 +299,7 @@ public class CourseInputView {
         System.out.println("=================================");
         System.out.println("1. 수강생 보기");
         System.out.println("2. 강좌평 보기");
-        System.out.println("3. 이전으로 돌아가기");
+        System.out.println("3. 이전으로");
         System.out.println("=================================");
         System.out.print("번호를 입력해주세요 : ");
 

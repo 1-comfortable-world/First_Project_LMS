@@ -299,13 +299,13 @@ public class MemberInputView {
             System.out.println("=================================");
             System.out.println("            메인메뉴");
             System.out.println("=================================");
-            System.out.println("0. 결제하기");
-            System.out.println("1. 강좌 전체 보기");
-            System.out.println("2. 강좌 즐겨찾기");
-            System.out.println("3. 강좌 수강하기");
+            System.out.println("0. 결제");
+            System.out.println("1. 강좌 전체 조회");
+            System.out.println("2. 강좌 선택 목록(수강예정 강좌 등록)");
+            System.out.println("3. 강좌 수강");
             System.out.println("4. 강좌평 작성");
-            System.out.println("5. 강좌 검색하기");
-            System.out.println("6. 결제 내역 보기");
+            System.out.println("5. 강좌 검색");
+            System.out.println("6. 결제 내역 조회");
             System.out.println("7. 마이페이지");
             System.out.println("8. 로그아웃");
             System.out.println("9. 회원탈퇴");
@@ -331,11 +331,9 @@ public class MemberInputView {
                     studyInputView.Review();
                     break;
                 case 5:
-                    // 강좌 검색하기 (별점순 조회 로직 연결)
                     try {
                         courseInputView.searchCourse();
                     } catch (SQLException e) {
-                        // SQL 예외 발생 시 출력 뷰를 통해 에러 메시지 표시
                         System.out.println("[오류] 강좌 검색 중 문제가 발생했습니다: " + e.getMessage());
                     }
                     break;
