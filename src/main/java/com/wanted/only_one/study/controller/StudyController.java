@@ -25,8 +25,8 @@ public class StudyController {
         return favService.showCourseList();
     }
 
-    public int addFavList(long memberId, String description) {
-        return favService.addFavList(memberId, description);
+    public int addFavList(long memberId, long courseId) {
+        return favService.addFavList(memberId, courseId);
     }
 
     public List<FavDTO> showFavList(long memberId) {
@@ -76,7 +76,11 @@ studyController.updateCourseStatus(memberId, courseId);
         return reviewService.checkCourseExists(description);
     }
 
-    public Boolean deleteFavList(long memberId, String description) {
-        return favService.deleteFavList(memberId, description);
+    public Boolean deleteFavList(long memberId, long courseId) {
+        return favService.deleteFavList(memberId, courseId);
+    }
+
+    public List<CourseDTO> searchCourseByTitle(String keyword) {
+        return favService.searchCourseByTitle(keyword);
     }
 }

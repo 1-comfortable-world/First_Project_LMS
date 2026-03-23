@@ -120,4 +120,20 @@ public class StudyOutputView {
             System.out.println("---------------------------------");
         }
     }
+
+    public void printCoursesWithIndex(List<CourseDTO> courseList) {
+        System.out.println("================================================");
+        for (int i = 0; i < courseList.size(); i++) {
+            System.out.println((i + 1) + ". " + courseList.get(i).getTitle() + " / " + courseList.get(i).getTeacherName());
+        }
+        System.out.println("================================================");
+    }
+
+    public void printFavCoursesWithIndex(List<FavDTO> favList) {
+        System.out.println(" ");
+        System.out.println("======수강 예정 목록======");
+        for (int i = 0; i < favList.size(); i++) {
+            System.out.println((i + 1) + ". " + favList.get(i).getCourse_title());
+        }
+    }
 }

@@ -34,21 +34,21 @@ public class FavService {
     }
 
 
-    public int addFavList(long memberId, String description) {
+    public int addFavList(long memberId, long courseId) {
         try {
             connection.setAutoCommit(false);
 
-            if (favDAO.checkAlreadyFav(memberId, description)) {
+            if (favDAO.checkAlreadyFav(memberId, courseId)) {
                 connection.rollback();
                 return 2;
             }
 
-            if (favDAO.checkAlreadyStudying(memberId, description)) {
+            if (favDAO.checkAlreadyStudying(memberId, courseId)) {
                 connection.rollback();
                 return 3;
             }
 
-            Long addedCourseId = favDAO.addFav(memberId, description);
+            Long addedCourseId = favDAO.addFav(memberId, courseId);
 
             if (addedCourseId == null) {
                 connection.rollback();
@@ -83,11 +83,11 @@ public class FavService {
         }
     }
 
-    public Boolean deleteFavList(long memberId, String description) {
+    public Boolean deleteFavList(long memberId, long courseId) {
         try {
             connection.setAutoCommit(false);
 
-            Boolean result = favDAO.deleteFav(memberId, description);
+            Boolean result = favDAO.deleteFav(memberId, courseId);
 
             if (result == null) {
                 connection.rollback();
@@ -110,6 +110,14 @@ public class FavService {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
+        }
+    }
+
+    public List<CourseDTO> searchCourseByTitle(String keyword) {
+        try {
+            return favDAO.searchCourseByTitle(keyword);
+        } catch (SQLException e) {
+            throw new RuntimeException("강좌 검색 중 에러 발생");
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.wanted.only_one.study.dao;
 
+import com.wanted.only_one.course.dto.CourseDTO;
 import com.wanted.only_one.global.utils.QueryUtil;
 import com.wanted.only_one.study.dto.FavDTO;
 
@@ -24,7 +25,7 @@ public class FavDAO {
 
         // 쿼리문 동작
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, memberId); // TODO: 로그인 세션 연결 후 교체 -> getMember_id 등 setter로
+            pstmt.setLong(1, memberId);
             ResultSet rset = pstmt.executeQuery();
 
             while(rset.next()){
@@ -32,18 +33,19 @@ public class FavDAO {
                         rset.getString("course_title"),
                         rset.getString("member_name")
                 );
+                course.setCourse_id(rset.getLong("course_id")); // 추가
                 favList.add(course);
             }
         }
         return favList;
     }
 
-    public Long addFav(long memberId,String description) throws SQLException {
+    public Long addFav(long memberId,long courseId) throws SQLException {
         String query = QueryUtil.getQuery("addFavList");
 
         try (PreparedStatement pstmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            pstmt.setLong(1,memberId);  // 나중에 현재 로그인 되어있는 사용자의 member_id 를 삽입
-            pstmt.setString(2, description);
+            pstmt.setLong(1,memberId);
+            pstmt.setLong(2, courseId);
 
             int affectedRows = pstmt.executeUpdate();
 
@@ -57,35 +59,55 @@ public class FavDAO {
         return null;
     }
 
-    public Boolean deleteFav(long memberId, String description) throws SQLException {
+    public Boolean deleteFav(long memberId, long courseId) throws SQLException {
         String query = QueryUtil.getQuery("deleteFavList");
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setLong(1, memberId);
-            pstmt.setString(2, description);
+            pstmt.setLong(2, courseId);
 
             int affectedRows = pstmt.executeUpdate();
             return affectedRows > 0 ? true : null;
         }
     }
 
-    public boolean checkAlreadyFav(long memberId, String description) throws SQLException {
+    public boolean checkAlreadyFav(long memberId, long courseId) throws SQLException {
         String query = QueryUtil.getQuery("checkAlreadyFav");
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setLong(1, memberId);
-            pstmt.setString(2, description);
+            pstmt.setLong(2, courseId);
             ResultSet rs = pstmt.executeQuery();
             return rs.next() && rs.getInt(1) > 0;
         }
     }
 
-    public boolean checkAlreadyStudying(long memberId, String description) throws SQLException {
+    public boolean checkAlreadyStudying(long memberId, long courseId) throws SQLException {
         String query = QueryUtil.getQuery("checkAlreadyStudying");
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setLong(1, memberId);
-            pstmt.setString(2, description);
+            pstmt.setLong(2, courseId);
             ResultSet rs = pstmt.executeQuery();
             return rs.next() && rs.getInt(1) > 0;
         }
+    }
+
+    public List<CourseDTO> searchCourseByTitle(String keyword) throws SQLException {
+        String query = QueryUtil.getQuery("searchCourseByTitle");
+        List<CourseDTO> result = new ArrayList<>();
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, "%" + keyword + "%");
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                CourseDTO dto = new CourseDTO(
+                        rs.getLong("course_id"),
+                        rs.getString("title"),
+                        rs.getLong("member_id")
+                );
+                dto.setTeacherName(rs.getString("teacher_name"));
+                result.add(dto);
+            }
+        }
+        return result;
     }
 }

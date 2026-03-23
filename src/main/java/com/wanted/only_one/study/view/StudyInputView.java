@@ -6,6 +6,7 @@ import com.wanted.only_one.study.controller.StudyController;
 import com.wanted.only_one.study.dto.FavDTO;
 import com.wanted.only_one.study.dto.ReviewDTO;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -162,7 +163,7 @@ public class StudyInputView {
     }
 
     public void deleteFav(List<FavDTO> favList) {
-        System.out.print("삭제할 강좌의 제목을 입력하세요 : ");
+        System.out.print("삭제할 강좌의 제목을 검색하세요 : ");
         String description = inputNoBlank();
 
         if (description == null) {
@@ -170,42 +171,85 @@ public class StudyInputView {
             return;
         }
 
-        boolean exists = false;
+        List<FavDTO> filtered = new ArrayList<>();
         for (FavDTO fav : favList) {
-            if (fav.getCourse_title().contains(description)) {
-                exists = true;
-                break;
+            if (fav.getCourse_title().toLowerCase().contains(description.toLowerCase())) {
+                filtered.add(fav);
             }
         }
 
-        if (!exists) {
+        if (filtered.isEmpty()) {
             studyOutputView.printError("수강 예정 목록에 없는 강좌입니다.");
             return;
         }
 
-        Boolean result = studyController.deleteFavList(loggedInMember.getMemberId(), description);
+        studyOutputView.printFavCoursesWithIndex(filtered);
 
-        if (result) {
-            studyOutputView.printSuccess("\"" + description + "\" 강좌가 수강 예정 목록에서 삭제되었습니다.");
+        System.out.println("이전으로 돌아가려면 0을 누르세요");
+        System.out.print("삭제할 강좌 번호를 선택하세요 : ");
+        int index = inputInt();
+
+        if (index == 0) {
+            studyOutputView.printMessage("== 이전 화면으로 돌아갑니다. ==");
+            return;
+        }
+
+        if (index < 1 || index > filtered.size()) {
+            studyOutputView.printError("올바른 번호를 입력해주세요.");
+            return;
+        }
+
+        FavDTO selectedFav = filtered.get(index - 1);
+        Boolean result = studyController.deleteFavList(loggedInMember.getMemberId(), selectedFav.getCourse_id());
+
+        if (result != null && result) {
+            studyOutputView.printSuccess("\"" + selectedFav.getCourse_title() + "\" 강좌가 수강 예정 목록에서 삭제되었습니다.");
         } else {
             studyOutputView.printError("삭제 중 문제가 발생했습니다.");
         }
     }
 
+
     public void chooseCourseList() {
         System.out.println("---수강 예정 목록 강좌 선택---");
-        System.out.print("선택 목록에 넣고자 하는 강좌의 제목을 입력하세요 : ");
+        System.out.print("추가할 강좌의 제목을 검색하세요 : ");
         String description = inputNoBlank();
 
         if (description == null) {
             studyOutputView.printMessage("== 이전 화면으로 돌아갑니다. ==");
             return;
         }
-        int result = studyController.addFavList(loggedInMember.getMemberId(), description);
+
+        List<CourseDTO> searchResult = studyController.searchCourseByTitle(description);
+
+        if (searchResult == null || searchResult.isEmpty()) {
+            studyOutputView.printError("\"" + description + "\"에 해당하는 강좌가 존재하지 않습니다.");
+            return;
+        }
+
+        studyOutputView.printCoursesWithIndex(searchResult);
+
+        System.out.println("이전으로 돌아가려면 0을 누르세요");
+        System.out.print("추가할 강좌 번호를 선택하세요 : ");
+        int index = inputInt();
+
+
+        if (index == 0) {
+            studyOutputView.printMessage("== 이전 화면으로 돌아갑니다. ==");
+            return;
+        }
+
+        if (index < 1 || index > searchResult.size()) {
+            studyOutputView.printError("올바른 번호를 입력해주세요.");
+            return;
+        }
+
+        CourseDTO selectedCourse = searchResult.get(index - 1);
+        int result = studyController.addFavList(loggedInMember.getMemberId(), selectedCourse.getCourseId());
 
         switch (result) {
             case 1:
-                studyOutputView.printSuccess("수강 예정 목록에 \"" + description + "\" 강좌가 추가되었습니다!");
+                studyOutputView.printSuccess("수강 예정 목록에 \"" + selectedCourse.getTitle() + "\" 강좌가 추가되었습니다!");
                 break;
             case 2:
                 studyOutputView.printError("이미 수강 예정 목록에 있는 강좌입니다.");
@@ -214,7 +258,7 @@ public class StudyInputView {
                 studyOutputView.printError("이미 수강 중이거나 수강완료한 강좌입니다.");
                 break;
             default:
-                studyOutputView.printError("\"" + description + "\"에 해당하는 강좌가 존재하지 않습니다.");
+                studyOutputView.printError("강좌 추가 중 문제가 발생했습니다.");
         }
     }
 
@@ -308,7 +352,6 @@ public class StudyInputView {
             }
             studyOutputView.printError("해당 강좌를 찾을 수 없습니다. 강좌명을 다시 확인해주세요.");
             System.out.println("이전으로 돌아가려면 0을 누르세요");
-            // while 다시 돌아서 재입력
         }
 
 
@@ -333,7 +376,7 @@ public class StudyInputView {
     }
 
 
-    // 학생이 자기가 쓴 강좌평 조회 -> 강좌평 작성하기에서 showMyReview
+    // 학생이 자기가 쓴 강좌평 조회
     // 강좌명과 쓴 강좌평 조회
     public void showMyReview() {
         List<ReviewDTO> MyReviewList = studyController.showMyReviewList(loggedInMember.getMemberId());

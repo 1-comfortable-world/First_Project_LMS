@@ -38,8 +38,8 @@ public class MemberInputView {
     public void displayMainMenu() {
         while (true) {
             System.out.println("╔═══════════════════════════════╗");
-            System.out.println("║     ✨  ONLY  ONE  ✨          ║");
-            System.out.println("║  only one에 오신 걸 환영합니다  ║");
+            System.out.println("║     ✨  ONLY  ONE  ✨        ║");
+            System.out.println("║  only one에 오신 걸 환영합니다   ║");
             System.out.println("╠═══════════════════════════════╣");
             System.out.println("║  1. 회원가입                   ║");
             System.out.println("║  2. 로그인                     ║");
@@ -393,10 +393,10 @@ public class MemberInputView {
                     resetPassword();
                     break;
                 case 3:
-                    studyInputView.ChooseFav();
+                    studyInputView.showFavList();
                     break;
                 case 4:
-                    /* 수강 강좌 보기 */
+                    studyInputView.MyStudying();
                     break;
                 case 5:
                     return;
