@@ -16,10 +16,10 @@ public class StudyInputView {
     private final StudyOutputView studyOutputView;
     private final Scanner sc = new Scanner(System.in);
 
-    private MemberDTO loggedInMember;
+    private MemberDTO memberDTO;
 
     public void setMember(MemberDTO member) {
-        this.loggedInMember = member;
+        this.memberDTO = member;
     }
 
 
@@ -135,7 +135,7 @@ public class StudyInputView {
     }
 
     public void showFavList() {
-        List<FavDTO> favList = studyController.showFavList(loggedInMember.getMemberId());
+        List<FavDTO> favList = studyController.showFavList(memberDTO.getMemberId());
         if (favList == null || favList.isEmpty()) {
             studyOutputView.printError("선택 목록에 담긴 강좌가 없습니다.");
             return;
@@ -177,7 +177,7 @@ public class StudyInputView {
         }
 
         FavDTO selectedFav = favList.get(index - 1);
-        Boolean result = studyController.deleteFavList(loggedInMember.getMemberId(), selectedFav.getCourse_id());
+        Boolean result = studyController.deleteFavList(memberDTO.getMemberId(), selectedFav.getCourse_id());
 
         if (result != null && result) {
             studyOutputView.printSuccess("\"" + selectedFav.getCourse_title() + "\" 강좌가 수강 예정 목록에서 삭제되었습니다.");
@@ -227,7 +227,7 @@ public class StudyInputView {
             selectedCourse = searchResult.get(index - 1);
         }
 
-        int result = studyController.addFavList(loggedInMember.getMemberId(), selectedCourse.getCourseId());
+        int result = studyController.addFavList(memberDTO.getMemberId(), selectedCourse.getCourseId());
 
         switch (result) {
             case 1:
@@ -279,7 +279,7 @@ public class StudyInputView {
 
     public void showReviewableList() {
 
-        List<CourseDTO> completedCourseList = studyController.showcompletedCourseList(loggedInMember.getMemberId());
+        List<CourseDTO> completedCourseList = studyController.showcompletedCourseList(memberDTO.getMemberId());
 
         studyOutputView.printCompletedCourses(completedCourseList);
 
@@ -309,7 +309,7 @@ public class StudyInputView {
     public void WriteReview(List<CourseDTO> completedCourseList) {
 
         // 학생만 리뷰 작성 가능 -> 학생이 아닌 경우 예외처리
-        if (!loggedInMember.getRole().equals("STUDENT")) {
+        if (!memberDTO.getRole().equals("STUDENT")) {
             studyOutputView.printError("학생만 이용할 수 있는 기능입니다.");
             return;
         }
@@ -347,7 +347,7 @@ public class StudyInputView {
         System.out.print("선택한 강좌에 별점을 매겨주세요 : ");
         double rating = inputDouble(0.0,5.0);
 
-        Boolean result = studyController.WriteReview(loggedInMember.getMemberId(), selectedCourse.getTitle(), content, rating);
+        Boolean result = studyController.WriteReview(memberDTO.getMemberId(), selectedCourse.getTitle(), content, rating);
 
         if (result == null) {
             studyOutputView.printError("❗이미 해당 강좌에 강좌평을 작성하셨습니다.");
@@ -362,7 +362,7 @@ public class StudyInputView {
     // 학생이 자기가 쓴 강좌평 조회 -> 강좌평 작성하기에서 showMyReview
     // 강좌명과 쓴 강좌평 조회
     public void showMyReview() {
-        List<ReviewDTO> MyReviewList = studyController.showMyReviewList(loggedInMember.getMemberId());
+        List<ReviewDTO> MyReviewList = studyController.showMyReviewList(memberDTO.getMemberId());
 
         if (MyReviewList == null || MyReviewList.isEmpty()) {
             studyOutputView.printError("작성하신 강좌평이 없습니다.");
@@ -429,7 +429,7 @@ public class StudyInputView {
 
     // 강사가 자기 강좌에 쓰여진 강좌평 조회
     public void ShowReviewForTeacher(){
-        List<ReviewDTO> ReviewForTeacher = studyController.ShowReviewForTeacher(loggedInMember.getMemberId());
+        List<ReviewDTO> ReviewForTeacher = studyController.ShowReviewForTeacher(memberDTO.getMemberId());
 
         if (ReviewForTeacher == null || ReviewForTeacher.isEmpty()) {
             studyOutputView.printError("개설하신 강좌가 없거나 작성된 강좌평이 없습니다.");
@@ -492,7 +492,7 @@ public class StudyInputView {
         switch (menu) {
             case 1:
                 System.out.println("====수강 예정인 강좌 목록====");
-                List<FavDTO> favList = studyController.showFavList(loggedInMember.getMemberId());
+                List<FavDTO> favList = studyController.showFavList(memberDTO.getMemberId());
                 if (favList == null || favList.isEmpty()) {
                     studyOutputView.printError("수강 예정인 강좌가 없습니다.");
                     return;
@@ -501,7 +501,7 @@ public class StudyInputView {
                 break;
             case 2:
                 System.out.println("====수강 중인 강좌 목록====");
-                List<CourseDTO> studyingList = studyController.showMyStudyingList(loggedInMember.getMemberId(),menu);
+                List<CourseDTO> studyingList = studyController.showMyStudyingList(memberDTO.getMemberId(),menu);
                 if (studyingList == null || studyingList.isEmpty()) {
                     studyOutputView.printError("수강 중인 강좌가 없습니다.");
                     return;
@@ -510,7 +510,7 @@ public class StudyInputView {
                 break;
             case 3:
                 System.out.println("====수강 완료한 강좌 목록====");
-                List<CourseDTO> completedList = studyController.showMyStudyingList(loggedInMember.getMemberId(),menu);
+                List<CourseDTO> completedList = studyController.showMyStudyingList(memberDTO.getMemberId(),menu);
                 if (completedList == null || completedList.isEmpty()) {
                     studyOutputView.printError("수강 완료한 강좌가 없습니다.");
                     return;

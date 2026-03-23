@@ -206,7 +206,7 @@ public class MemberInputView {
 
         MemberDTO result = authController.signIn(email, password);
         if (result != null && !result.getRole().equals("STUDENT")) {
-            System.out.println("강사 계정이 아닙니다.");
+            System.out.println("학생 계정이 아닙니다.");
             authController.signOut(result.getMemberId());
             outputView.printSignInResult(false);
             return false;
@@ -235,7 +235,7 @@ public class MemberInputView {
 
         MemberDTO result = authController.signIn(email, password);
         if (result != null && !result.getRole().equals("TEACHER")) {
-            System.out.println("학생 계정이 아닙니다.");
+            System.out.println("강사 계정이 아닙니다.");
             authController.signOut(result.getMemberId());
             outputView.printSignInResult(false);
             return false;
