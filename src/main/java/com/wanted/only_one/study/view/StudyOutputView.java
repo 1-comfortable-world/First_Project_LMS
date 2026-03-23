@@ -122,11 +122,11 @@ public class StudyOutputView {
     }
 
     public void printCoursesWithIndex(List<CourseDTO> courseList) {
-        System.out.println("================================================");
+        System.out.println("=============== 검색 결과 ================");
         for (int i = 0; i < courseList.size(); i++) {
             System.out.println((i + 1) + ". " + courseList.get(i).getTitle() + " / " + courseList.get(i).getTeacherName());
         }
-        System.out.println("================================================");
+        System.out.println("========================================");
     }
 
     public void printFavCoursesWithIndex(List<FavDTO> favList) {
