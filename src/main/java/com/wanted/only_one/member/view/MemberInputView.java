@@ -305,11 +305,10 @@ public class MemberInputView {
             System.out.println("3. 강좌 수강하기");
             System.out.println("4. 강좌평 작성");
             System.out.println("5. 강좌 검색하기");
-            System.out.println("6. 비밀번호 재설정");
-            System.out.println("7. 결제 내역 보기");
-            System.out.println("8. 마이페이지");
-            System.out.println("9. 로그아웃");
-            System.out.println("10. 회원탈퇴");
+            System.out.println("6. 결제 내역 보기");
+            System.out.println("7. 마이페이지");
+            System.out.println("8. 로그아웃");
+            System.out.println("9. 회원탈퇴");
             System.out.println("=================================");
             System.out.print("메뉴 선택 : ");
 
@@ -341,15 +340,12 @@ public class MemberInputView {
                     }
                     break;
                 case 6:
-                    resetPassword();
-                    break;
-                case 7:
                     payInputView.showPayment();
                     break;
-                case 8:
+                case 7:
                     displayStudentMyPage(loggedInMember);
                     break;
-                case 9:
+                case 8:
                     boolean out = logout(loggedInEmail);
                     loggedInEmail = null;
                     loggedInMember = null;
@@ -359,7 +355,7 @@ public class MemberInputView {
                         System.out.println("==========나 죽어...==========");
                     } System.exit(0);
                     break;
-                case 10:
+                case 9:
                     boolean kill = getOut(loggedInEmail);
                     loggedInEmail = null;
                     loggedInMember = null;

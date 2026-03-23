@@ -92,13 +92,16 @@ public class    PaymentDAO {
 
             ResultSet rset = pstmt.executeQuery();
 
+
             while(rset.next()) {
 
-                    PaymentDTO payment = new PaymentDTO(
+                PaymentDTO payment = new PaymentDTO(
                         rset.getTimestamp("결제일"),
-                        rset.getLong("결제금액")
+                        rset.getLong("결제금액"),
+                        rset.getTimestamp("만료일")
                     );
                     payList.add(payment);
+
             }
             return payList;
         }

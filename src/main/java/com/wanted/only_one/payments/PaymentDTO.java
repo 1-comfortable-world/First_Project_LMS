@@ -3,12 +3,14 @@ package com.wanted.only_one.payments;
 import com.wanted.only_one.course.dto.CourseDTO;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class PaymentDTO {
     private Long pay_id;
     private Long member_id;
     private Timestamp payed_at;
     private Long price;
+    private Timestamp expire;
 
     public PaymentDTO(Long pay_id, Long member_id, Timestamp payed_at, Long price) {
 
@@ -16,13 +18,15 @@ public class PaymentDTO {
         this.member_id = member_id;
         this.payed_at = payed_at;
         this.price = price;
+        this.expire = expire;
     }
 
     public PaymentDTO() {}
 
-    public PaymentDTO(Timestamp payed_at, Long price) {
+    public PaymentDTO(Timestamp payed_at, Long price, Timestamp expire) {
         this.payed_at = payed_at;
         this.price = price;
+        this.expire = expire;
     }
 
     public Long getPay_id() {
@@ -49,6 +53,14 @@ public class PaymentDTO {
         this.payed_at = payed_at;
     }
 
+    public Timestamp getExpireDate() {
+        return expire;
+    }
+
+    public void setExpireDate() {
+        this.expire = expire;
+    }
+
     public Long getPrice() {
         return price;
     }
@@ -64,6 +76,7 @@ public class PaymentDTO {
                 ", member_id=" + member_id +
                 ", payed_at=" + payed_at +
                 ", price=" + price +
+                ", expireDate=" + expire +
                 '}';
     }
 }

@@ -19,6 +19,7 @@ public class PaymentOutputView  {
         for (PaymentDTO payment : payList) {
             System.out.print("결제일: " + payment.getPayed_at());
             System.out.println(" / 결제금액: " + payment.getPrice());
+            System.out.println(" / 만료일: " + payment.getExpireDate());
         }
     }
 
