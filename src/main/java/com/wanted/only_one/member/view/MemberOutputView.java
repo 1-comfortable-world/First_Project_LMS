@@ -27,7 +27,7 @@ public class MemberOutputView {
     public void printsignOutResult(boolean result) {
         if (result) {
             System.out.println(" 로그아웃 성공하였습니다.");
-            System.out.println(" 로그인 환명으로 이동하겠습다");
+            System.out.println(" 로그인 화면으로 이동하겠습다");
         } else {
             System.out.println("로그아웃 실패하였습니다.");
         }

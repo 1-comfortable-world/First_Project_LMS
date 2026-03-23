@@ -4,6 +4,9 @@ import com.wanted.only_one.course.controller.CourseController;
 import com.wanted.only_one.course.dto.CourseDTO;
 import com.wanted.only_one.course.dto.LectureDTO;
 import com.wanted.only_one.course.dto.SectionDTO;
+import com.wanted.only_one.member.controller.AuthController;
+import com.wanted.only_one.member.dto.MemberDTO;
+import com.wanted.only_one.member.view.MemberOutputView;
 import com.wanted.only_one.study.view.StudyInputView;
 
 import java.sql.SQLException;
@@ -16,11 +19,15 @@ public class CourseInputView {
     private final CourseOutputView outputView;
     private final StudyInputView studyInputView;
     private final Scanner sc = new Scanner(System.in);
+    private final AuthController authController;
+    private final MemberOutputView memberOutputView;
 
-    public CourseInputView(CourseController controller, CourseOutputView outputView, StudyInputView studyInputView) {
+    public CourseInputView(CourseController controller, CourseOutputView outputView, StudyInputView studyInputView, AuthController authController, MemberOutputView memberOutputView) {
         this.controller = controller;
         this.outputView = outputView;
         this.studyInputView = studyInputView;
+        this.authController = authController;
+        this.memberOutputView = memberOutputView;
     }
 
     // ── 학생용 ───────────────────────────────────────
@@ -133,7 +140,7 @@ public class CourseInputView {
 
     // ── 강사용 ───────────────────────────────────────
 
-    public void teacherCourseMenu(long memberId) throws SQLException {
+    public boolean teacherCourseMenu(long memberId, String email, MemberDTO member) throws SQLException {
         while (true) {
             List<CourseDTO> courseList = controller.T_showAllCourses(memberId);
 
@@ -146,7 +153,9 @@ public class CourseInputView {
             System.out.println("2. 강좌/강의 등록하기");
             System.out.println("3. 강좌 수정하기");
             System.out.println("4. 강좌 삭제하기");
-            System.out.println("5. 이전으로 돌아가기");
+            System.out.println("5. 마이페이지");
+            System.out.println("6. 로그아웃");
+            System.out.println("7. 회원탈퇴");
             System.out.print("번호를 입력해주세요 : ");
 
             int menu = inputInt();
@@ -161,11 +170,99 @@ public class CourseInputView {
                 case 2: createCourse(memberId); break;
                 case 3: updateCourse(memberId, courseList); break;
                 case 4: deleteCourse(memberId, courseList); break;
-                case 5: return;
+                case 5: displayTeacherMyPage(member); break;
+                case 6:
+                    try {
+                        boolean logoutResult = authController.signOut(memberId);
+                        memberOutputView.printsignOutResult(logoutResult);
+                    } catch (Exception e) {
+                        outputView.printError("로그아웃 중 오류 발생");
+                    }
+                    return false;
+                case 7:try {
+                    boolean deleteResult = authController.getOut(email);
+                    memberOutputView.printDeleteMemberResult(deleteResult);
+                } catch (Exception e) {
+                    outputView.printError("회원탈퇴 중 오류 발생");
+                }
+                    return true;
+            }
+        }
+    }
+
+    private void displayTeacherMyPage(MemberDTO member) {
+        while (true) {
+            System.out.println();
+            System.out.println("=================================");
+            System.out.println("           마이페이지");
+            System.out.println("=================================");
+            System.out.println("1. 내 정보 보기");
+            System.out.println("2. 내 정보 수정하기");
+            System.out.println("3. 나가기");
+            System.out.println("=================================");
+            System.out.print("메뉴 선택 : ");
+
+            int menu = inputInt();
+
+            switch (menu) {
+                case 1:
+                    System.out.println("=================================");
+                    System.out.println("아이디 : " + member.getEmail());
+                    System.out.println("이름   : " + member.getName());
+                    System.out.println("역할   : " + member.getRole());
+                    System.out.println("가입일 : " + member.getEnrolledAt());
+                    System.out.println("=================================");
+                    break;
+                case 2: 
+                    resetTeacherPassword();
+                    break;
+                case 3: return;
                 default: outputView.printError("");
             }
         }
     }
+
+    private void resetTeacherPassword() {
+        System.out.println();
+        System.out.println("=================================");
+        System.out.println("         비밀번호 변경");
+        System.out.println("=================================");
+        System.out.print("이메일 : ");
+        String email = sc.nextLine().replaceAll("\\s", "");
+
+        while (true) {
+            System.out.print("새 비밀번호 (특수기호 포함) : ");
+            String newPassword = sc.nextLine().replaceAll("\\s", "");
+
+
+            String specialChars = "!@#$%^&*()_+-=[]{}|;':\",./<>?";
+            boolean hasSpecial = false;
+            for (char c : newPassword.toCharArray()) {
+                if (specialChars.indexOf(c) >= 0) {
+                    hasSpecial = true;
+                    break;
+                }
+            }
+
+            if (!hasSpecial) {
+                outputView.printMessage("특수기호는 필수입니다. 다시 입력해주세요.");
+                continue;
+            }
+
+            try {
+                boolean result = authController.resetPassword(email, newPassword);
+                if (result) {
+                    outputView.printMessage("비밀번호가 변경되었습니다.");
+                } else {
+                    outputView.printMessage("비밀번호 변경에 실패하였습니다.");
+                }
+            } catch (Exception e) {
+                outputView.printError("비밀번호 변경 중 오류 발생");
+            }
+            break;
+        }
+    }
+
 
     private void viewTeacherCourseDetail(long memberId, List<CourseDTO> courseList) throws SQLException {
         outputView.printCourses(courseList);

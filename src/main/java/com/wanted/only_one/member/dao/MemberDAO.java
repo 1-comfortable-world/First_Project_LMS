@@ -61,7 +61,7 @@ public class MemberDAO {
 
     // 이메일, 비밀번호로 회원 조회
     public MemberDTO findByEmailAndPassword(String email, String password) {
-        String sql = "SELECT * FROM members WHERE email = ? AND password = ?";
+        String sql = "SELECT * FROM members WHERE BINARY email = ? AND BINARY password = ?";
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 

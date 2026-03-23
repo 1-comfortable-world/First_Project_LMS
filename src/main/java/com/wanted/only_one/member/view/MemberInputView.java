@@ -147,7 +147,7 @@ public class MemberInputView {
             String password = sc.nextLine().replaceAll("\\s","");
             boolean pwdResult = authController.pwdInclude(password);
             if (!pwdResult) {
-                outputView.printError("\n특수기호는 필수입니다");
+                outputView.printError("\n비밀번호는 특수기호, 대문자, 소문자를 모두 포함해야 합니다.");
                 continue;
             }
             result = authController.signUp(name, email, password, role);
@@ -247,8 +247,8 @@ public class MemberInputView {
             this.loggedInMember = result;
             studyInputView.setMember(result);
             try {
-                courseInputView.teacherCourseMenu(result.getMemberId());
-                return true;
+                courseInputView.teacherCourseMenu(result.getMemberId(),email,result);
+                return false;
             } catch (SQLException e) {
                 outputView.printError("강사 메뉴 로드 중 오류 발생");
             }
@@ -307,8 +307,9 @@ public class MemberInputView {
             System.out.println("5. 강좌 검색하기");
             System.out.println("6. 비밀번호 재설정");
             System.out.println("7. 결제 내역 보기");
-            System.out.println("8. 로그아웃");
-            System.out.println("9. 회원탈퇴");
+            System.out.println("8. 마이페이지");
+            System.out.println("9. 로그아웃");
+            System.out.println("10. 회원탈퇴");
             System.out.println("=================================");
             System.out.print("메뉴 선택 : ");
 
@@ -340,16 +341,19 @@ public class MemberInputView {
                     payInputView.showPayment();
                     break;
                 case 8:
+                    displayStudentMyPage(loggedInMember);
+                    break;
+                case 9:
                     boolean out = logout(loggedInEmail);
                     loggedInEmail = null;
                     loggedInMember = null;
                     if(out){
-                        return true;
+                        return false;
                     } else {
                         System.out.println("==========나 죽어...==========");
                     } System.exit(0);
                     break;
-                case 9:
+                case 10:
                     boolean kill = getOut(loggedInEmail);
                     loggedInEmail = null;
                     loggedInMember = null;
@@ -364,6 +368,44 @@ public class MemberInputView {
             }
         }
     }
+
+    private void displayStudentMyPage(MemberDTO loggedInMember) {
+        while (true) {
+            System.out.println();
+            System.out.println("=================================");
+            System.out.println("           마이페이지");
+            System.out.println("=================================");
+            System.out.println("1. 내 정보 보기");
+            System.out.println("2. 비밀번호 변경");
+            System.out.println("3. 즐겨찾기 강좌 보기");
+            System.out.println("4. 수강 강좌 보기");
+            System.out.println("5. 나가기");
+            System.out.println("=================================");
+            System.out.print("메뉴 선택 : ");
+
+            int menu = inputInt();
+
+            switch (menu) {
+                case 1:
+                    outputView.printMemberInfo(loggedInMember);
+                    break;
+                case 2:
+                    resetPassword();
+                    break;
+                case 3:
+                    studyInputView.ChooseFav();
+                    break;
+                case 4:
+                    /* 수강 강좌 보기 */
+                    break;
+                case 5:
+                    return;
+                default:
+                    outputView.printError("올바른 메뉴를 선택해주세요.");
+            }
+        }
+    }
+
 
     public boolean getOut(String email) {
         try {
@@ -387,7 +429,7 @@ public class MemberInputView {
             boolean out = authController.logout(email);
             if(out) {
                 System.out.println("===============================");
-                System.out.println("          공부 더 안해?          ");
+                System.out.println("          로그아웃 되었습니다!!         ");
                 System.out.println("===============================");
                 return out;
             } else {
