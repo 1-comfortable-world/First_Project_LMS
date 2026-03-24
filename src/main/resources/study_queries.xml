@@ -128,4 +128,19 @@
         join members m on c.member_id = m.member_id
         where lower(c.title) like lower(concat('%', ?, '%'))
     </query>
+    <query  key="getLectureStatusMap">
+        select lh.lecture_id, lh.status
+        from lecture_histories lh
+        join lectures l ON lh.lecture_id = l.lecture_id
+        where lh.member_id = ? AND l.course_id = ?
+    </query >
+    <query  key="totalLectureCount">
+        select count(*) from lectures where course_id = ?
+    </query >
+    <query  key="completedLectureCount">
+        select count(*) from lecture_histories lh
+        join lectures l ON lh.lecture_id = l.lecture_id
+        where lh.member_id = ? AND l.course_id = ?
+        and (lh.status = 'COMPLETED' OR lh.status = '수강완료')
+    </query >
 </properties>
