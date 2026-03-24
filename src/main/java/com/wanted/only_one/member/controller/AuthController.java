@@ -37,6 +37,10 @@ public class AuthController {
         return service.addBlacklist(memberId);
     }
 
+    public boolean isBlacklistedEmail(String email) {
+        return service.isBlacklistedEmail(email);
+    }
+
     public boolean emailMix(String email) {
         return service.emailMix(email);
     }
