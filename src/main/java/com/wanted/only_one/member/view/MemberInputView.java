@@ -41,10 +41,10 @@ public class MemberInputView {
                 "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
                 "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
                 "⣿⣿⣿⣿⣿⣿⠿⠛⠻⠿⣿⣿⣿⣿⣿⣿⣿⣿⠻⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠻⠻⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
-                "⣿⣿⣿⣿⡟⠁⣠⣤⣄⠀⢹⡟⠛⠻⠛⠻⣿⡇⠀⡞⠛⣻⣿⠛⢛⣿⣿⡟⠁⣠⣤⣤⠀⢘⡿⠛⠻⠛⠛⣿⣿⠿⠻⣿⣿⣿⣿⣿",
+                "⣿⣿⣿⣿⡟⠁⣠⣤⣄⠀⢹⡟⠛⠻⠛⠻⣿ ⠀⡞⠛⣻⣿⠛⢛⣿⣿⡟⠁⣠⣤⣤⠀⢘⡿⠛⠻⠛⠛⣿⣿⠿⠻⣿⣿⣿⣿⣿",
                 "⣿⣿⣿⡿⠀⢰⣿⣿⡟⠀⢸⠃⠀⣴⡆⠀⣾⠀⢠⣇⠀⣺⠃⢀⣾⣿⣿⠀⢠⣿⣿⡿⠀⢰⠇⠀⣴⡆⠀⢼⠁⠠⠛⠂⠀⣿⣿⣿⣿⣿",
                 "⣿⣿⣿⣧⠀⠘⠿⠛⠁⣠⡟⠀⢸⣿⠀⢠⡇⠀⣼⣗⠀⠂⢠⣾⣿⣿⣿⠀⠈⠿⠟⠁⣤⡾⠀⢰⣿⠅⠀⡇⠀⠶⠶⠒⢲⣿⣿⣿⣿",
-                "⣿⣿⣿⣿⣷⣤⣤⣴⣾⣿⣧⣤⣿⣷⣤⣼⣤⣤⡿⠟⠀⢠⣿⣿⣿⣿⣿⣷⣤⣤⣤⣿⣿⣧⣤⣾⣿⣤⣼⣿⣦⣤⣤⣶⣿⣿⣿⣿",
+                "⣿⣿⣿⣿⣷⣤⣤⣴⣾⣿⣧⣤⣿⣷⣤⣼⣤⣤⡿⠟⠀⢠⣿⣿⣿⣿⣿⣷⣤⣤⣤⣿⣿⣧⣤⣿⣿⣤⣼⣿⣦⣤⣤⣶⣿⣿⣿⣿",
                 "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
                 "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
                 "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿"
@@ -56,7 +56,7 @@ public class MemberInputView {
 
         while (true) {
             System.out.println("╔═══════════════════════════════╗");
-            System.out.println("║     ✨  ONLY  ONE  ✨        ║");
+            System.out.println("║      ✨  ONLY  ONE  ✨       ║");
             System.out.println("║  only one에 오신 걸 환영합니다   ║");
             System.out.println("╠═══════════════════════════════╣");
             System.out.println("║  1. 회원가입                   ║");
@@ -89,7 +89,7 @@ public class MemberInputView {
         while (true) {
             System.out.println();
             System.out.println("=================================");
-            System.out.println("            회원가입");
+            System.out.println("             회원가입");
             System.out.println("=================================");
             System.out.println("1. 학생 회원가입");
             System.out.println("2. 강사 회원가입");
@@ -119,7 +119,7 @@ public class MemberInputView {
         while (true) {
             System.out.println();
             System.out.println("=================================");
-            System.out.println("       개인정보 수집 동의");
+            System.out.println("         개인정보 수집 동의");
             System.out.println("=================================");
             System.out.println("개인정보 수집 및 이용에 동의하십니까?");
             System.out.println("1. 예");
@@ -166,6 +166,7 @@ public class MemberInputView {
             boolean pwdResult = authController.pwdInclude(password);
             if (!pwdResult) {
                 outputView.printError("\n비밀번호는 특수기호, 대문자, 소문자를 모두 포함해야 합니다.");
+                System.out.println(" ");
                 continue;
             }
             result = authController.signUp(name, email, password, role);
@@ -183,7 +184,7 @@ public class MemberInputView {
         while (true) {
             System.out.println();
             System.out.println("=================================");
-            System.out.println("            로그인");
+            System.out.println("              로그인");
             System.out.println("=================================");
             System.out.println("1. 학생 로그인");
             System.out.println("2. 강사 로그인");
@@ -315,11 +316,11 @@ public class MemberInputView {
         while (true) {
             System.out.println();
             System.out.println("=================================");
-            System.out.println("            메인메뉴");
+            System.out.println("             메인메뉴");
             System.out.println("=================================");
             System.out.println("0. 결제");
             System.out.println("1. 강좌 전체 조회");
-            System.out.println("2. 강좌 선택 목록(수강예정 강좌 등록)");
+            System.out.println("2. 강좌 선택 목록");
             System.out.println("3. 강좌 수강");
             System.out.println("4. 강좌평 작성");
             System.out.println("5. 강좌 검색");
@@ -364,7 +365,7 @@ public class MemberInputView {
                     if(out){
                         return false;
                     } else {
-                        System.out.println("==========나 죽어...==========");
+                        System.out.println("============나 죽어...============");
                     } System.exit(0);
                     break;
                 case 8:
@@ -374,7 +375,7 @@ public class MemberInputView {
                     if(kill){
                         return true;
                     } else {
-                        System.out.println("==========나 죽어...==========");
+                        System.out.println("============나 죽어...============");
                     } System.exit(0);
                     break;
                 default:
@@ -387,7 +388,7 @@ public class MemberInputView {
         while (true) {
             System.out.println();
             System.out.println("=================================");
-            System.out.println("           마이페이지");
+            System.out.println("            마이페이지");
             System.out.println("=================================");
             System.out.println("1. 내 정보 보기");
             System.out.println("2. 비밀번호 변경");
@@ -429,9 +430,9 @@ public class MemberInputView {
         try {
             boolean kill = authController.getOut(email);
             if(kill) {
-                System.out.println("==================================");
-                System.out.println("    결국 포기한거야? 나약한 녀석...");
-                System.out.println("==================================");
+                System.out.println("=================================");
+                System.out.println("    결국 포기한거야? 나약한 녀석...   ");
+                System.out.println("=================================");
                 return kill;
             } else {
                 return kill;
@@ -446,9 +447,9 @@ public class MemberInputView {
         try {
             boolean out = authController.logout(email);
             if(out) {
-                System.out.println("===============================");
-                System.out.println("          로그아웃 되었습니다!!         ");
-                System.out.println("===============================");
+                System.out.println("=================================");
+                System.out.println("        로그아웃 되었습니다!!       ");
+                System.out.println("=================================");
                 return out;
             } else {
                 return out;

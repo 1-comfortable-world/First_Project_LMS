@@ -210,7 +210,7 @@ public class CourseInputView {
             List<CourseDTO> courseList = controller.T_showAllCourses(memberId);
 
             System.out.println("=================================");
-            System.out.println("           강사 메인페이지");
+            System.out.println("          강사 메인페이지");
             System.out.println("=================================");
             System.out.println("1. 나의 강좌 전체 조회");
             System.out.println("2. 강좌/강의 등록");

@@ -77,9 +77,9 @@ public class StudyInputView {
             System.out.println("=================================");
             System.out.println("         선택 목록 고르기");
             System.out.println("=================================");
-            System.out.println("1. 전체 강좌 목록보기");
-            System.out.println("2. 수강 예정 강좌 고르기");
-            System.out.println("3. 수강예정 강좌 조회하기");
+            System.out.println("1. 전체 강좌 조회");
+            System.out.println("2. 선택 목록 강좌 선택");
+            System.out.println("3. 선택 목록 강좌 조회");
             System.out.println("4. 전으로 돌아가기");
             System.out.print("번호를 입력해주세요 : ");
 
@@ -117,7 +117,7 @@ public class StudyInputView {
 
         while (true) {
             System.out.println(" ");
-            System.out.println("1. 수강 예정 목록에 넣을 강좌 고르기");
+            System.out.println("1. 강좌 선택 목록에 넣을 강좌 고르기");
             System.out.println("2. 강좌 선택 그만하기");
             System.out.print("번호를 입력해주세요 : ");
             int menu = inputInt();
@@ -145,7 +145,7 @@ public class StudyInputView {
 
         while (true) {
             System.out.println(" ");
-            System.out.println("1. 수강 예정 목록에서 강좌 삭제하기");
+            System.out.println("1. 강좌 선택 목록에서 강좌 삭제하기");
             System.out.println("2. 이전 화면으로 돌아가기");
             System.out.print("번호를 입력해주세요 : ");
             int menu = inputInt();
@@ -180,14 +180,14 @@ public class StudyInputView {
         Boolean result = studyController.deleteFavList(memberDTO.getMemberId(), selectedFav.getCourse_id());
 
         if (result != null && result) {
-            studyOutputView.printSuccess("\"" + selectedFav.getCourse_title() + "\" 강좌가 수강 예정 목록에서 삭제되었습니다.");
+            studyOutputView.printSuccess("\"" + selectedFav.getCourse_title() + "\" 강좌가 선택 목록에서 삭제되었습니다.");
         } else {
             studyOutputView.printError("삭제 중 문제가 발생했습니다.");
         }
     }
 
     public void chooseCourseList() {
-        System.out.println("---수강 예정 목록 강좌 선택---");
+        System.out.println("---강좌 선택 목록 강좌 선택---");
         System.out.print("추가할 강좌의 제목을 검색하세요 : ");
         String description = inputNoBlank();
 
@@ -231,10 +231,10 @@ public class StudyInputView {
 
         switch (result) {
             case 1:
-                studyOutputView.printSuccess("수강 예정 목록에 \"" + selectedCourse.getTitle() + "\" 강좌가 추가되었습니다!");
+                studyOutputView.printSuccess("강좌 선택 목록에 \"" + selectedCourse.getTitle() + "\" 강좌가 추가되었습니다!");
                 break;
             case 2:
-                studyOutputView.printError("이미 수강 예정 목록에 있는 강좌입니다.");
+                studyOutputView.printError("이미 선택 목록에 있는 강좌입니다.");
                 break;
             case 3:
                 studyOutputView.printError("이미 수강 중이거나 수강완료한 강좌입니다.");
@@ -388,9 +388,9 @@ public class StudyInputView {
     // 특정 강좌에 있는 강좌평 조회
     public void ShowReviewInCourse() {
         while (true) {
-            System.out.println("=========================================");
-            System.out.println("               강좌평 조회 ");
-            System.out.println("=========================================");
+            System.out.println("=================================");
+            System.out.println("           강좌평 조회 ");
+            System.out.println("=================================");
             System.out.print("강좌평을 조회하고자 하는 강좌명을 입력하세요 : ");
             String description = inputNoBlank();
 
@@ -491,16 +491,16 @@ public class StudyInputView {
     public void showMyStudyingList(int menu) {
         switch (menu) {
             case 1:
-                System.out.println("====수강 예정인 강좌 목록====");
+                System.out.println("========수강 예정 강좌 목록========");
                 List<FavDTO> favList = studyController.showFavList(memberDTO.getMemberId());
                 if (favList == null || favList.isEmpty()) {
-                    studyOutputView.printError("수강 예정인 강좌가 없습니다.");
+                    studyOutputView.printError("선택 목록에 강좌가 없습니다.");
                     return;
                 }
                 studyOutputView.printFavCourses(favList);
                 break;
             case 2:
-                System.out.println("====수강 중인 강좌 목록====");
+                System.out.println("========수강 중인 강좌 목록========");
                 List<CourseDTO> studyingList = studyController.showMyStudyingList(memberDTO.getMemberId(),menu);
                 if (studyingList == null || studyingList.isEmpty()) {
                     studyOutputView.printError("수강 중인 강좌가 없습니다.");
@@ -509,7 +509,7 @@ public class StudyInputView {
                 studyOutputView.printCourses(studyingList);
                 break;
             case 3:
-                System.out.println("====수강 완료한 강좌 목록====");
+                System.out.println("========수강 완료한 강좌 목록========");
                 List<CourseDTO> completedList = studyController.showMyStudyingList(memberDTO.getMemberId(),menu);
                 if (completedList == null || completedList.isEmpty()) {
                     studyOutputView.printError("수강 완료한 강좌가 없습니다.");

@@ -16,7 +16,7 @@ public class CourseOutputView {
         }
 
         System.out.println(" ");
-        System.out.println("===============전체 강좌 리스트=================");
+        System.out.println("==========전체 강좌 리스트==========");
         for (int i = 0; i < list.size(); i++) {
             CourseDTO c = list.get(i);
             System.out.println((i + 1) + ". 강좌명 : " + c.getTitle());
@@ -34,7 +34,7 @@ public class CourseOutputView {
         }
 
         System.out.println(" ");
-        System.out.println("================================");
+        System.out.println("=================================");
         for (int i = 0; i < list.size(); i++) {
             CourseDTO c = list.get(i);
             System.out.println((i + 1) + ". 강좌명 : " + c.getTitle());

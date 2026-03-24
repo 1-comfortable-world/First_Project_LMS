@@ -87,8 +87,8 @@ public class PaymentInputView {
             payoutputView.printMessage("========================================");
             return true;
         } else {
-            payoutputView.printMessage("     🤣🤣🤣 결제 처리 중 문제가 발생했습니다!!!");
-            payoutputView.printMessage("================================================");
+            payoutputView.printMessage(" 🤣🤣🤣 결제 처리 중 문제가 발생했습니다!!!");
+            payoutputView.printMessage("========================================");
             return false;
         }
     }

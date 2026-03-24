@@ -28,12 +28,12 @@ public class StudyOutputView {
             return;
         }
         System.out.println(" ");
-        System.out.println("================================================");
-        System.out.println("                   목록 조회 결과                ");
-        System.out.println("================================================");
+        System.out.println("=================================");
+        System.out.println("           목록 조회 결과          ");
+        System.out.println("=================================");
         for (CourseDTO courseDTO : courseList) {
             System.out.println("  강좌명 : " + courseDTO.getTitle() + " / 강사명 : " + courseDTO.getTeacherName());
-            System.out.println("------------------------------------------------");
+            System.out.println("---------------------------------");
         }
     }
 
@@ -46,12 +46,12 @@ public class StudyOutputView {
         }
 
         System.out.println(" ");
-        System.out.println("================================================");
-        System.out.println("           수강 완료한 강좌 목록 전체 조회                ");
-        System.out.println("================================================");
+        System.out.println("=================================");
+        System.out.println("   수강 완료한 강좌 목록 전체 조회   ");
+        System.out.println("=================================");
         for (int i = 0; i < completedCourseList.size(); i++) {
             System.out.println((i + 1) + ". " + completedCourseList.get(i).getTitle());
-            System.out.println("------------------------------------------");
+            System.out.println("---------------------------------");
         }
     }
 
@@ -63,7 +63,7 @@ public class StudyOutputView {
         }
 
         System.out.println( " ");
-        System.out.println("======수강 예정 목록 조회 결과======");
+        System.out.println("======강좌 선택 목록 조회 결과======");
         for (FavDTO favDTO : favList){
             System.out.println( "- 강좌명 : "+favDTO.getCourse_title() );
         }
@@ -76,7 +76,7 @@ public class StudyOutputView {
         }
 
         System.out.println( " ");
-        System.out.println("======내가 작성한 강좌평 조회======");
+        System.out.println("=======내가 작성한 강좌평 조회=======");
         for (ReviewDTO reviewDTO : myReviewList){
             System.out.println("강좌명 : " + reviewDTO.getTitle());
             System.out.println("강좌평 : " + reviewDTO.getContents());
@@ -92,7 +92,7 @@ public class StudyOutputView {
         }
 
         System.out.println(" ");
-        System.out.println("======입력하신 강좌의 강좌평 조회======");
+        System.out.println("=====입력하신 강좌의 강좌평 조회=====");
         for (ReviewDTO reviewDTO : reviewInCourse) {
             System.out.println("강좌명 : " + reviewDTO.getTitle());
             System.out.println("강사명 : " + reviewDTO.getTeacher_name());
@@ -110,7 +110,7 @@ public class StudyOutputView {
         }
 
         System.out.println(" ");
-        System.out.println("======내 강좌에 작성된 강좌평 조회======");
+        System.out.println("=====내 강좌에 작성된 강좌평 조회=====");
         for (ReviewDTO reviewDTO : reviewForTeacher){
             System.out.println("강좌명 : " + reviewDTO.getTitle());
             System.out.println("강좌평 : " + reviewDTO.getContents());
@@ -122,18 +122,10 @@ public class StudyOutputView {
 
     public void printCoursesWithIndex(List<CourseDTO> courseList) {
         System.out.println(" ");
-        System.out.println("=============== 검색 결과 ================");
+        System.out.println("============ 검색 결과 ============");
         for (int i = 0; i < courseList.size(); i++) {
             System.out.println((i + 1) + ". " + courseList.get(i).getTitle() + " / " + courseList.get(i).getTeacherName());
         }
-        System.out.println("========================================");
-    }
-
-    public void printFavCoursesWithIndex(List<FavDTO> favList) {
-        System.out.println(" ");
-        System.out.println("======수강 예정 목록======");
-        for (int i = 0; i < favList.size(); i++) {
-            System.out.println((i + 1) + ". " + favList.get(i).getCourse_title());
-        }
+        System.out.println("=================================");
     }
 }

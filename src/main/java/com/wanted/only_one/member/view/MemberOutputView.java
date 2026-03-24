@@ -5,14 +5,14 @@ import com.wanted.only_one.member.dto.MemberDTO;
 public class MemberOutputView {
     // 회원가입 결과 출력
     public void printSignUpResult(boolean result) {
-        System.out.println("=========================");
+        System.out.println("=================================");
         if (result) {
             System.out.println(" 회원가입이 완료되었습니다.");
             System.out.println("로그인 화면으로 이동합니다.");
         } else {
             System.out.println(" 회원가입에 실패하였습니다.");
         }
-        System.out.println("=========================");
+        System.out.println("=================================");
     }
     // 로그인 결과 출력
     public void printSignInResult(boolean result) {
@@ -21,7 +21,7 @@ public class MemberOutputView {
         } else {
             System.out.println(" 로그인에 실패하였습니다.");
         }
-        System.out.println("=========================");
+        System.out.println("=================================");
     }
     // 로그아웃 결과 출력
     public void printsignOutResult(boolean result) {
@@ -31,12 +31,12 @@ public class MemberOutputView {
         } else {
             System.out.println("로그아웃 실패하였습니다.");
         }
-        System.out.println("=========================");
+        System.out.println("=================================");
     }
     // 회원 정보 출력
     public void printMemberInfo(MemberDTO member) {
         System.out.println(" 내 정보 보기");
-        System.out.println("=========================");
+        System.out.println("=================================");
         if (member == null) {
             System.out.println(" 회원 정보를 찾을 수 없습니다.");
         } else {
@@ -45,7 +45,7 @@ public class MemberOutputView {
             System.out.println("역할 : " + member.getRole());
             System.out.println("가입일 : " + member.getEnrolledAt());
         }
-        System.out.println("=========================");
+        System.out.println("=================================");
     }
 
     // 비밀번호 수정 결과
@@ -55,7 +55,7 @@ public class MemberOutputView {
         } else {
             System.out.println(" 비밀번호 수정에 실패하였습니다.");
         }
-        System.out.println("=========================");
+        System.out.println("=================================");
     }
     // 회원 탈퇴 결과
     public void printDeleteMemberResult(boolean result) {
@@ -65,14 +65,14 @@ public class MemberOutputView {
         } else {
             System.out.println(" 회원탈퇴에 실패하였습니다.");
         }
-        System.out.println("=========================");
+        System.out.println("=================================");
     }
 
     // 블랙리스트 결과
     public void printBlacklistResult() {
         System.out.println(" 중복 로그인이 감지되었습니다.");
         System.out.println("로그인 화면으로 이동합니다.");
-        System.out.println("=========================");
+        System.out.println("=================================");
     }
 
     // 비밀번호 초기화 결과
@@ -82,14 +82,14 @@ public class MemberOutputView {
         } else {
             System.out.println(" 비밀번호 초기화에 실패하였습니다.");
         }
-        System.out.println("=========================");
+        System.out.println("=================================");
     }
 
     // 정보수집 동의 거부
     public void printAgreeReject() {
         System.out.println("정보수집 동의를 거부하셨습니다.");
         System.out.println("메인 화면으로 이동합니다.");
-        System.out.println("=========================");
+        System.out.println("=================================");
     }
 
     // 에러 메시지 출력
