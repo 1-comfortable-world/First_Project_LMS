@@ -18,6 +18,8 @@ public class StudyingService {
     private final StudyingDAO studyingDAO;
     private final LectureHistoryDAO lectureHistoryDAO;
 
+    System.out.println("시작");
+
     public StudyingService(Connection connection) {
         this.studyingDAO = new StudyingDAO(connection);
         this.lectureHistoryDAO = new LectureHistoryDAO(connection);
