@@ -428,11 +428,11 @@ public class StudyInputView {
     }
 
     // 강사가 자기 강좌에 쓰여진 강좌평 조회
-    public void ShowReviewForTeacher(){
-        List<ReviewDTO> ReviewForTeacher = studyController.ShowReviewForTeacher(memberDTO.getMemberId());
+    public void ShowReviewForTeacher(long courseId){
+        List<ReviewDTO> ReviewForTeacher = studyController.ShowReviewForTeacher(courseId);
 
         if (ReviewForTeacher == null || ReviewForTeacher.isEmpty()) {
-            studyOutputView.printError("개설하신 강좌가 없거나 작성된 강좌평이 없습니다.");
+            studyOutputView.printError("작성된 강좌평이 없습니다.");
             return;
         }
 

@@ -76,8 +76,8 @@ public class StudyController {
         return reviewService.ShowReviewInCourse(description);
     }
 
-    public List<ReviewDTO> ShowReviewForTeacher(long memberId) {
-        return reviewService.ShowReviewForTeacher(memberId);
+    public List<ReviewDTO> ShowReviewForTeacher(long courseId) {
+        return reviewService.ShowReviewForTeacher(courseId);
     }
 
     public boolean checkCourseExists(String description) {

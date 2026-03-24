@@ -22,7 +22,7 @@ public class ReviewDAO {
         String query = QueryUtil.getQuery("writeReview");
 
         try (PreparedStatement pstmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            pstmt.setLong(1,memberId);  // 나중에 현재 로그인 되어있는 사용자의 member_id 를 삽입
+            pstmt.setLong(1,memberId);
             pstmt.setString(2, content);
             pstmt.setDouble(3, rating);
             pstmt.setString(4, description);
@@ -46,7 +46,7 @@ public class ReviewDAO {
 
         // 쿼리문 동작
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, memberId); // TODO: 로그인 세션 연결 후 교체
+            pstmt.setLong(1, memberId);
             ResultSet rset = pstmt.executeQuery();
 
             while(rset.next()){
@@ -85,13 +85,13 @@ public class ReviewDAO {
         return ReviewInCourse;
     }
 
-    public List<ReviewDTO> ShowReviewForTeacher(long memberId) throws SQLException {
+    public List<ReviewDTO> ShowReviewForTeacher(long courseId) throws SQLException {
 
         String query = QueryUtil.getQuery("ShowReviewForTeacher");
         List<ReviewDTO> ReviewForTeacher = new ArrayList<>();
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, memberId); // TODO: 로그인 세션 연결 후 교체
+            pstmt.setLong(1, courseId);
             ResultSet rset = pstmt.executeQuery();
 
             while(rset.next()){
@@ -111,7 +111,7 @@ public class ReviewDAO {
         String query = QueryUtil.getQuery("existsReview");
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-            pstmt.setLong(1, memberId); // TODO: 현재 로그인한 member_id로 변경
+            pstmt.setLong(1, memberId);
             pstmt.setString(2, description);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {

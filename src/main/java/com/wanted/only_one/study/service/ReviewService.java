@@ -86,9 +86,9 @@ public class ReviewService {
         }
     }
 
-    public List<ReviewDTO> ShowReviewForTeacher(long memberId) {
+    public List<ReviewDTO> ShowReviewForTeacher(long courseId) {
         try {
-            return reviewDAO.ShowReviewForTeacher(memberId);
+            return reviewDAO.ShowReviewForTeacher(courseId);
         } catch (SQLException e) {
             throw new RuntimeException("강좌평 조회 중 에러 발생 🚨");
         }

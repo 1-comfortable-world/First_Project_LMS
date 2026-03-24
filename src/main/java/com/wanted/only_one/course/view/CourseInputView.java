@@ -336,7 +336,7 @@ public class CourseInputView {
 
         int menu = inputInt();
         if (menu == 1) showStudentList(courseId);
-        else if (menu == 2) studyInputView.ShowReviewInCourse();
+        else if (menu == 2) studyInputView.ShowReviewForTeacher(courseId);
     }
 
     private void createCourse(long memberId) throws SQLException {
