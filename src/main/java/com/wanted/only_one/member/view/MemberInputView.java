@@ -49,7 +49,7 @@ public class MemberInputView {
                 "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
                 "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿"
         };
-        
+
         for (int i = 0; i < lines.length; i ++) {
             System.out.println(lines[i]);
         }
@@ -323,7 +323,6 @@ public class MemberInputView {
             System.out.println("3. 강좌 수강");
             System.out.println("4. 강좌평 작성");
             System.out.println("5. 강좌 검색");
-//            System.out.println("6. 결제 내역 조회");
             System.out.println("6. 마이페이지");
             System.out.println("7. 로그아웃");
             System.out.println("8. 회원탈퇴");
@@ -355,9 +354,6 @@ public class MemberInputView {
                         System.out.println("[오류] 강좌 검색 중 문제가 발생했습니다: " + e.getMessage());
                     }
                     break;
-//                case 6:
-//                    payInputView.showPayment();
-//                    break;
                 case 6:
                     displayStudentMyPage(loggedInMember);
                     break;
