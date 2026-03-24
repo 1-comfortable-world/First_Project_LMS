@@ -83,7 +83,7 @@
         from courses c
         join course_reviews r ON c.course_id = r.course_id
         join members student ON r.member_id = student.member_id AND student.role = 'STUDENT'
-        where c.member_id = ?
+        where c.course_id = ?
     </query>
     <query key="existsReview">
         select count(*)

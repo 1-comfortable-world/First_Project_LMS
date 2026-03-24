@@ -432,7 +432,7 @@ public class StudyInputView {
         List<ReviewDTO> ReviewForTeacher = studyController.ShowReviewForTeacher(courseId);
 
         if (ReviewForTeacher == null || ReviewForTeacher.isEmpty()) {
-            studyOutputView.printError("개설하신 강좌가 없거나 작성된 강좌평이 없습니다.");
+            studyOutputView.printError("작성된 강좌평이 없습니다.");
             return;
         }
 
