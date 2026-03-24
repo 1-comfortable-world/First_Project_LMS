@@ -158,7 +158,11 @@ public class MemberInputView {
             }
             boolean emailresult = authController.emailMix(email);
             if (emailresult) {
-                outputView.printError("\n이미 존재하는 이메일입니다");
+                if (authController.isBlacklistedEmail(email)) {
+                    outputView.printError("\n블랙리스트에 등록된 이메일입니다. 가입이 불가능합니다.");
+                } else {
+                    outputView.printError("\n이미 존재하는 이메일입니다.");
+                }
                 continue;
             }
             System.out.print("비밀번호를 입력하십시오 (특수기호 포함) : ");

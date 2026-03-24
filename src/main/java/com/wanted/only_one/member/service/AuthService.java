@@ -245,4 +245,18 @@ public class AuthService {
             }
         }
     }
+
+    public boolean isBlacklistedEmail(String email) {
+        Connection con = null;
+        try {
+            con = JDBCTemplate.getConnection();
+            BlacklistDAO blacklistDAO = new BlacklistDAO(con);
+            return blacklistDAO.existsBlacklistByEmail(email);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try { if (con != null) con.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+    }
 }

@@ -406,7 +406,6 @@ public class StudyInputView {
 
             List<ReviewDTO> reviewInCourse = studyController.ShowReviewInCourse(description);
 
-
             if (reviewInCourse == null || reviewInCourse.isEmpty()) {
                 studyOutputView.printMessage("해당 강좌에 작성된 강좌평이 없습니다.");
                 return;

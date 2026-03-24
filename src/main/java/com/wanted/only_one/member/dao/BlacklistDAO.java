@@ -53,5 +53,27 @@ public class BlacklistDAO {
         }
         return false;
     }
+    public boolean existsBlacklistByEmail(String email) {
+        String sql = "SELECT COUNT(*) FROM blacklists b " +
+                "JOIN members m ON b.member_id = m.member_id " +
+                "WHERE m.email = ?";
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
+        try {
+            pstmt = con.prepareStatement(sql);
+            pstmt.setString(1, email);
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try { if (rs != null) rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+            try { if (pstmt != null) pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+        }
+        return false;
+    }
 }
