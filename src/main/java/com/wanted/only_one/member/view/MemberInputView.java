@@ -36,6 +36,25 @@ public class MemberInputView {
 
     // 메인 메뉴
     public void displayMainMenu() {
+        String[] lines = {
+                "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+                "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+                "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+                "⣿⣿⣿⣿⣿⣿⠿⠛⠻⠿⣿⣿⣿⣿⣿⣿⣿⣿⠻⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠻⠻⠻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+                "⣿⣿⣿⣿⡟⠁⣠⣤⣄⠀⢹⡟⠛⠻⠛⠻⣿⡇⠀⡞⠛⣻⣿⠛⢛⣿⣿⡟⠁⣠⣤⣤⠀⢘⡿⠛⠻⠛⠛⣿⣿⠿⠻⣿⣿⣿⣿⣿",
+                "⣿⣿⣿⡿⠀⢰⣿⣿⡟⠀⢸⠃⠀⣴⡆⠀⣾⠀⢠⣇⠀⣺⠃⢀⣾⣿⣿⠀⢠⣿⣿⡿⠀⢰⠇⠀⣴⡆⠀⢼⠁⠠⠛⠂⠀⣿⣿⣿⣿⣿",
+                "⣿⣿⣿⣧⠀⠘⠿⠛⠁⣠⡟⠀⢸⣿⠀⢠⡇⠀⣼⣗⠀⠂⢠⣾⣿⣿⣿⠀⠈⠿⠟⠁⣤⡾⠀⢰⣿⠅⠀⡇⠀⠶⠶⠒⢲⣿⣿⣿⣿",
+                "⣿⣿⣿⣿⣷⣤⣤⣴⣾⣿⣧⣤⣿⣷⣤⣼⣤⣤⡿⠟⠀⢠⣿⣿⣿⣿⣿⣷⣤⣤⣤⣿⣿⣧⣤⣾⣿⣤⣼⣿⣦⣤⣤⣶⣿⣿⣿⣿",
+                "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣧⣤⣶⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+                "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿",
+                "⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿"
+        };
+
+        // 짝수 줄만 출력 (절반 높이)
+        for (int i = 0; i < lines.length; i ++) {
+            System.out.println(lines[i]);
+        }
+
         while (true) {
             System.out.println("╔═══════════════════════════════╗");
             System.out.println("║     ✨  ONLY  ONE  ✨        ║");
@@ -305,10 +324,10 @@ public class MemberInputView {
             System.out.println("3. 강좌 수강");
             System.out.println("4. 강좌평 작성");
             System.out.println("5. 강좌 검색");
-            System.out.println("6. 결제 내역 조회");
-            System.out.println("7. 마이페이지");
-            System.out.println("8. 로그아웃");
-            System.out.println("9. 회원탈퇴");
+//            System.out.println("6. 결제 내역 조회");
+            System.out.println("6. 마이페이지");
+            System.out.println("7. 로그아웃");
+            System.out.println("8. 회원탈퇴");
             System.out.println("=================================");
             System.out.print("메뉴 선택 : ");
 
@@ -337,13 +356,13 @@ public class MemberInputView {
                         System.out.println("[오류] 강좌 검색 중 문제가 발생했습니다: " + e.getMessage());
                     }
                     break;
+//                case 6:
+//                    payInputView.showPayment();
+//                    break;
                 case 6:
-                    payInputView.showPayment();
-                    break;
-                case 7:
                     displayStudentMyPage(loggedInMember);
                     break;
-                case 8:
+                case 7:
                     boolean out = logout(loggedInEmail);
                     loggedInEmail = null;
                     loggedInMember = null;
@@ -353,7 +372,7 @@ public class MemberInputView {
                         System.out.println("==========나 죽어...==========");
                     } System.exit(0);
                     break;
-                case 9:
+                case 8:
                     boolean kill = getOut(loggedInEmail);
                     loggedInEmail = null;
                     loggedInMember = null;
@@ -379,7 +398,8 @@ public class MemberInputView {
             System.out.println("2. 비밀번호 변경");
             System.out.println("3. 즐겨찾기 강좌 보기");
             System.out.println("4. 수강 강좌 보기");
-            System.out.println("5. 나가기");
+            System.out.println("5. 결제 내역 조회");
+            System.out.println("6. 나가기");
             System.out.println("=================================");
             System.out.print("메뉴 선택 : ");
 
@@ -399,6 +419,9 @@ public class MemberInputView {
                     studyInputView.MyStudying();
                     break;
                 case 5:
+                    payInputView.showPayment();
+                    break;
+                case 6:
                     return;
                 default:
                     outputView.printError("올바른 메뉴를 선택해주세요.");
