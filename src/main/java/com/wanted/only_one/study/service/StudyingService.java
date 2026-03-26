@@ -17,7 +17,7 @@ public class StudyingService {
     private final Connection connection;
     private final StudyingDAO studyingDAO;
     private final LectureHistoryDAO lectureHistoryDAO;
-
+    
     public StudyingService(Connection connection) {
         this.studyingDAO = new StudyingDAO(connection);
         this.lectureHistoryDAO = new LectureHistoryDAO(connection);
@@ -62,55 +62,17 @@ public class StudyingService {
         }
     }
 
-    // 강의별 수강 상태 Map<lectureId, status> 반환
     public Map<Long, String> getLectureStatusMap(long memberId, long courseId) {
-        String sql =
-                "SELECT lh.lecture_id, lh.status " +
-                        "FROM lecture_histories lh " +
-                        "JOIN lectures l ON lh.lecture_id = l.lecture_id " +
-                        "WHERE lh.member_id = ? AND l.course_id = ?";
-
-        Map<Long, String> map = new HashMap<>();
-        try (PreparedStatement p = connection.prepareStatement(sql)) {
-            p.setLong(1, memberId);
-            p.setLong(2, courseId);
-            ResultSet rs = p.executeQuery();
-            while (rs.next()) {
-                map.put(rs.getLong("lecture_id"), rs.getString("status"));
-            }
+        try {
+            return lectureHistoryDAO.getLectureStatusMap(memberId, courseId);
         } catch (SQLException e) {
             throw new RuntimeException("강의 상태 조회 중 에러 발생 🚨");
         }
-        return map;
     }
 
-    // 강좌 전체 강의 수 vs 완료된 강의 수 비교
     public boolean isAllLecturesComplete(long memberId, long courseId) {
-        String totalSql = "SELECT COUNT(*) FROM lectures WHERE course_id = ?";
-        String completedSql =
-                "SELECT COUNT(*) FROM lecture_histories lh " +
-                        "JOIN lectures l ON lh.lecture_id = l.lecture_id " +
-                        "WHERE lh.member_id = ? AND l.course_id = ? " +
-                        "AND (lh.status = 'COMPLETED' OR lh.status = '수강완료')";
-
         try {
-            int total = 0;
-            try (PreparedStatement p = connection.prepareStatement(totalSql)) {
-                p.setLong(1, courseId);
-                ResultSet rs = p.executeQuery();
-                if (rs.next()) total = rs.getInt(1);
-            }
-            if (total == 0) return false;
-
-            int completed = 0;
-            try (PreparedStatement p = connection.prepareStatement(completedSql)) {
-                p.setLong(1, memberId);
-                p.setLong(2, courseId);
-                ResultSet rs = p.executeQuery();
-                if (rs.next()) completed = rs.getInt(1);
-            }
-            return total == completed;
-
+            return lectureHistoryDAO.isAllLecturesComplete(memberId, courseId);
         } catch (SQLException e) {
             throw new RuntimeException("강의 완료 여부 확인 중 에러 발생 🚨");
         }
